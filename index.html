@@ -1,0 +1,3979 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ramdev Enterprise — Official Wholesale & Retail Shopping Portal</title>
+  <link rel="icon" type="image/jpeg" href="./assets/ramdev_feather_logo.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-body: #F1F3F6;
+      --bg-white: #FFFFFF;
+      --nav-dark: #131921;
+      --nav-sub: #232F3E;
+      --text-dark: #111827;
+      --text-muted: #565959;
+      --text-sub: #6B7280;
+      --amazon-yellow: #FFD814;
+      --amazon-yellow-hover: #F7CA00;
+      --amazon-orange: #FFA41C;
+      --amazon-orange-hover: #FA8900;
+      --flipkart-blue: #2874F0;
+      --link-blue: #007185;
+      --badge-green: #007600;
+      --badge-red: #B12704;
+      --border-gray: #E5E7EB;
+      --border-card: #E3E6E6;
+      --font-heading: 'Plus Jakarta Sans', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-body);
+      color: var(--text-dark);
+      font-family: var(--font-body);
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Strip */
+    .top-strip {
+      background: #0F1111;
+      color: #9CA3AF;
+      font-size: 0.78rem;
+      padding: 6px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .top-strip a { color: #D1D5DB; text-decoration: none; margin-left: 16px; }
+    .top-strip a:hover { color: #FFF; text-decoration: underline; }
+
+    /* Site Header */
+    header.site-header {
+      background: var(--nav-dark);
+      color: #FFF;
+      padding: 10px 24px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    }
+    .header-content {
+      max-width: 1440px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    /* Brand Logo */
+    .brand-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #FFF;
+      padding: 4px 8px;
+      border-radius: 4px;
+      border: 1px solid transparent;
+    }
+    .brand-link:hover { border-color: #FFF; }
+    .brand-logo-img {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1.5px solid rgba(255, 255, 255, 0.25);
+    }
+    .brand-text h1 {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: 0.5px;
+    }
+    .brand-text p {
+      font-size: 0.65rem;
+      color: var(--amazon-orange);
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    /* Delivery Pin */
+    .delivery-pin-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: transparent;
+      border: 1px solid transparent;
+      color: #FFF;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      text-align: left;
+    }
+    .delivery-pin-btn:hover { border-color: #FFF; }
+    .delivery-pin-btn .sub { font-size: 0.7rem; color: #9CA3AF; line-height: 1; }
+    .delivery-pin-btn .main { font-size: 0.82rem; font-weight: 700; line-height: 1.2; }
+
+    /* Search Bar */
+    .header-search {
+      flex: 1 1 320px;
+      min-width: 260px;
+      max-width: 650px;
+      display: flex;
+      border-radius: 6px;
+      overflow: hidden;
+      background: #FFF;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+    .search-select {
+      background: #E5E7EB;
+      border: none;
+      padding: 0 12px;
+      font-size: 0.8rem;
+      color: #374151;
+      font-family: var(--font-body);
+      cursor: pointer;
+      outline: none;
+      border-right: 1px solid #D1D5DB;
+    }
+    .search-input {
+      flex: 1;
+      border: none;
+      padding: 10px 14px;
+      font-size: 0.95rem;
+      outline: none;
+      font-family: var(--font-body);
+    }
+    .search-btn {
+      background: var(--amazon-yellow);
+      border: none;
+      padding: 0 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s;
+    }
+    .search-btn:hover { background: var(--amazon-yellow-hover); }
+
+    /* Wholesale/Retail Toggle */
+    .rate-mode-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 4px 8px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    .rate-mode-lbl { font-size: 0.72rem; color: #D1D5DB; font-weight: 600; text-transform: uppercase; }
+    .rate-toggle-pill { display: flex; background: #0F172A; border-radius: 4px; padding: 2px; }
+    .rate-toggle-pill button {
+      background: transparent;
+      border: none;
+      color: #9CA3AF;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 5px 10px;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .rate-toggle-pill button.active { background: var(--amazon-orange); color: #000; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3); }
+    .portal-switch-btn {
+      background: #2563EB;
+      color: #FFF;
+      border: none;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 5px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .portal-switch-btn:hover { background: #1D4ED8; }
+
+    /* Header Dealer Badge */
+    .header-retail-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #1E40AF, #2563EB);
+      padding: 5px 12px;
+      border-radius: 6px;
+      border: 1px solid #60A5FA;
+      color: #FFF;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+    }
+    .header-retail-badge .firm { font-size: 0.82rem; font-weight: 800; color: #FFF; line-height: 1.1; }
+    .header-retail-badge .gstin { font-size: 0.68rem; color: #BFDBFE; font-weight: 600; }
+
+    .header-dealer-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, #065F46, #047857);
+      padding: 4px 10px;
+      border-radius: 4px;
+      border: 1px solid #34D399;
+      cursor: pointer;
+    }
+    .header-dealer-badge .firm { font-size: 0.82rem; font-weight: 800; color: #FFF; }
+    .header-dealer-badge .gstin { font-size: 0.68rem; color: #A7F3D0; font-family: monospace; }
+
+    /* Account & Orders */
+    .header-action-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: #FFF;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      text-align: left;
+      text-decoration: none;
+    }
+    .header-action-btn:hover { border-color: #FFF; }
+    .header-action-btn .sub { font-size: 0.7rem; color: #9CA3AF; line-height: 1; }
+    .header-action-btn .main { font-size: 0.82rem; font-weight: 700; line-height: 1.2; display: flex; align-items: center; gap: 4px; }
+
+    /* Cart Button */
+    .cart-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: transparent;
+      border: 1px solid transparent;
+      color: #FFF;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      position: relative;
+    }
+    .cart-btn:hover { border-color: #FFF; }
+    .cart-count {
+      background: var(--amazon-orange);
+      color: #000;
+      font-size: 0.78rem;
+      font-weight: 800;
+      padding: 1px 7px;
+      border-radius: 12px;
+    }
+
+    /* 5 Categories Strip Bar */
+    .categories-strip-bar {
+      background: #FFF;
+      border-bottom: 1px solid #E5E7EB;
+      padding: 12px 24px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+    .categories-strip-content {
+      max-width: 1440px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .cat-pill-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      color: #374151;
+      padding: 6px 12px;
+      border-radius: 8px;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .cat-pill-item:hover, .cat-pill-item.active { background: #F3F4F6; color: var(--flipkart-blue); transform: translateY(-1px); }
+    .cat-pill-circle {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: #F8FAFC;
+      border: 1.5px solid #E2E8F0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+    }
+    .cat-pill-circle img { width: 100%; height: 100%; object-fit: contain; }
+    .cat-pill-label { font-size: 0.8rem; font-weight: 700; text-align: center; }
+
+    /* Secondary Subnav */
+    .secondary-subnav {
+      background: var(--nav-sub);
+      color: #FFF;
+      padding: 6px 24px;
+      font-size: 0.82rem;
+    }
+    .secondary-subnav-content {
+      max-width: 1440px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+    .subnav-link {
+      color: #FFF;
+      text-decoration: none;
+      padding: 4px 6px;
+      border-radius: 3px;
+      font-weight: 500;
+    }
+    .subnav-link:hover { outline: 1px solid #FFF; }
+    .subnav-link.highlight { color: var(--amazon-yellow); font-weight: 700; }
+
+    /* Main Container */
+    .main-body-container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 16px 20px;
+      width: 100%;
+      flex: 1;
+    }
+
+    /* Hero Banner */
+    .home-hero-banner {
+      background: linear-gradient(135deg, #1E3A8A 0%, #0F172A 100%);
+      border-radius: 12px;
+      padding: 24px 32px;
+      color: #FFF;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+      position: relative;
+      overflow: hidden;
+    }
+    .home-hero-banner h2 { font-size: 1.6rem; font-weight: 800; font-family: var(--font-heading); margin-bottom: 6px; }
+    .home-hero-banner p { font-size: 0.95rem; color: #93C5FD; max-width: 780px; margin-bottom: 16px; }
+    .hero-features-strip { display: flex; gap: 14px; flex-wrap: wrap; }
+    .hero-feat-chip {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    /* 4-Tile Showcase Grid */
+    .amazon-tiles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+    .tile-card {
+      background: #FFF;
+      border: 1px solid var(--border-card);
+      border-radius: 8px;
+      padding: 18px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .tile-card h3 {
+      font-size: 1.1rem;
+      font-weight: 800;
+      font-family: var(--font-heading);
+      margin-bottom: 12px;
+      color: #0F172A;
+    }
+    .tile-quad-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .quad-item {
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      transition: transform 0.15s;
+    }
+    .quad-item:hover { transform: translateY(-2px); }
+    .quad-img-box {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 6px;
+      height: 105px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .quad-img-box img { max-width: 90%; max-height: 90%; object-fit: contain; }
+    .quad-label { font-size: 0.75rem; font-weight: 600; color: #334155; line-height: 1.2; }
+    .tile-see-more {
+      font-size: 0.82rem;
+      color: var(--link-blue);
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .tile-see-more:hover { text-decoration: underline; color: #C45500; }
+
+    /* Category Products View */
+    .category-products-view { display: none; }
+    .category-top-nav-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #FFF;
+      border: 1px solid var(--border-card);
+      border-radius: 8px;
+      padding: 10px 18px;
+      margin-bottom: 14px;
+    }
+    .btn-back-home {
+      background: #0F172A;
+      color: #FFF;
+      border: none;
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.82rem;
+      cursor: pointer;
+    }
+    .btn-back-home:hover { background: #1E293B; }
+    .breadcrumbs-box { font-size: 0.82rem; color: #64748B; font-weight: 600; }
+    .breadcrumbs-box strong { color: #0F172A; }
+
+    /* Section Bar */
+    .catalog-section-bar {
+      background: #FFF;
+      border: 1px solid var(--border-card);
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .catalog-section-bar h2 { font-size: 1.25rem; font-weight: 800; font-family: var(--font-heading); }
+    .catalog-subtext { font-size: 0.82rem; color: #64748B; margin-top: 2px; }
+
+    /* Sub-Filter Chips */
+    .bottle-subcat-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+    .chip-btn {
+      background: #F1F5F9;
+      border: 1px solid #CBD5E1;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #334155;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .chip-btn.active, .chip-btn:hover { background: #0F172A; color: #FFF; border-color: #0F172A; }
+
+    /* Catalog Toolbar */
+    .catalog-toolbar-bar {
+      background: #FFF;
+      border: 1px solid var(--border-card);
+      border-radius: 8px;
+      padding: 10px 18px;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .catalog-toolbar-left { display: flex; align-items: center; gap: 12px; }
+    .catalog-count-pill { font-size: 0.82rem; font-weight: 700; color: #475569; }
+    .stock-filter-btn {
+      background: #F8FAFC;
+      border: 1px solid #CBD5E1;
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #334155;
+      cursor: pointer;
+    }
+    .stock-filter-btn.active { background: #DCFCE7; color: #166534; border-color: #86EFAC; }
+    .catalog-sort-box { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; font-weight: 600; color: #475569; }
+    .catalog-sort-select {
+      padding: 5px 10px;
+      border-radius: 6px;
+      border: 1px solid #CBD5E1;
+      font-size: 0.82rem;
+      outline: none;
+      cursor: pointer;
+    }
+
+    /* Product Grid */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+    .p-card {
+      background: #FFF;
+      border: 1px solid var(--border-card);
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .p-card:hover { transform: translateY(-3px); box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08); }
+    .badge-deal {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: #CC0C39;
+      color: #FFF;
+      font-size: 0.68rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 4px;
+      z-index: 2;
+      text-transform: uppercase;
+    }
+    .badge-moq {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #FEF3C7;
+      color: #92400E;
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 4px;
+      z-index: 2;
+    }
+    .badge-stock {
+      position: absolute;
+      top: 38px;
+      right: 10px;
+      font-size: 0.68rem;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 4px;
+      z-index: 2;
+    }
+    .badge-stock.in-stock { background: #DCFCE7; color: #166534; }
+    .badge-stock.low-stock { background: #FEE2E2; color: #991B1B; }
+
+    .p-img-box {
+      height: 210px;
+      background: #F8FAFC;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px;
+      cursor: pointer;
+      border-bottom: 1px solid #F1F5F9;
+    }
+    .p-img-box img { max-width: 100%; max-height: 100%; object-fit: contain; }
+    .p-body { padding: 14px; display: flex; flex-direction: column; flex: 1; }
+    .p-category-tag { font-size: 0.72rem; color: #64748B; font-weight: 700; text-transform: uppercase; }
+    .p-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #0F172A;
+      margin: 4px 0 8px;
+      line-height: 1.35;
+      cursor: pointer;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .p-title:hover { color: var(--link-blue); }
+    .p-ratings { display: flex; align-items: center; gap: 6px; font-size: 0.78rem; margin-bottom: 8px; }
+    .p-ratings .stars { color: var(--amazon-orange); letter-spacing: 1px; }
+    .p-ratings .rating-num { color: #64748B; font-weight: 600; }
+    .p-price-box { margin-bottom: 10px; }
+    .mrp-line { font-size: 0.78rem; color: #64748B; }
+    .mrp-line del { color: #94A3B8; }
+    .price-row { display: flex; align-items: baseline; gap: 4px; }
+    .price-label { font-size: 0.8rem; font-weight: 700; color: #4B5563; }
+    .price-curr { font-size: 0.9rem; font-weight: 800; color: #0F172A; }
+    .price-amount { font-size: 1.45rem; font-weight: 800; color: #0F172A; line-height: 1; }
+    .price-unit { font-size: 0.78rem; color: #64748B; font-weight: 600; }
+
+    .wholesale-lock-bar {
+      background: #F8FAFC;
+      border: 1px dashed #CBD5E1;
+      padding: 6px 8px;
+      border-radius: 4px;
+      margin-top: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.72rem;
+    }
+    .wholesale-lock-bar .lock-txt { color: #475569; font-weight: 600; }
+    .btn-unlock-text {
+      background: none;
+      border: none;
+      color: #2563EB;
+      font-weight: 800;
+      cursor: pointer;
+      font-size: 0.72rem;
+      text-decoration: underline;
+    }
+    .wholesale-verified-bar {
+      background: #ECFDF5;
+      border: 1px solid #A7F3D0;
+      color: #047857;
+      padding: 5px 8px;
+      border-radius: 4px;
+      margin-top: 6px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .p-delivery { font-size: 0.76rem; color: #475569; margin-bottom: 12px; }
+    .p-actions { margin-top: auto; display: flex; flex-direction: column; gap: 6px; }
+
+    /* Action Buttons */
+    .btn-cart {
+      background: var(--amazon-yellow);
+      border: 1px solid #FCD200;
+      color: #0F1111;
+      padding: 8px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-cart:hover { background: var(--amazon-yellow-hover); }
+    .btn-buy {
+      background: var(--amazon-orange);
+      border: 1px solid #FF8F00;
+      color: #0F1111;
+      padding: 8px;
+      border-radius: 6px;
+      font-weight: 800;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-buy:hover { background: var(--amazon-orange-hover); }
+    .btn-specs {
+      background: #F1F5F9;
+      border: 1px solid #CBD5E1;
+      color: #334155;
+      padding: 6px;
+      border-radius: 6px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn-specs:hover { background: #E2E8F0; }
+    .btn-wa {
+      background: #25D366;
+      border: 1px solid #1EBE5D;
+      color: #FFF;
+      padding: 7px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.78rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .btn-wa:hover { background: #20BA5A; }
+    .btn-portal-blue {
+      background: #2563EB;
+      color: #FFF;
+      border: none;
+      border-radius: 6px;
+      padding: 8px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn-portal-blue:hover { background: #1D4ED8; }
+
+    /* Footer */
+    .main-footer {
+      background: #131A22;
+      color: #DDD;
+      padding: 32px 24px 20px;
+      font-size: 0.82rem;
+      margin-top: auto;
+    }
+    .footer-grid {
+      max-width: 1440px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid #334155;
+    }
+    .footer-col h4 { color: #FFF; font-size: 0.95rem; font-weight: 800; margin-bottom: 12px; font-family: var(--font-heading); }
+    .footer-col p { color: #94A3B8; line-height: 1.6; }
+    .footer-col a { color: #94A3B8; text-decoration: none; display: block; margin-bottom: 6px; }
+    .footer-col a:hover { color: #FFF; text-decoration: underline; }
+    .footer-bottom {
+      max-width: 1440px;
+      margin: 16px auto 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      color: #64748B;
+      font-size: 0.75rem;
+    }
+
+    /* Modal System */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(3px);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-card {
+      background: #FFF;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      animation: fadeInSlideUp 0.25s ease-out;
+    }
+    .modal-card-sm { max-width: 480px; }
+    .modal-card-md { max-width: 620px; }
+    .modal-card-lg { max-width: 860px; }
+
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 20px;
+      border-bottom: 1px solid #E2E8F0;
+      background: #0F172A;
+      color: #FFF;
+      border-radius: 12px 12px 0 0;
+    }
+    .modal-head h3 { font-size: 1.05rem; font-weight: 800; font-family: var(--font-heading); }
+    .modal-close {
+      background: none;
+      border: none;
+      color: #FFF;
+      font-size: 1.5rem;
+      cursor: pointer;
+      line-height: 1;
+      padding: 0 4px;
+    }
+    .modal-body { padding: 20px; }
+
+    /* Gateway Choice */
+    .portal-choice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px; }
+    .portal-card-opt {
+      border: 2px solid #E2E8F0;
+      border-radius: 8px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+    .portal-card-opt:hover { border-color: #2563EB; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1); }
+    .portal-card-opt h4 { font-size: 1rem; font-weight: 800; margin: 8px 0 4px; }
+    .portal-card-opt p { font-size: 0.78rem; color: #64748B; }
+
+    /* Forms */
+    .form-group { margin-bottom: 12px; }
+    .form-group label { display: block; font-size: 0.82rem; font-weight: 700; margin-bottom: 4px; color: #334155; }
+    .form-control {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1.5px solid #CBD5E1;
+      border-radius: 6px;
+      font-size: 0.88rem;
+      font-family: var(--font-body);
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .form-control:focus { border-color: #2563EB; }
+    .form-control.is-valid { border-color: #10B981; background: #F0FDF4; }
+    .form-control.has-error { border-color: #EF4444; background: #FEF2F2; }
+    .validation-hint { font-size: 0.75rem; margin-top: 4px; font-weight: 600; }
+    .validation-hint.error { color: #DC2626; }
+    .validation-hint.success { color: #166534; }
+
+    /* Pincode & City Chips */
+    .pincode-input-group { display: flex; gap: 8px; margin-bottom: 12px; }
+    .city-chip-list { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+    .city-chip {
+      background: #F1F5F9;
+      border: 1px solid #CBD5E1;
+      padding: 4px 10px;
+      border-radius: 16px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: #334155;
+      cursor: pointer;
+    }
+    .city-chip:hover { background: #0F172A; color: #FFF; }
+    .pincode-result-card {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      padding: 14px;
+      margin-top: 10px;
+    }
+
+    /* Specs Modal Layout */
+    .specs-modal-layout { display: grid; grid-template-columns: 280px 1fr; gap: 20px; }
+    .specs-img-display { text-align: center; }
+    .specs-img-display img { max-width: 100%; height: 220px; object-fit: contain; }
+    .specs-table, .bulk-slabs-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      margin-bottom: 12px;
+    }
+    .specs-table th, .specs-table td, .bulk-slabs-table th, .bulk-slabs-table td {
+      border: 1px solid #E2E8F0;
+      padding: 6px 10px;
+    }
+    .specs-table th, .bulk-slabs-table th { background: #F1F5F9; text-align: left; }
+
+    /* Invoice */
+    .invoice-paper {
+      background: #FFF;
+      border: 1px solid #CBD5E1;
+      padding: 24px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    .invoice-title-strip { text-align: center; border-bottom: 2px solid #0F172A; padding-bottom: 12px; margin-bottom: 14px; }
+    .invoice-title-strip h3 { font-size: 1.4rem; font-weight: 800; font-family: var(--font-heading); color: #0F172A; }
+    .invoice-header-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .invoice-items-table { width: 100%; border-collapse: collapse; margin-bottom: 14px; }
+    .invoice-items-table th, .invoice-items-table td { border: 1px solid #CBD5E1; padding: 7px 10px; }
+    .invoice-items-table th { background: #F8FAFC; text-align: left; }
+    .invoice-stamp-box {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-top: 1px solid #E2E8F0;
+      padding-top: 14px;
+      margin-top: 14px;
+    }
+
+    /* 4-Step Tracker */
+    .tracking-timeline-box { background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 16px; margin-top: 14px; }
+    .timeline-steps {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+      margin: 18px 0;
+    }
+    .timeline-steps::before {
+      content: '';
+      position: absolute;
+      top: 15px;
+      left: 10%;
+      right: 10%;
+      height: 3px;
+      background: #CBD5E1;
+      z-index: 1;
+    }
+    .timeline-step-item {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      width: 25%;
+    }
+    .timeline-step-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #E2E8F0;
+      color: #64748B;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.8rem;
+    }
+    .timeline-step-item.done .timeline-step-icon { background: #10B981; color: #FFF; }
+    .timeline-step-item.active .timeline-step-icon { background: #2563EB; color: #FFF; box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2); }
+    .timeline-step-label { font-size: 0.72rem; font-weight: 700; color: #475569; text-align: center; }
+
+    /* Cart Summary */
+    .cart-tax-summary-box { background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 12px; margin-bottom: 14px; font-size: 0.82rem; }
+    .cart-tax-row { display: flex; justify-content: space-between; padding: 3px 0; }
+    .cart-tax-row.net-total { border-top: 1.5px solid #CBD5E1; margin-top: 6px; padding-top: 6px; font-size: 0.95rem; font-weight: 800; }
+
+    /* Toast */
+    .toast-popup {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #0F172A;
+      color: #FFF;
+      padding: 12px 18px;
+      border-radius: 8px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+      z-index: 3000;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      animation: fadeInSlideUp 0.2s ease-out;
+    }
+
+    @keyframes fadeInSlideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    @media (max-width: 900px) {
+      .header-search { order: 3; max-width: 100%; flex-basis: 100%; }
+      .specs-modal-layout { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .portal-choice-grid { grid-template-columns: 1fr; }
+    }
+    @media print {
+      body * { visibility: hidden !important; }
+      #proformaInvoiceModal, #proformaInvoiceModal * { visibility: visible !important; }
+      #proformaInvoiceModal { position: absolute; left: 0; top: 0; width: 100%; display: block !important; }
+      .no-print { display: none !important; }
+    }
+  
+    /* ========================================================= */
+    /* FULL-PAGE ENTRY & AUTHENTICATION GATEWAY (STEP 2 OF PLAN) */
+    /* ========================================================= */
+    .entry-auth-fullscreen {
+      min-height: 100vh;
+      width: 100%;
+      background: radial-gradient(circle at top, #1E293B 0%, #0B1120 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      z-index: 9999;
+      overflow-y: auto;
+    }
+    .auth-gate-card {
+      background: #FFFFFF;
+      width: 100%;
+      max-width: 520px;
+      border-radius: 16px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+      overflow: hidden;
+      animation: fadeInSlideUp 0.3s ease-out;
+      margin: auto;
+    }
+    .auth-gate-header {
+      background: #0F172A;
+      color: #FFFFFF;
+      padding: 24px 24px 20px;
+      text-align: center;
+      border-bottom: 3px solid var(--amazon-orange);
+    }
+    .auth-gate-logo {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      margin-bottom: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    .auth-gate-header h2 {
+      font-family: var(--font-heading);
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+    .auth-gate-header p {
+      font-size: 0.72rem;
+      color: var(--amazon-orange);
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+    .auth-gate-tabs {
+      display: flex;
+      background: #F1F5F9;
+      border-bottom: 1px solid #E2E8F0;
+    }
+    .auth-gate-tab-btn {
+      flex: 1;
+      padding: 12px 6px;
+      background: transparent;
+      border: none;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #64748B;
+      cursor: pointer;
+      transition: all 0.2s;
+      border-bottom: 2px solid transparent;
+      font-family: var(--font-body);
+    }
+    .auth-gate-tab-btn.active {
+      color: #0F172A;
+      background: #FFFFFF;
+      border-bottom: 2px solid #2563EB;
+    }
+    .auth-gate-body {
+      padding: 24px;
+    }
+    .auth-gate-footer-links {
+      text-align: center;
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid #E2E8F0;
+      font-size: 0.82rem;
+    }
+
+  </style>
+</head>
+
+<body>
+  <!-- ========================================================================= -->
+  <!-- STEP 2 OF MASTER PLAN: ENTRY AUTHENTICATION GATEWAY (LOGIN / SIGN-UP)    -->
+  <!-- ========================================================================= -->
+  <div id="entryAuthGateScreen" class="entry-auth-fullscreen">
+    <div class="auth-gate-card">
+      <div class="auth-gate-header">
+        <img src="./assets/ramdev_feather_logo.jpg" alt="Ramdev Enterprise" class="auth-gate-logo">
+        <h2>Ramdev Enterprise</h2>
+        <p>Quality Plastics for a Brighter Tomorrow</p>
+      </div>
+
+      <div class="auth-gate-body">
+        <!-- ======================================================== -->
+        <!-- 1. PRIMARY LOGIN PAGE (FIRST SCREEN ON WEBSITE ENTRY)    -->
+        <!-- ======================================================== -->
+        <div id="gateLoginView">
+          <h3 style="font-size: 1.15rem; font-weight: 800; color: #0F172A; margin-bottom: 4px;">
+            🔑 Sign In to Your Account
+          </h3>
+          <p style="font-size: 0.82rem; color: #64748B; margin-bottom: 16px;">
+            Enter your registered Mobile Number or Email ID to enter your portal:
+          </p>
+
+          <div id="gateLoginAlert" class="validation-hint error" style="display: none; margin-bottom: 12px;"></div>
+
+          <div class="form-group">
+            <label>User ID (Registered Mobile or Email) *</label>
+            <input type="text" id="gateLoginInput" class="form-control" placeholder="e.g. 9829012345 or email" oninput="validateGateLoginLive(this)">
+            <div id="gateLoginHint" class="validation-hint"></div>
+          </div>
+
+          <div class="form-group">
+            <label>Password *</label>
+            <input type="password" id="gateLoginPass" class="form-control" placeholder="Enter password (e.g. 123)">
+          </div>
+
+          <button class="btn-buy" style="width: 100%; padding: 12px; font-weight: 800; font-size: 0.95rem; margin-top: 6px;" onclick="submitGateLogin()">
+            Sign In & Enter Storefront →
+          </button>
+
+          <!-- 1-Click Demo Login Helpers for Retail vs Wholesale -->
+          <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 12px; margin-top: 14px;">
+            <div style="font-size: 0.75rem; font-weight: 700; color: #64748B; margin-bottom: 8px; text-transform: uppercase;">
+              ⚡ Quick Test Logins (Auto-Separated ID):
+            </div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <button type="button" class="btn-specs" style="flex: 1; font-size: 0.76rem;" onclick="quickFillRetailUser()">
+                🛍️ Retail ID (9829012345)
+              </button>
+              <button type="button" class="btn-specs" style="flex: 1; font-size: 0.76rem; color: #047857; border-color: #A7F3D0; background: #ECFDF5;" onclick="quickFillWholesaleDealer()">
+                🏭 Wholesale ID (9414167890)
+              </button>
+            </div>
+          </div>
+
+          <!-- PROMINENT NEW USER REGISTRATION BOX -->
+          <div style="border-top: 2px dashed #CBD5E1; margin-top: 20px; padding-top: 18px; text-align: center;">
+            <div style="font-size: 0.88rem; font-weight: 700; color: #334155; margin-bottom: 6px;">
+              New to Ramdev Enterprise?
+            </div>
+            <p style="font-size: 0.78rem; color: #64748B; margin-bottom: 12px;">
+              Create an account with your full details to shop retail or wholesale:
+            </p>
+            <button class="btn-portal-blue" style="width: 100%; padding: 11px; font-weight: 800; font-size: 0.9rem;" onclick="showGateSignupView()">
+              📝 New User? Register & Create Account Here →
+            </button>
+          </div>
+
+          <!-- Bottom Utility Links -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; padding-top: 12px; border-top: 1px solid #E2E8F0; font-size: 0.78rem;">
+            <a href="javascript:void(0)" style="color: #64748B; text-decoration: none;" onclick="showGateOwnerView()">
+              👑 Store Owner PIN Gate
+            </a>
+            <a href="javascript:void(0)" style="color: #2563EB; font-weight: 700; text-decoration: none;" onclick="continueAsGuest()">
+              🛍️ Continue as Guest (Retail) ›
+            </a>
+          </div>
+        </div>
+
+        <!-- ======================================================== -->
+        <!-- 2. DEDICATED NEW USER REGISTRATION PAGE (FULL DETAILS)   -->
+        <!-- ======================================================== -->
+        <div id="gateSignupView" style="display: none;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <button type="button" class="btn-specs" style="padding: 4px 10px; font-size: 0.78rem;" onclick="showGateLoginView()">
+              ← Back to Login
+            </button>
+            <span style="font-size: 0.78rem; color: #64748B; font-weight: 700;">STEP 1: REGISTRATION</span>
+          </div>
+
+          <h3 style="font-size: 1.15rem; font-weight: 800; color: #0F172A; margin-bottom: 4px;">
+            📝 Create New Customer Account
+          </h3>
+          <p style="font-size: 0.82rem; color: #64748B; margin-bottom: 14px;">
+            Enter your full details as planned. Your Login ID will automatically separate your portal:
+          </p>
+
+          <form onsubmit="event.preventDefault(); submitGateSignup();">
+            <div class="form-group">
+              <label>Full Name *</label>
+              <input type="text" id="gateRegName" class="form-control" placeholder="e.g. Ramesh Sharma" required>
+            </div>
+            <div class="form-group">
+              <label>10-Digit Mobile Number (Login User ID) *</label>
+              <input type="tel" id="gateRegPhone" class="form-control" placeholder="e.g. 9829012345" maxlength="10" required oninput="validatePhoneLive(this, 'gatePhoneHint')">
+              <div id="gatePhoneHint" class="validation-hint"></div>
+            </div>
+            <div class="form-group">
+              <label>Shop / Firm Name or Household *</label>
+              <input type="text" id="gateRegFirm" class="form-control" placeholder="e.g. Shree Ram Trading Co. / Domestic Home" required>
+            </div>
+            <div class="form-group">
+              <label>Email Address (Alternate User ID) *</label>
+              <input type="email" id="gateRegEmail" class="form-control" placeholder="e.g. ramesh@example.com" required oninput="validateEmailLive(this, 'gateEmailHint')">
+              <div id="gateEmailHint" class="validation-hint"></div>
+            </div>
+            <div class="form-group">
+              <label>Create Password (Min 6 Characters) *</label>
+              <input type="password" id="gateRegPass" class="form-control" placeholder="Create strong password" required minlength="6">
+            </div>
+            <div class="form-group">
+              <label>Account Type / Shopping Portal *</label>
+              <select id="gateRegPortal" class="form-control" style="font-weight: 700;">
+                <option value="retail">🛍️ Retail Customer (1 Pc Orders - Courier Doorstep Delivery)</option>
+                <option value="wholesale">🏭 Wholesale Trade Dealer (Bulk Lot Orders - Transport Bilty)</option>
+              </select>
+              <span style="font-size: 0.72rem; color: #64748B;">
+                * Your User ID will automatically open this portal whenever you log in.
+              </span>
+            </div>
+
+            <div style="display: flex; gap: 8px; margin-top: 14px;">
+              <button type="button" class="btn-specs" style="flex: 1;" onclick="autoFillGateSignup()">⚡ Auto-Fill Valid Details</button>
+              <button type="submit" class="btn-buy" style="flex: 1.2; font-weight: 800;">Verify Mobile & Email →</button>
+            </div>
+          </form>
+
+          <div style="text-align: center; margin-top: 14px; font-size: 0.82rem;">
+            Already registered? <a href="javascript:void(0)" class="tile-see-more" onclick="showGateLoginView()">Sign In Here ›</a>
+          </div>
+        </div>
+
+        <!-- ======================================================== -->
+        <!-- 3. DUAL OTP VERIFICATION (MOBILE + EMAIL)               -->
+        <!-- ======================================================== -->
+        <div id="gateOtpView" style="display: none; text-align: center;">
+          <span style="font-size: 2.2rem;">📲</span>
+          <h4 style="font-size: 1.15rem; margin: 6px 0;">Verify Mobile & Email via OTP</h4>
+          <p style="font-size: 0.82rem; color: #64748B; margin-bottom: 14px;">
+            Codes sent to <strong id="gateOtpPhoneText">+91 9829012345</strong> & <strong id="gateOtpEmailText">email@example.com</strong>:
+          </p>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px;">
+            <div style="background: #F8FAFC; border: 1px solid #CBD5E1; border-radius: 6px; padding: 10px;">
+              <div style="font-size: 0.75rem; font-weight: 700; color: #64748B;">Mobile OTP</div>
+              <input type="text" id="gateMobileOtpBox" class="form-control" maxlength="4" placeholder="4819" style="text-align: center; font-size: 1.1rem; font-weight: 800; letter-spacing: 2px; margin-top: 6px;">
+              <div id="gateMobileOtpError" class="validation-hint error"></div>
+            </div>
+            <div style="background: #F8FAFC; border: 1px solid #CBD5E1; border-radius: 6px; padding: 10px;">
+              <div style="font-size: 0.75rem; font-weight: 700; color: #64748B;">Email OTP</div>
+              <input type="text" id="gateEmailOtpBox" class="form-control" maxlength="4" placeholder="9352" style="text-align: center; font-size: 1.1rem; font-weight: 800; letter-spacing: 2px; margin-top: 6px;">
+              <div id="gateEmailOtpError" class="validation-hint error"></div>
+            </div>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button type="button" class="btn-specs" style="flex: 1;" onclick="autoFillGateOtps()">⚡ Auto-Fill Codes</button>
+            <button type="button" class="btn-buy" style="flex: 1.2; font-weight: 800;" onclick="verifyGateOtps()">Verify & Enter Store →</button>
+          </div>
+        </div>
+
+        <!-- ======================================================== -->
+        <!-- 4. STORE OWNER MASTER PIN GATE                           -->
+        <!-- ======================================================== -->
+        <div id="gateOwnerView" style="display: none; text-align: center;">
+          <div style="display: flex; justify-content: flex-start; margin-bottom: 8px;">
+            <button type="button" class="btn-specs" style="padding: 4px 10px; font-size: 0.78rem;" onclick="showGateLoginView()">
+              ← Back to Customer Login
+            </button>
+          </div>
+          <span style="font-size: 2.2rem;">👑</span>
+          <h4 style="font-size: 1.15rem; margin: 6px 0;">Ramdev Enterprise Store Owner Login</h4>
+          <p style="font-size: 0.85rem; color: #64748B; margin-bottom: 14px;">
+            Enter Master Owner Security PIN to access live inventory and dispatch:
+          </p>
+          <input type="password" id="gateOwnerPinInput" class="form-control" placeholder="Enter Master PIN (Default: 8899)" maxlength="6" style="max-width: 260px; margin: 0 auto 12px; text-align: center; font-size: 1.1rem; font-weight: 800; letter-spacing: 3px;" onkeyup="if(event.key === 'Enter') submitGateOwnerPin()">
+          <button class="btn-buy" style="width: 100%; padding: 11px; font-weight: 800;" onclick="submitGateOwnerPin()">
+            Unlock Owner Dashboard →
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- STEP 3 OF MASTER PLAN: MAIN STOREFRONT & PRODUCT SHOWCASE                 -->
+  <!-- ========================================================================= -->
+  <div id="mainStorefrontApp" style="display: none; min-height: 100vh; flex-direction: column;">
+  <!-- Top Strip -->
+  <div class="top-strip">
+    <div>🏭 <strong>Ramdev Enterprise</strong> — Sangaria Ind. Area, Jodhpur (Raj.) | GST Registered Trader</div>
+    <div>
+      <a href="javascript:void(0)" onclick="toggleAuth(true); openModal('authModal');" style="color: #FBBF24; font-weight: 700;">📝 Register / Create Account</a>
+      <a href="javascript:void(0)" onclick="toggleAuth(false); openModal('authModal');">🔑 Sign In</a>
+      <a href="javascript:void(0)" onclick="openModal('trackOrderModal')">🚚 Live Track Order</a>
+      <a href="javascript:void(0)" onclick="openDeliveryPincodeModal()">📍 Check Pincode</a>
+      <a href="javascript:void(0)" onclick="openModal('complaintModal')">⚠️ Support</a>
+      <a href="javascript:void(0)" onclick="openModal('adminModal')">👑 Owner Login</a>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-content">
+      <!-- Brand Logo -->
+      <a href="javascript:void(0)" class="brand-link" onclick="showHomePage()">
+        <img src="./assets/ramdev_feather_logo.jpg" alt="Ramdev Enterprise Logo" class="brand-logo-img">
+        <div class="brand-text">
+          <h1>Ramdev Enterprise</h1>
+          <p>Wholesale & Retail Plastics</p>
+        </div>
+      </a>
+
+      <!-- Pin Location -->
+      <button class="delivery-pin-btn" onclick="openDeliveryPincodeModal()" title="Choose your delivery pincode & logistics hub">
+        <span style="font-size: 1.2rem;">📍</span>
+        <div>
+          <div class="sub">Deliver to</div>
+          <div class="main" id="headerDeliveryLocationText">All India (Transport)</div>
+        </div>
+      </button>
+
+      <!-- Prominent Search Bar -->
+      <div class="header-search">
+        <select class="search-select" id="searchCategorySelect" onchange="handleSelectCategory(this.value)">
+          <option value="all">All Categories</option>
+          <option value="bottle">1. Plastic Bottles</option>
+          <option value="diesel">2. Diesel Cans</option>
+          <option value="water">3. Water Cool Jars</option>
+          <option value="disposable">4. Disposable Items</option>
+          <option value="other">5. Other Cleaning</option>
+        </select>
+        <input type="text" id="searchInput" class="search-input"
+          placeholder="Search Standard Bottle, Threaded Bottle, Tap Dispenser Bottle, Diesel Can..."
+          onkeyup="if(event.key === 'Enter') searchCatalog()" oninput="handleSearchInputLive(this.value)">
+        <button class="search-btn" onclick="searchCatalog()" title="Search catalog">
+          <span style="font-size: 1.1rem;">🔍</span>
+        </button>
+      </div>
+
+      <!-- Wholesale vs Retail Portal Switch (Shown only for unverified guests) -->
+      <div class="rate-mode-box" id="headerPortalModeBox">
+        <div class="rate-mode-lbl">Portal:</div>
+        <div class="rate-toggle-pill">
+          <button id="retailToggleBtn" class="active" onclick="requestSwitchMode('retail')">Retail (1 Pc)</button>
+          <button id="wholesaleToggleBtn" onclick="requestSwitchMode('wholesale')">Wholesale <span id="wholesaleLockIcon">🔒</span></button>
+        </div>
+        <button class="portal-switch-btn" onclick="openPortalGateway()" title="Change Buyer Portal">🔄 Switch</button>
+      </div>
+
+      <!-- Retail Customer Store Badge (Shown for Retail ID - Wholesale switch is completely hidden) -->
+      <div class="header-retail-badge" id="headerRetailBadge" style="display: none;">
+        <span style="font-size: 1.2rem;">🛍️</span>
+        <div>
+          <div class="firm">Retail Customer Store</div>
+          <div class="gstin">Single Unit Shopping (1 Pc Orders)</div>
+        </div>
+      </div>
+
+      <!-- Verified Dealer Badge in Header -->
+      <div class="header-dealer-badge" id="headerDealerBadge" style="display: none;" onclick="openDealerProfileModal()" title="View Verified Trade Credentials">
+        <span>🏭</span>
+        <div>
+          <div class="firm" id="headerFirmName">Verified Dealer</div>
+          <div class="gstin" id="headerGstin">GST Active</div>
+        </div>
+      </div>
+
+      <!-- User Account -->
+      <button class="header-action-btn" onclick="handleAccountHeaderClick()">
+        <div class="sub" id="userGreeting">Hello, Sign In</div>
+        <div class="main">Account & Lists ▾</div>
+      </button>
+
+      <!-- Returns & Track Order -->
+      <button class="header-action-btn" onclick="openModal('trackOrderModal')">
+        <div class="sub">Returns</div>
+        <div class="main">& Orders</div>
+      </button>
+
+      <!-- Shopping Cart -->
+      <button class="cart-btn" onclick="openModal('cartModal')">
+        <span style="font-size: 1.3rem;">🛒</span>
+        <span class="cart-count" id="cartCountBadge">0</span>
+        <span style="font-weight: 700; font-size: 0.85rem;">Cart</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- 5 Categories Bar -->
+  <section class="categories-strip-bar">
+    <div class="categories-strip-content">
+      <div class="cat-pill-item" id="cat-pill-bottle" onclick="filterCategory('bottle')">
+        <div class="cat-pill-circle"><img src="./assets/normal_plastic_bottle.jpg" alt="Plastic Bottles"></div>
+        <span class="cat-pill-label">1. Plastic Bottles</span>
+      </div>
+      <div class="cat-pill-item" id="cat-pill-diesel" onclick="filterCategory('diesel')">
+        <div class="cat-pill-circle"><img src="./assets/white_jerrycan_hdpe.jpg" alt="Diesel Cans"></div>
+        <span class="cat-pill-label">2. Diesel Cans</span>
+      </div>
+      <div class="cat-pill-item" id="cat-pill-water" onclick="filterCategory('water')">
+        <div class="cat-pill-circle"><img src="./assets/water_camper_tap.jpg" alt="Water Cool Jars"></div>
+        <span class="cat-pill-label">3. Water Cool Jars</span>
+      </div>
+      <div class="cat-pill-item" id="cat-pill-disposable" onclick="filterCategory('disposable')">
+        <div class="cat-pill-circle"><img src="./assets/disposable_food_containers.jpg" alt="Disposable Items"></div>
+        <span class="cat-pill-label">4. Disposable Items</span>
+      </div>
+      <div class="cat-pill-item" id="cat-pill-other" onclick="filterCategory('other')">
+        <div class="cat-pill-circle"><img src="./assets/spin_mop_bucket.jpg" alt="Cleaning & Other"></div>
+        <span class="cat-pill-label">5. Other Cleaning</span>
+      </div>
+      <div class="cat-pill-item" id="cat-pill-all" onclick="filterCategory('all')">
+        <div class="cat-pill-circle" style="background: #0F172A; color: #FFF; font-size: 1.4rem;">📦</div>
+        <span class="cat-pill-label">All Products</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Secondary Subnav -->
+  <nav class="secondary-subnav">
+    <div class="secondary-subnav-content">
+      <a href="javascript:void(0)" class="subnav-link highlight" onclick="filterCategory('all')">☰ All 5 Categories</a>
+      <a href="javascript:void(0)" class="subnav-link" onclick="filterCategory('bottle')">Clear & Threaded Bottles</a>
+      <a href="javascript:void(0)" class="subnav-link" onclick="filterCategory('diesel')">Industrial Jerrycans & Cans</a>
+      <a href="javascript:void(0)" class="subnav-link" onclick="filterCategory('water')">Water Dispensers & Campers</a>
+      <a href="javascript:void(0)" class="subnav-link" onclick="filterCategory('disposable')">Disposable Packaging</a>
+      <a href="javascript:void(0)" class="subnav-link" onclick="filterCategory('other')">Spin Mops & Buckets</a>
+      <a href="javascript:void(0)" class="subnav-link" onclick="openDeliveryPincodeModal()">🚚 Freight & Bilty Hubs</a>
+      <a href="javascript:void(0)" class="subnav-link" onclick="openModal('adminModal')">👑 Store Owner Admin</a>
+    </div>
+  </nav>
+
+  <!-- MAIN BODY -->
+  <main class="main-body-container">
+    <!-- Home Hero Banner -->
+    <section class="home-hero-banner" id="homeHeroBanner">
+      <h2>Factory Direct Plastics & Packaging — Wholesale & Retail</h2>
+      <p>Official Trading Portal for Ramdev Enterprise. Buy single units at transparent retail prices, or unlock direct manufacturer factory rates with verified GSTIN wholesale access.</p>
+      <div class="hero-features-strip">
+        <div class="hero-feat-chip">🏭 Direct Factory Pricing</div>
+        <div class="hero-feat-chip">🚚 Transport Bilty Pallet Booking</div>
+        <div class="hero-feat-chip">📦 100% Leak-Proof & Food Grade HDPE</div>
+        <div class="hero-feat-chip">📄 GST Tax Invoice with Chapter 3923 HSN</div>
+      </div>
+    </section>
+
+    <!-- 4-Tiles Showcase Grid -->
+    <section class="amazon-tiles-grid" id="homepageTilesSection">
+      <!-- Tile 1 -->
+      <div class="tile-card">
+        <h3>1. Plastic Bottles Collection</h3>
+        <div class="tile-quad-grid">
+          <div class="quad-item" onclick="openCategoryWithSub('bottle', 'normal')">
+            <div class="quad-img-box"><img src="./assets/normal_plastic_bottle.jpg" alt="Standard Bottle"></div>
+            <span class="quad-label">Standard Bottle</span>
+          </div>
+          <div class="quad-item" onclick="openCategoryWithSub('bottle', 'threading')">
+            <div class="quad-img-box"><img src="./assets/threading_bottle.jpg" alt="Threaded Bottle"></div>
+            <span class="quad-label">Threaded Bottle</span>
+          </div>
+          <div class="quad-item" onclick="openCategoryWithSub('bottle', 'nal')">
+            <div class="quad-img-box"><img src="./assets/nal_wali_bottle.jpg" alt="Tap Dispenser Bottle"></div>
+            <span class="quad-label">Tap Dispenser Bottle</span>
+          </div>
+          <div class="quad-item" onclick="filterCategory('bottle')">
+            <div class="quad-img-box"><span style="font-size: 1.8rem;">📦</span></div>
+            <span class="quad-label">All Bottles</span>
+          </div>
+        </div>
+        <a href="javascript:void(0)" class="tile-see-more" onclick="filterCategory('bottle')">Explore all Plastic Bottles ›</a>
+      </div>
+
+      <!-- Tile 2 -->
+      <div class="tile-card">
+        <h3>2. Diesel & Industrial Cans</h3>
+        <div class="tile-quad-grid">
+          <div class="quad-item" onclick="filterCategory('diesel')">
+            <div class="quad-img-box"><img src="./assets/white_jerrycan_hdpe.jpg" alt="White HDPE Can"></div>
+            <span class="quad-label">HDPE White Jerrycan</span>
+          </div>
+          <div class="quad-item" onclick="filterCategory('diesel')">
+            <div class="quad-img-box"><img src="./assets/blue_diesel_jerrycan.jpg" alt="20L Heavy Diesel Can"></div>
+            <span class="quad-label">20L Diesel Can</span>
+          </div>
+          <div class="quad-item" onclick="filterCategory('diesel')">
+            <div class="quad-img-box"><span style="font-size: 1.8rem;">⛽</span></div>
+            <span class="quad-label">Chemical Safe</span>
+          </div>
+          <div class="quad-item" onclick="filterCategory('diesel')">
+            <div class="quad-img-box"><span style="font-size: 1.8rem;">🔒</span></div>
+            <span class="quad-label">Tamper Seals</span>
+          </div>
+        </div>
+        <a href="javascript:void(0)" class="tile-see-more" onclick="filterCategory('diesel')">Explore Industrial Cans ›</a>
+      </div>
+
+      <!-- Tile 3 -->
+      <div class="tile-card">
+        <h3>3. Water Cool Jars & Campers</h3>
+        <div class="tile-quad-grid">
+          <div class="quad-item" onclick="filterCategory('water')">
+            <div class="quad-img-box"><img src="./assets/water_camper_tap.jpg" alt="Amber Water Camper"></div>
+            <span class="quad-label">Amber Water Camper</span>
+          </div>
+          <div class="quad-item" onclick="filterCategory('water')">
+            <div class="quad-img-box"><img src="./assets/nal_wali_bottle.jpg" alt="Dispenser Bottle"></div>
+            <span class="quad-label">Compact Tap Camper</span>
+          </div>
+          <div class="quad-item" onclick="filterCategory('water')">
+            <div class="quad-img-box"><span style="font-size: 1.8rem;">🚰</span></div>
+            <span class="quad-label">Push-Tap Design</span>
+          </div>
+          <div class="quad-item" onclick="filterCategory('water')">
+            <div class="quad-img-box"><span style="font-size: 1.8rem;">❄️</span></div>
+            <span class="quad-label">Cooling Insulation</span>
+          </div>
+        </div>
+        <a href="javascript:void(0)" class="tile-see-more" onclick="filterCategory('water')">Explore Water Cool Jars ›</a>
+      </div>
+
+      <!-- Tile 4 -->
+      <div class="tile-card">
+        <h3>4. Disposable & Cleaning Range</h3>
+        <div class="tile-quad-grid">
+          <div class="quad-item" onclick="filterCategory('disposable')">
+            <div class="quad-img-box"><img src="./assets/disposable_food_containers.jpg" alt="Disposable Food Boxes"></div>
+            <span class="quad-label">Meal Containers</span>
+          </div>
+          <div class="quad-item" onclick="filterCategory('other')">
+            <div class="quad-img-box"><img src="./assets/spin_mop_bucket.jpg" alt="Spin Mop Bucket"></div>
+            <span class="quad-label">360° Spin Mop</span>
+          </div>
+          <div class="quad-item" onclick="filterCategory('disposable')">
+            <div class="quad-img-box"><span style="font-size: 1.8rem;">🍽️</span></div>
+            <span class="quad-label">Plastic Glasses</span>
+          </div>
+          <div class="quad-item" onclick="filterCategory('other')">
+            <div class="quad-img-box"><span style="font-size: 1.8rem;">🧹</span></div>
+            <span class="quad-label">Microfiber Heads</span>
+          </div>
+        </div>
+        <a href="javascript:void(0)" class="tile-see-more" onclick="filterCategory('all')">View All Wholesale Lots ›</a>
+      </div>
+    </section>
+
+    <!-- Dedicated Category Products View -->
+    <section class="category-products-view" id="categoryProductsView">
+      <div class="category-top-nav-bar">
+        <button class="btn-back-home" onclick="showHomePage()">← Back to Homepage</button>
+        <div class="breadcrumbs-box">
+          Home › <span id="breadcrumbCurrentCat">1. Plastic Bottles Range</span>
+        </div>
+      </div>
+
+      <div class="catalog-section-bar" id="productsCatalogSection">
+        <div>
+          <h2 id="catalogTitleHeading">📦 1. Plastic Bottles Range</h2>
+          <p class="catalog-subtext" id="catalogSubtext">
+            Showing Standard Bottle, Threaded Bottle & Tap Dispenser Bottle with photo, price & MOQ.
+          </p>
+        </div>
+
+        <!-- Sub-Filter Chips for Category 1 -->
+        <div class="bottle-subcat-chips" id="bottleSubcatChips">
+          <button class="chip-btn active" id="chip-all" onclick="filterBottleSub('all')">All Bottles</button>
+          <button class="chip-btn" id="chip-normal" onclick="filterBottleSub('normal')">Standard Bottle</button>
+          <button class="chip-btn" id="chip-threading" onclick="filterBottleSub('threading')">Threaded Bottle</button>
+          <button class="chip-btn" id="chip-nal" onclick="filterBottleSub('nal')">Tap Dispenser Bottle</button>
+        </div>
+      </div>
+
+      <!-- Catalog Toolbar -->
+      <div class="catalog-toolbar-bar" id="catalogToolbarBar">
+        <div class="catalog-toolbar-left">
+          <span class="catalog-count-pill" id="catalogResultCountBadge">Showing 8 Products</span>
+          <button class="stock-filter-btn" id="filterInStockBtn" onclick="toggleInStockFilter()">
+            <span>📦</span> Only In-Stock Items
+          </button>
+        </div>
+        <div class="catalog-sort-box">
+          <label for="catalogSortSelect">Sort By:</label>
+          <select id="catalogSortSelect" class="catalog-sort-select" onchange="sortCatalog(this.value)">
+            <option value="featured">Featured / Best Match</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+            <option value="rating">Highest Customer Rating</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Dynamic Product Cards Grid -->
+      <div class="product-grid" id="productCardGrid">
+        <!-- Rendered dynamically by JavaScript -->
+      </div>
+    </section>
+  </main>
+
+  <!-- MODALS -->
+
+  <!-- 0. Initial Entry Gateway Modal -->
+  <div class="modal-overlay" id="entryGatewayModal">
+    <div class="modal-card modal-card-md">
+      <div class="modal-head">
+        <h3>Welcome to Ramdev Enterprise</h3>
+        <button class="modal-close" onclick="closeGatewayModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 0.9rem; color: #475569; text-align: center; margin-bottom: 16px;">
+          Choose how you would like to shop today:
+        </p>
+        <div class="portal-choice-grid">
+          <div class="portal-card-opt" onclick="selectPortal('retail')">
+            <span style="font-size: 2.2rem;">🛍️</span>
+            <h4>Retail Customer</h4>
+            <p>Single piece purchases (MOQ: 1 Pc). Instant courier doorstep delivery across India.</p>
+            <button class="btn-buy" style="width: 100%; margin-top: 12px;" onclick="event.stopPropagation(); selectPortal('retail')">Shop Retail Mode</button>
+          </div>
+          <div class="portal-card-opt" onclick="selectPortal('wholesale')">
+            <span style="font-size: 2.2rem;">🏭</span>
+            <h4>Wholesale Dealer</h4>
+            <p>Direct factory bulk lot rates. Transport bilty pallet booking (Requires GSTIN / Trade proof).</p>
+            <button class="btn-portal-blue" style="width: 100%; margin-top: 12px;" onclick="event.stopPropagation(); selectPortal('wholesale')">Verify & Unlock Wholesale</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 0.1 Wholesale Dealer Self-Verification Modal -->
+  <div class="modal-overlay" id="dealerVerificationModal">
+    <div class="modal-card modal-card-md">
+      <div class="modal-head">
+        <h3>🏭 Wholesale Trade Account Verification</h3>
+        <button class="modal-close" onclick="closeModal('dealerVerificationModal')">×</button>
+      </div>
+      <div class="modal-body">
+        <!-- Step 1: Registration -->
+        <div id="dealerStep1">
+          <div style="background: #F8FAFC; border: 1px solid #CBD5E1; border-radius: 6px; padding: 10px; margin-bottom: 12px; font-size: 0.82rem; color: #334155;">
+            Wholesale rates are strictly reserved for commercial shops, dealers & industrial users. Enter your GSTIN or trade proof to unlock wholesale pricing.
+          </div>
+          <form onsubmit="event.preventDefault(); submitDealerVerificationStep1();">
+            <div class="form-group">
+              <label>Business / Firm Name *</label>
+              <input type="text" id="dealerFirmInput" class="form-control" placeholder="e.g. Shree Ram Plastics & Trade" required>
+            </div>
+            <div class="form-group">
+              <label>Business Category *</label>
+              <select id="dealerCategorySelect" class="form-control">
+                <option value="Plastic Ware Retailer">Plastic Ware Retail Shop</option>
+                <option value="Industrial Packaging Unit">Industrial Packaging Unit</option>
+                <option value="Hardware & Tools Distributor">Hardware & Tools Distributor</option>
+                <option value="Chemical & Oil Mill">Chemical & Oil Mill</option>
+                <option value="General Wholesaler">General Wholesaler / Reseller</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Trade Proof Type *</label>
+              <select id="dealerProofSelect" class="form-control">
+                <option value="GSTIN Active Certificate">GSTIN Active Certificate</option>
+                <option value="Udyam MSME Registration">Udyam MSME Registration</option>
+                <option value="Shop & Establishment Trade License">Shop & Establishment License</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>GSTIN Number *</label>
+              <input type="text" id="dealerGstinInput" class="form-control" placeholder="e.g. 08AABCR1234F1Z8" maxlength="15" required style="text-transform: uppercase;">
+            </div>
+            <div class="form-group">
+              <label>Contact Person Name *</label>
+              <input type="text" id="dealerContactPersonInput" class="form-control" placeholder="e.g. Rajesh Kumar" required>
+            </div>
+            <div class="form-group">
+              <label>10-Digit Mobile Number (For OTP Verification) *</label>
+              <input type="tel" id="dealerMobileInput" class="form-control" placeholder="e.g. 9829012345" maxlength="10" required>
+            </div>
+            <div class="form-group">
+              <label>Godown / Shop City *</label>
+              <input type="text" id="dealerCityInput" class="form-control" placeholder="e.g. Jodhpur, Rajasthan" required>
+            </div>
+            <div style="display: flex; gap: 8px; margin-top: 14px;">
+              <button type="button" class="btn-specs" style="flex: 1;" onclick="autoFillSampleGstin()">⚡ Auto-Fill Sample GSTIN</button>
+              <button type="submit" class="btn-buy" style="flex: 1;">Continue to OTP Verification →</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Step 2: OTP Verification -->
+        <div id="dealerStep2" style="display: none; text-align: center;">
+          <span style="font-size: 2.2rem;">📲</span>
+          <h4 style="font-size: 1.1rem; margin: 6px 0;">Enter Trade Verification Code</h4>
+          <p style="font-size: 0.85rem; color: #64748B; margin-bottom: 14px;">
+            A 4-digit code was sent to <strong id="otpMobileDisplay">+91 9829012345</strong>:
+          </p>
+          <input type="text" id="otpBox" class="form-control" placeholder="Enter 4-digit code (e.g. 5588)" maxlength="4" style="max-width: 220px; margin: 0 auto 12px; text-align: center; font-size: 1.2rem; letter-spacing: 4px; font-weight: 800;">
+          <div style="font-size: 0.78rem; color: #64748B; margin-bottom: 14px;">
+            Demo verification code: <span style="background: #F1F5F9; padding: 2px 6px; border-radius: 4px; font-weight: 800; cursor: pointer;" onclick="document.getElementById('otpBox').value = '5588'">5588</span>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button type="button" class="btn-specs" style="flex: 1;" onclick="document.getElementById('dealerStep2').style.display='none'; document.getElementById('dealerStep1').style.display='block';">← Back</button>
+            <button type="button" class="btn-buy" style="flex: 1;" onclick="verifyDealerOtp()">Verify Code & Unlock</button>
+          </div>
+        </div>
+
+        <!-- Step 3: Success -->
+        <div id="dealerStep3" style="display: none; text-align: center; padding: 14px 0;">
+          <span style="font-size: 2.5rem;">🎉</span>
+          <h4 style="font-size: 1.2rem; color: #166534; margin: 8px 0;">Verified Wholesale Dealer Account Active!</h4>
+          <p style="font-size: 0.85rem; color: #475569; margin-bottom: 16px;">
+            Congratulations, <strong id="successFirmName">Shree Ram Plastics</strong>! Your account has been verified. Factory wholesale lot pricing and transport dispatch are now active.
+          </p>
+          <button type="button" class="btn-portal-blue" style="width: 100%; padding: 10px;" onclick="finishDealerVerification()">Start Browsing Wholesale Catalog →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 0.2 Verified Dealer Profile Modal -->
+  <div class="modal-overlay" id="dealerProfileModal">
+    <div class="modal-card modal-card-sm">
+      <div class="modal-head">
+        <h3>🏭 Verified Trade Profile</h3>
+        <button class="modal-close" onclick="closeModal('dealerProfileModal')">×</button>
+      </div>
+      <div class="modal-body">
+        <div style="background: #ECFDF5; border: 1px solid #A7F3D0; border-radius: 8px; padding: 14px; margin-bottom: 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <strong id="profileFirmName" style="font-size: 1rem; color: #065F46;">Shree Ram Plastics & Trade</strong>
+            <span style="background: #10B981; color: #FFF; font-size: 0.7rem; font-weight: 800; padding: 2px 6px; border-radius: 4px;">ACTIVE</span>
+          </div>
+          <div style="font-size: 0.8rem; color: #047857; line-height: 1.6;">
+            <div>Category: <strong id="profileCategory">Plastic Ware Retailer</strong></div>
+            <div>GSTIN: <strong id="profileGstin" style="font-family: monospace;">08AABCR1234F1Z8</strong></div>
+            <div>Authorized Person: <strong id="profilePerson">Rajesh Kumar</strong></div>
+            <div>Registered Mobile: <strong id="profilePhone">+91 9829012345</strong></div>
+            <div>Logistics Hub: <strong id="profileCity">Jodhpur, Rajasthan</strong></div>
+          </div>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn-specs" style="flex: 1;" onclick="requestSwitchMode('retail'); closeModal('dealerProfileModal');">Switch to Retail</button>
+          <button class="btn-specs" style="flex: 1; color: #DC2626; border-color: #FCA5A5;" onclick="logoutDealerAccount()">Disconnect Dealer ID</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 0.3 Interactive Delivery Pincode & Freight Modal -->
+  <div class="modal-overlay" id="deliveryPincodeModal">
+    <div class="modal-card modal-card-sm">
+      <div class="modal-head">
+        <h3>📍 Check Delivery Pincode & Freight Logistics</h3>
+        <button class="modal-close" onclick="closeModal('deliveryPincodeModal')">×</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 0.85rem; color: #64748B; margin-bottom: 12px;">
+          Enter your 6-digit Indian PIN code to check courier transit days and wholesale transport waybill hubs:
+        </p>
+        <div class="pincode-input-group">
+          <input type="text" id="pincodeInput" maxlength="6" class="form-control" placeholder="e.g. 342001" onkeyup="if(event.key === 'Enter') checkPincodeDelivery()">
+          <button class="btn-buy" style="padding: 0 18px; font-weight: 700;" onclick="checkPincodeDelivery()">Check</button>
+        </div>
+
+        <div style="font-size: 0.78rem; font-weight: 700; color: #64748B; margin-bottom: 6px;">Popular Commercial Hubs:</div>
+        <div class="city-chip-list">
+          <span class="city-chip" onclick="quickSelectPincode('342001', 'Jodhpur (Rajasthan)')">Jodhpur 342001</span>
+          <span class="city-chip" onclick="quickSelectPincode('302001', 'Jaipur (Rajasthan)')">Jaipur 302001</span>
+          <span class="city-chip" onclick="quickSelectPincode('110001', 'Delhi NCR')">Delhi 110001</span>
+          <span class="city-chip" onclick="quickSelectPincode('380001', 'Ahmedabad (Gujarat)')">Ahmedabad 380001</span>
+          <span class="city-chip" onclick="quickSelectPincode('400001', 'Mumbai (Maharashtra)')">Mumbai 400001</span>
+        </div>
+
+        <div id="pincodeResultBox" class="pincode-result-card" style="display: none;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <strong id="pincodeLocName" style="color: #0F172A; font-size: 0.95rem;">Jodhpur (Rajasthan)</strong>
+            <span style="background: #DCFCE7; color: #166534; font-size: 0.72rem; font-weight: 800; padding: 2px 8px; border-radius: 20px;">✔ DELIVERABLE</span>
+          </div>
+          <div style="font-size: 0.8rem; color: #475569; line-height: 1.6;">
+            <div>🚚 <strong>Retail Courier:</strong> 2–3 Business Days Doorstep Delivery.</div>
+            <div>🏭 <strong>Wholesale Transport Bilty:</strong> Jaipur Golden / TCI Express Transport Nagar Hub.</div>
+            <div>📦 <strong>Freight Cost:</strong> Standard local/interstate transport bilty on actuals.</div>
+          </div>
+          <button class="btn-portal-blue" style="width: 100%; margin-top: 12px; font-size: 0.82rem;" onclick="savePincodeSelection()">Set As Active Delivery Location</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 0.4 Product Technical Specifications & Quick View Modal -->
+  <div class="modal-overlay" id="productQuickViewModal">
+    <div class="modal-card modal-card-lg">
+      <div class="modal-head">
+        <div>
+          <span id="quickViewCatTag" style="font-size: 0.72rem; color: #38BDF8; font-weight: 700; text-transform: uppercase;">Category</span>
+          <h3 id="quickViewTitle" style="color: #FFF; font-size: 1.15rem; margin-top: 2px;">Product Technical Specifications</h3>
+        </div>
+        <button class="modal-close" onclick="closeModal('productQuickViewModal')">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="specs-modal-layout">
+          <!-- Left: Image & Badges -->
+          <div class="specs-img-display">
+            <img src="./assets/normal_plastic_bottle.jpg" id="quickViewImg" alt="Product Specification View">
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 8px;">
+              <span id="quickViewStockBadge" class="badge-stock in-stock" style="position: static;">● In Stock</span>
+              <span id="quickViewMoqBadge" style="background: #FEF3C7; color: #92400E; font-size: 0.72rem; font-weight: 800; padding: 2px 8px; border-radius: 4px;">MOQ: 1 Pc</span>
+            </div>
+            <button class="btn-wa" id="quickViewWaBtn" style="width: 100%; margin-top: 14px;">💬 Direct WhatsApp Inquiry</button>
+          </div>
+
+          <!-- Right: Details & Specs -->
+          <div>
+            <div id="quickViewPriceBox" style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 12px; margin-bottom: 14px;"></div>
+            <h4 style="font-size: 0.9rem; font-weight: 800; color: #0F172A; margin-bottom: 6px;">Technical Product Specifications:</h4>
+            <table class="specs-table" id="quickViewSpecsTable"></table>
+            <h4 style="font-size: 0.9rem; font-weight: 800; color: #0F172A; margin-top: 12px; margin-bottom: 6px;">Wholesale Volume Slabs & Discounts:</h4>
+            <table class="bulk-slabs-table" id="quickViewSlabsTable"></table>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px;">
+              <button class="btn-cart" id="quickViewAddCartBtn" style="padding: 10px;">Add to Cart</button>
+              <button class="btn-buy" id="quickViewBuyNowBtn" style="padding: 10px;">Buy Now</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 0.5 GST Proforma Invoice / Quotation Modal -->
+  <div class="modal-overlay" id="proformaInvoiceModal">
+    <div class="modal-card modal-card-lg">
+      <div class="modal-head no-print">
+        <h3>📄 GST Tax Proforma Invoice / Quotation</h3>
+        <button class="modal-close" onclick="closeModal('proformaInvoiceModal')">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="invoice-paper" id="printableInvoiceArea">
+          <div class="invoice-title-strip">
+            <h3>RAMDEV ENTERPRISE</h3>
+            <p style="font-size: 0.8rem; color: #475569;">Wholesale Plastic Packaging, Cans, Jars & Household Ware</p>
+            <p style="font-size: 0.78rem; font-weight: 700; color: #0284C7; margin-top: 2px;">
+              GSTIN: 08AABCR1234F1Z8 • State Code: 08 (Rajasthan) • HSN Chapter: 3923
+            </p>
+          </div>
+          <div class="invoice-header-grid">
+            <div>
+              <div style="font-size: 0.72rem; text-transform: uppercase; color: #64748B; font-weight: 800;">Billed & Shipped To:</div>
+              <strong id="invPartyName" style="font-size: 0.95rem; color: #0F172A;">Customer / Trading Firm</strong>
+              <div id="invPartyGstin" style="font-size: 0.8rem; color: #475569;">GSTIN: Unregistered Consumer</div>
+              <div id="invPartyContact" style="font-size: 0.8rem; color: #475569;">Mobile: +91 98XXXXXXXX</div>
+              <div id="invPartyCity" style="font-size: 0.8rem; color: #475569;">Destination: All India Transport</div>
+            </div>
+            <div>
+              <div style="font-size: 0.72rem; text-transform: uppercase; color: #64748B; font-weight: 800;">Proforma Details:</div>
+              <div>Invoice No: <strong id="invNumber">#RE-PI-2026-904</strong></div>
+              <div>Date: <strong id="invDate">14/10/2026</strong></div>
+              <div>Portal Channel: <strong id="invPortalType">Wholesale Trade</strong></div>
+              <div>Logistics: <strong>Pan-India Transport (Freight Bilty)</strong></div>
+            </div>
+          </div>
+          <table class="invoice-items-table">
+            <thead>
+              <tr>
+                <th style="width: 35px;">#</th>
+                <th>Item Description</th>
+                <th style="width: 80px;">HSN Code</th>
+                <th style="width: 65px; text-align: center;">Qty</th>
+                <th style="width: 85px; text-align: right;">Rate (₹)</th>
+                <th style="width: 95px; text-align: right;">Amount (₹)</th>
+              </tr>
+            </thead>
+            <tbody id="invoiceItemsTableBody"></tbody>
+          </table>
+          <div style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
+            <div style="width: 320px; font-size: 0.85rem;">
+              <div style="display: flex; justify-content: space-between; padding: 4px 0;">
+                <span>Taxable Value (Base):</span>
+                <strong id="invBaseTotal">₹0</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding: 4px 0; color: #64748B;">
+                <span>CGST (9%):</span>
+                <span id="invCgst">₹0</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding: 4px 0; color: #64748B;">
+                <span>SGST (9%):</span>
+                <span id="invSgst">₹0</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding: 8px 0; border-top: 2px solid #0F172A; font-size: 1rem; font-weight: 800;">
+                <span>Grand Total (Incl. GST):</span>
+                <span id="invGrandTotal">₹0</span>
+              </div>
+            </div>
+          </div>
+          <div class="invoice-stamp-box">
+            <div style="font-size: 0.75rem; color: #64748B; max-width: 420px;">
+              <strong>Terms:</strong> Goods once sold are packed in master industrial cartons. Transport freight payable at destination delivery point.
+            </div>
+            <div style="text-align: center;">
+              <div style="font-size: 0.8rem; font-weight: 800; color: #0F172A; margin-bottom: 24px;">For Ramdev Enterprise</div>
+              <div style="font-size: 0.72rem; color: #64748B; border-top: 1px dashed #94A3B8; padding-top: 4px;">Authorized Signatory & Stamp</div>
+            </div>
+          </div>
+        </div>
+        <div class="no-print" style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px;">
+          <button class="btn-cart" style="padding: 10px 18px;" onclick="window.print()">🖨️ Print / Save as PDF</button>
+          <button class="btn-wa" style="padding: 10px 18px;" onclick="shareInvoiceWhatsApp()">💬 Forward via WhatsApp</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1. Live Dynamic Order Tracking Modal -->
+  <div class="modal-overlay" id="trackOrderModal">
+    <div class="modal-card modal-card-md">
+      <div class="modal-head">
+        <h3>🚚 Live Order & Consignment Tracker</h3>
+        <button class="modal-close" onclick="closeModal('trackOrderModal')">×</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 0.85rem; color: #64748B; margin-bottom: 12px;">
+          Enter your Order ID (e.g. #RE-89241 or your recent order) to track consignment dispatch:
+        </p>
+        <div style="display: flex; gap: 8px; margin-bottom: 14px;">
+          <input type="text" id="trackInput" class="form-control" placeholder="Enter Order ID (e.g. #RE-89241)" value="#RE-89241" style="font-weight: 700; text-transform: uppercase;" onkeyup="if(event.key === 'Enter') performOrderTrack()">
+          <button class="btn-buy" style="padding: 0 20px; font-weight: 700;" onclick="performOrderTrack()">Track</button>
+        </div>
+        <div id="recentOrdersQuickTrack" style="margin-bottom: 14px; font-size: 0.78rem;"></div>
+
+        <div id="trackResultContainer" class="tracking-timeline-box">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+            <div>
+              <span style="font-size: 0.75rem; color: #64748B;">Tracking Order:</span>
+              <strong id="trackDisplayOrderId" style="font-size: 1.05rem; color: #0F172A; margin-left: 4px;">#RE-89241</strong>
+            </div>
+            <span id="trackDisplayStatusBadge" style="background: #ECFDF5; color: #047857; font-size: 0.75rem; font-weight: 800; padding: 3px 10px; border-radius: 20px;">● IN TRANSPORT</span>
+          </div>
+          <div id="trackDisplayParty" style="font-size: 0.8rem; color: #475569; margin-bottom: 14px;">Customer: Shree Ram Plastics (Jodhpur)</div>
+
+          <!-- 4-Step Visual Tracker -->
+          <div class="timeline-steps">
+            <div class="timeline-step-item done" id="stepPlaced">
+              <div class="timeline-step-icon">✔</div>
+              <span class="timeline-step-label">Order Placed</span>
+            </div>
+            <div class="timeline-step-item done" id="stepPacked">
+              <div class="timeline-step-icon">✔</div>
+              <span class="timeline-step-label">Packed at Mill</span>
+            </div>
+            <div class="timeline-step-item active" id="stepDispatched">
+              <div class="timeline-step-icon">🚚</div>
+              <span class="timeline-step-label">In Transport</span>
+            </div>
+            <div class="timeline-step-item" id="stepDelivered">
+              <div class="timeline-step-icon">🏁</div>
+              <span class="timeline-step-label">Delivered</span>
+            </div>
+          </div>
+
+          <div style="background: #FFF; border: 1px solid #E2E8F0; border-radius: 6px; padding: 12px; margin-top: 14px; font-size: 0.8rem; color: #334155; line-height: 1.6;">
+            <div>Logistics Partner: <strong id="trackCarrier">Jaipur Golden Transport Co.</strong></div>
+            <div>Waybill / LR Number: <strong id="trackWaybill" style="color: #0284C7;">#JP-49208</strong></div>
+            <div id="trackConsignmentSummary" style="color: #64748B;">Consignment: 50x Tap Dispenser Bottles + 20x 20L Diesel Jerrycans</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Customer Complaint Modal -->
+  <div class="modal-overlay" id="complaintModal">
+    <div class="modal-card modal-card-sm">
+      <div class="modal-head">
+        <h3>⚠️ File A Customer Support Ticket</h3>
+        <button class="modal-close" onclick="closeModal('complaintModal')">×</button>
+      </div>
+      <div class="modal-body">
+        <form onsubmit="event.preventDefault(); alert('Complaint submitted! Support team will contact you shortly.'); closeModal('complaintModal');">
+          <div class="form-group">
+            <label>Customer / Firm Name *</label>
+            <input type="text" class="form-control" placeholder="Enter name" required>
+          </div>
+          <div class="form-group">
+            <label>Mobile Number *</label>
+            <input type="tel" class="form-control" placeholder="Enter 10-digit mobile" maxlength="10" required>
+          </div>
+          <div class="form-group">
+            <label>Order ID (Optional)</label>
+            <input type="text" class="form-control" placeholder="e.g. #RE-89241">
+          </div>
+          <div class="form-group">
+            <label>Issue Category *</label>
+            <select class="form-control">
+              <option>Transit Damage / Broken Product</option>
+              <option>Missing Tap / Cap Seal in Carton</option>
+              <option>Delayed Transport Bilty Delivery</option>
+              <option>Billing / GST Invoice Correction</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Describe the Problem *</label>
+            <textarea class="form-control" rows="3" placeholder="Please describe the issue..." required></textarea>
+          </div>
+          <button type="submit" class="btn-buy" style="width: 100%; padding: 10px;">Submit Ticket</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Auth & Onboarding Modal (Phone & Email OTP Verification) -->
+  <div class="modal-overlay" id="authModal">
+    <div class="modal-card modal-card-md">
+      <div class="modal-head">
+        <h3 id="authTitle">🔑 Sign In</h3>
+        <button class="modal-close" onclick="closeModal('authModal')">×</button>
+      </div>
+      <div class="modal-body">
+        <!-- Sign In View -->
+        <div id="loginView">
+          <div id="loginErrorAlert" class="validation-hint error" style="display: none; margin-bottom: 10px;"></div>
+          <div class="form-group">
+            <label>Registered Mobile Number or Email *</label>
+            <input type="text" id="loginInput" class="form-control" placeholder="Enter 10-digit mobile or email" oninput="validateLoginInputLive(this)">
+            <div id="loginFormatHint" class="validation-hint"></div>
+          </div>
+          <div class="form-group">
+            <label>Password *</label>
+            <input type="password" id="loginPass" class="form-control" placeholder="Enter password">
+          </div>
+          <button class="btn-buy" style="width: 100%; padding: 10px; margin-bottom: 10px;" onclick="doLogin()">Sign In</button>
+          <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 14px;">
+            <a href="javascript:void(0)" class="tile-see-more" onclick="quickFillDemoLogin()">⚡ Quick Fill Demo Login</a>
+            <a href="javascript:void(0)" class="tile-see-more" onclick="alert('Password reset sent to registered contact.')">Forgot Password?</a>
+          </div>
+          <div style="border-top: 1px solid #E2E8F0; padding-top: 12px; text-align: center; font-size: 0.82rem;">
+            New to Ramdev Enterprise? <a href="javascript:void(0)" class="tile-see-more" onclick="toggleAuth(true)">Create Account & Verify OTP ›</a>
+          </div>
+        </div>
+
+        <!-- Sign Up View -->
+        <div id="signupView" style="display: none;">
+          <form onsubmit="event.preventDefault(); startSignupOtpVerification();">
+            <div class="form-group">
+              <label>Full Name *</label>
+              <input type="text" id="regName" class="form-control" placeholder="e.g. Ramesh Sharma" required>
+            </div>
+            <div class="form-group">
+              <label>10-Digit Mobile Number *</label>
+              <input type="tel" id="regPhone" class="form-control" placeholder="e.g. 9829012345" maxlength="10" required oninput="validatePhoneLive(this, 'phoneErrorHint')">
+              <div id="phoneErrorHint" class="validation-hint"></div>
+            </div>
+            <div class="form-group">
+              <label>Email Address *</label>
+              <input type="email" id="regEmail" class="form-control" placeholder="e.g. ramesh.sharma@example.com" required oninput="validateEmailLive(this, 'emailErrorHint')">
+              <div id="emailErrorHint" class="validation-hint"></div>
+            </div>
+            <div class="form-group">
+              <label>Password (At least 6 characters) *</label>
+              <input type="password" id="regPass" class="form-control" placeholder="Create password" required minlength="6">
+            </div>
+            <div class="form-group">
+              <label>Default Shopping Portal</label>
+              <select id="regPortalChoice" class="form-control">
+                <option value="retail">Retail Customer (1 Pc Orders)</option>
+                <option value="wholesale">Wholesale Dealer (Bulk Lots)</option>
+              </select>
+            </div>
+            <div style="display: flex; gap: 8px; margin-top: 14px;">
+              <button type="button" class="btn-specs" style="flex: 1;" onclick="autoFillValidSignupData()">⚡ Auto-Fill Test Data</button>
+              <button type="submit" class="btn-buy" style="flex: 1;">Verify Mobile & Email →</button>
+            </div>
+          </form>
+          <div style="border-top: 1px solid #E2E8F0; padding-top: 12px; margin-top: 12px; text-align: center; font-size: 0.82rem;">
+            Already have an account? <a href="javascript:void(0)" class="tile-see-more" onclick="toggleAuth(false)">Sign In ›</a>
+          </div>
+        </div>
+
+        <!-- Dual OTP Verification View -->
+        <div id="dualOtpView" style="display: none;">
+          <p style="font-size: 0.85rem; color: #475569; margin-bottom: 14px;">
+            Enter the 4-digit verification codes sent to your mobile and email:
+          </p>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px;">
+            <div style="background: #F8FAFC; border: 1px solid #CBD5E1; border-radius: 6px; padding: 10px;">
+              <div style="font-size: 0.75rem; font-weight: 700; color: #64748B;">Mobile OTP (<span id="verifyMobileText">+91 9829012345</span>)</div>
+              <input type="text" id="signupMobileOtp" class="form-control" maxlength="4" placeholder="4819" style="text-align: center; font-size: 1.1rem; font-weight: 800; letter-spacing: 2px; margin-top: 6px;">
+              <div id="mobileOtpError" class="validation-hint error"></div>
+            </div>
+            <div style="background: #F8FAFC; border: 1px solid #CBD5E1; border-radius: 6px; padding: 10px;">
+              <div style="font-size: 0.75rem; font-weight: 700; color: #64748B;">Email OTP (<span id="verifyEmailText">email@example.com</span>)</div>
+              <input type="text" id="signupEmailOtp" class="form-control" maxlength="4" placeholder="9352" style="text-align: center; font-size: 1.1rem; font-weight: 800; letter-spacing: 2px; margin-top: 6px;">
+              <div id="emailOtpError" class="validation-hint error"></div>
+            </div>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button type="button" class="btn-specs" style="flex: 1;" onclick="autoFillBothOtps()">⚡ Auto-Fill OTPs (4819 / 9352)</button>
+            <button type="button" class="btn-buy" style="flex: 1;" onclick="verifySignupOtps()">Verify Both OTPs</button>
+          </div>
+        </div>
+
+        <!-- Verified Success View -->
+        <div id="authSuccessView" style="display: none; text-align: center; padding: 14px 0;">
+          <span style="font-size: 2.5rem;">🎉</span>
+          <h4 style="font-size: 1.15rem; color: #166534; margin: 8px 0;">Account Verified Successfully!</h4>
+          <p style="font-size: 0.85rem; color: #475569; margin-bottom: 16px;">
+            Welcome, <strong id="authSuccessUserName">Ramesh Sharma</strong>. Your mobile and email have been verified.
+          </p>
+          <button type="button" class="btn-portal-blue" style="width: 100%; padding: 10px;" onclick="finishSignupAccess()">Continue to Storefront →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3.5 User Account Profile Modal -->
+  <div class="modal-overlay" id="userAccountModal">
+    <div class="modal-card modal-card-sm">
+      <div class="modal-head">
+        <h3>👤 Customer Profile</h3>
+        <button class="modal-close" onclick="closeModal('userAccountModal')">×</button>
+      </div>
+      <div class="modal-body">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+          <div id="userInitialChar" style="width: 48px; height: 48px; border-radius: 50%; background: #2563EB; color: #FFF; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; font-weight: 800;">U</div>
+          <div>
+            <h4 id="userAccName" style="font-size: 1.05rem; font-weight: 800; color: #0F172A;">Ramesh Sharma</h4>
+            <span style="background: #DCFCE7; color: #166534; font-size: 0.72rem; font-weight: 800; padding: 2px 6px; border-radius: 4px;">✔ OTP Verified Customer</span>
+          </div>
+        </div>
+        <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 12px; font-size: 0.82rem; line-height: 1.6; margin-bottom: 14px;">
+          <div>Mobile: <strong id="userAccPhone">+91 9829012345</strong></div>
+          <div>Email: <strong id="userAccEmail">ramesh.sharma@example.com</strong></div>
+          <div>Portal Mode: <strong id="userAccPortal">Retail (1 Pc Orders)</strong></div>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn-specs" style="flex: 1;" onclick="closeModal('userAccountModal'); openModal('trackOrderModal');">🚚 Track Past Orders</button>
+          <button class="btn-specs" style="flex: 1; color: #DC2626; border-color: #FCA5A5;" onclick="logoutUser()">Sign Out</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Shopping Cart Modal -->
+  <div class="modal-overlay" id="cartModal">
+    <div class="modal-card modal-card-md">
+      <div class="modal-head">
+        <h3>🛒 Shopping Cart & Order Checkout</h3>
+        <button class="modal-close" onclick="closeModal('cartModal')">×</button>
+      </div>
+      <div class="modal-body">
+        <div id="cartItemList">
+          <p style="text-align: center; color: #64748B; padding: 20px;">Your cart is empty.</p>
+        </div>
+
+        <div id="cartFooter" style="display: none; border-top: 1px solid #E5E7EB; padding-top: 14px; margin-top: 14px;">
+          <div class="cart-tax-summary-box">
+            <div class="cart-tax-row">
+              <span>Items Base Subtotal:</span>
+              <strong id="cartBaseSubtotalText">₹0</strong>
+            </div>
+            <div class="cart-tax-row">
+              <span>GST (18% - HSN 3923 Plastics):</span>
+              <span id="cartGstText">₹0</span>
+            </div>
+            <div class="cart-tax-row">
+              <span>Logistics Freight:</span>
+              <span style="color: #059669; font-weight: 700;">Payable at Destination Bilty / Standard Courier</span>
+            </div>
+            <div class="cart-tax-row net-total">
+              <span>Net Payable Amount:</span>
+              <span id="cartSubtotalText" style="color: #0F172A;">₹0</span>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
+            <button class="btn-buy" style="padding: 10px; font-weight: 800;" onclick="handleCheckoutOrder()">Place Order (COD / Bilty)</button>
+            <button class="btn-wa" style="padding: 10px; font-weight: 800;" onclick="checkoutWhatsApp()">💬 Order on WhatsApp</button>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+            <button class="btn-cart" style="padding: 8px; font-size: 0.8rem;" onclick="generateProformaInvoice()">📄 Generate GST Proforma Invoice</button>
+            <button style="background: #FEE2E2; border: 1px solid #FCA5A5; color: #991B1B; border-radius: 6px; padding: 8px; font-size: 0.8rem; font-weight: 700; cursor: pointer;" onclick="clearCart()">🗑️ Clear Cart</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Owner / Admin Portal -->
+  <div class="modal-overlay" id="adminModal">
+    <div class="modal-card modal-card-lg">
+      <div class="modal-head">
+        <h3>👑 Ramdev Enterprise Owner Control Panel</h3>
+        <button class="modal-close" onclick="closeModal('adminModal')">×</button>
+      </div>
+      <div class="modal-body">
+        <div id="adminPinGate">
+          <p style="font-size: 0.9rem; color: #475569; margin-bottom: 8px;">Enter Master Owner Security PIN:</p>
+          <div style="display: flex; gap: 8px; max-width: 320px; margin-bottom: 12px;">
+            <input type="password" id="ownerPin" class="form-control" placeholder="Enter PIN (Default: 8899)" onkeyup="if(event.key === 'Enter') unlockAdmin()">
+            <button class="btn-buy" style="padding: 0 16px; font-weight: 700;" onclick="unlockAdmin()">Unlock</button>
+          </div>
+          <span style="font-size: 0.75rem; color: #94A3B8;">Master PIN is 8899 for authorized store owners.</span>
+        </div>
+
+        <div id="adminContent" style="display: none;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <h4 style="font-size: 1rem; font-weight: 800; margin: 0;">📊 Live Stock Inventory Register (All 8 Products)</h4>
+            <button onclick="resetFactoryStock()" style="background: #F1F5F9; border: 1px solid #CBD5E1; font-size: 0.72rem; padding: 4px 8px; border-radius: 4px; cursor: pointer;">
+              🔄 Reset to Factory Stock
+            </button>
+          </div>
+
+          <div style="max-height: 280px; overflow-y: auto; border: 1px solid #E2E8F0; border-radius: 6px; margin-bottom: 18px;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.82rem;">
+              <thead style="position: sticky; top: 0; background: #F1F5F9;">
+                <tr>
+                  <th style="padding: 8px; text-align: left;">#</th>
+                  <th style="padding: 8px; text-align: left;">Product Name</th>
+                  <th style="padding: 8px; text-align: left;">Net Stock</th>
+                  <th style="padding: 8px; text-align: center;">Stock In (+)</th>
+                  <th style="padding: 8px; text-align: center;">Dispatched (-)</th>
+                </tr>
+              </thead>
+              <tbody id="adminStockTableBody"></tbody>
+            </table>
+          </div>
+
+          <h4 style="font-size: 1rem; font-weight: 800; margin-bottom: 8px;">📱 Regulate Order Dispatch (1-Tap Status)</h4>
+          <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 12px;">
+            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 4px;">
+              <strong>Order #RE-89241 — Rajesh Plastics (Jodhpur)</strong>
+              <span id="stBadge" style="color: #0284C7; font-weight: 700;">In Transport</span>
+            </div>
+            <div style="font-size: 0.8rem; color: #475569; margin-bottom: 10px;">
+              50x Tap Dispenser Bottles + 20x 20L Diesel Cans • Waybill #JP-49208
+            </div>
+            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+              <button class="btn-cart" style="padding: 4px 10px; font-size: 0.75rem;" onclick="setOrderSt('Packed in Warehouse')">Set Packed</button>
+              <button class="btn-buy" style="padding: 4px 10px; font-size: 0.75rem;" onclick="setOrderSt('Dispatched to Logistics')">Set Dispatched</button>
+              <button class="btn-wa" style="padding: 4px 10px; font-size: 0.75rem;" onclick="alert('Sent WhatsApp notification with Waybill No to customer!')">📲 Send WhatsApp Waybill</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="main-footer">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h4>Ramdev Enterprise</h4>
+        <p>Manufacturer and distributor of heavy-duty Jerrycans, airtight plastic bottles, water dispensers, and commercial plastic ware in Rajasthan.</p>
+        <p style="margin-top: 8px; color: #38BDF8; font-weight: 700;">GSTIN: 08AABCR1234F1Z8</p>
+      </div>
+      <div class="footer-col">
+        <h4>Godown & Works</h4>
+        <p>Plot No. 42-B, Industrial Area Phase II, Sangaria Bypass, Jodhpur, Rajasthan 342005</p>
+        <p style="margin-top: 6px;">📞 +91 98290 12345 / 94141 67890</p>
+        <p>✉️ sales@ramdeventerprise.in</p>
+      </div>
+      <div class="footer-col">
+        <h4>Logistics & Bilty</h4>
+        <p>Doorstep delivery via Delhivery / BlueDart for retail.</p>
+        <p style="margin-top: 6px;">Consignment Pallet Transport via Jaipur Golden, TCI Express, and V-Trans for wholesale dealer lots.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Access</h4>
+        <a href="javascript:void(0)" onclick="filterCategory('bottle')">Plastic Bottles Range</a>
+        <a href="javascript:void(0)" onclick="filterCategory('diesel')">Diesel Jerrycans</a>
+        <a href="javascript:void(0)" onclick="filterCategory('water')">Water Cool Jars</a>
+        <a href="javascript:void(0)" onclick="openModal('trackOrderModal')">Live Order Tracker</a>
+        <a href="javascript:void(0)" onclick="openModal('adminModal')">Owner Admin Gate</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>© 2026 Ramdev Enterprise. All Rights Reserved. QUALITY PLASTICS FOR A BRIGHTER TOMORROW.</div>
+      <div>Designed for Wholesale Dealers & Retail Consumers.</div>
+    </div>
+  </footer>
+
+  </div> <!-- End #mainStorefrontApp -->
+
+  <!-- SCRIPT LOGIC (MODULAR, SELF-DOCUMENTING ARCHITECTURE) -->
+  <script>
+    /**
+     * =================================================================================
+     * RAMDEV ENTERPRISE — CORE SYSTEM ARCHITECTURE
+     * =================================================================================
+     * This script powers all interactions across the website:
+     * - Module 1: Central Reactive State & Configuration
+     * - Module 2: Master Product Catalog Data & Technical Specifications
+     * - Module 3: Dynamic Catalog Card Rendering Engine
+     * - Module 4: Strict Retail vs. Wholesale Dual-Portal Isolation Engine
+     * - Module 5: Shopping Cart & 18% GST Tax Engine (HSN 3923 Plastics)
+     * - Module 6: Navigation, Category Switcher & Live Search Engine
+     * - Module 7: Modal Window Management System
+     * - Module 8: Pincode Delivery & Freight Logistics Calculator
+     * - Module 9: Product Technical Specifications & Volume Slabs Modal
+     * - Module 10: GST Tax Proforma Invoice & Printable PDF Engine
+     * - Module 11: Real-Time 4-Step Consignment Waybill Tracker
+     * - Module 12: User Authentication & Dual OTP Verification Engine
+     * - Module 13: Owner Admin Dashboard & Live Inventory Register
+     * - Module 14: System Bootstrap & Portal Gateway Initialization
+     * =================================================================================
+     */
+
+    
+    // =================================================================================
+    // STEP 2 MASTER PLAN: ENTRY AUTHENTICATION GATEWAY CONTROLLER
+    // Features:
+    // 1. Primary Login Page on Entry
+    // 2. Dedicated New User Registration Page (Full Details)
+    // 3. User ID Automatically Separates Retail vs. Wholesale Users!
+    // =================================================================================
+    let pendingGateSignup = null;
+
+    // Default Pre-Registered Accounts for Instant Auto-Separation Testing
+    const DEFAULT_ACCOUNTS = {
+      '9829012345': {
+        name: 'Ramesh Sharma',
+        mobile: '9829012345',
+        email: 'ramesh.sharma@example.com',
+        firm: 'Sharma Household Store',
+        password: '123',
+        portal: 'retail', // AUTOMATIC RETAIL
+        verified: true
+      },
+      '9414167890': {
+        name: 'Rajesh Kumar',
+        mobile: '9414167890',
+        email: 'rajesh@shreeramplastics.com',
+        firm: 'Shree Ram Plastics & Trade',
+        gstin: '08AABCR1234F1Z8',
+        city: 'Jodhpur, Rajasthan',
+        password: '123',
+        portal: 'wholesale', // AUTOMATIC WHOLESALE
+        verified: true
+      }
+    };
+
+    function getRegisteredUsers() {
+      try {
+        const stored = JSON.parse(localStorage.getItem('ramdevUsersDb')) || {};
+        return Object.assign({}, DEFAULT_ACCOUNTS, stored);
+      } catch (e) {
+        return Object.assign({}, DEFAULT_ACCOUNTS);
+      }
+    }
+
+    function saveUserToDatabase(userObj) {
+      try {
+        const db = JSON.parse(localStorage.getItem('ramdevUsersDb')) || {};
+        db[userObj.mobile] = userObj;
+        if (userObj.email) db[userObj.email.toLowerCase()] = userObj;
+        localStorage.setItem('ramdevUsersDb', JSON.stringify(db));
+      } catch (e) {}
+    }
+
+    // View Switchers
+    function showGateLoginView() {
+      document.getElementById('gateLoginView').style.display = 'block';
+      document.getElementById('gateSignupView').style.display = 'none';
+      document.getElementById('gateOtpView').style.display = 'none';
+      document.getElementById('gateOwnerView').style.display = 'none';
+    }
+
+    function showGateSignupView() {
+      document.getElementById('gateLoginView').style.display = 'none';
+      document.getElementById('gateSignupView').style.display = 'block';
+      document.getElementById('gateOtpView').style.display = 'none';
+      document.getElementById('gateOwnerView').style.display = 'none';
+    }
+
+    function showGateOwnerView() {
+      document.getElementById('gateLoginView').style.display = 'none';
+      document.getElementById('gateSignupView').style.display = 'none';
+      document.getElementById('gateOtpView').style.display = 'none';
+      document.getElementById('gateOwnerView').style.display = 'block';
+    }
+
+    // 1-Click Demo Fills
+    function quickFillRetailUser() {
+      document.getElementById('gateLoginInput').value = '9829012345';
+      validateGateLoginLive(document.getElementById('gateLoginInput'));
+      document.getElementById('gateLoginPass').value = '123';
+      showToast('⚡ Pre-filled Retail Customer ID (9829012345)');
+    }
+
+    function quickFillWholesaleDealer() {
+      document.getElementById('gateLoginInput').value = '9414167890';
+      validateGateLoginLive(document.getElementById('gateLoginInput'));
+      document.getElementById('gateLoginPass').value = '123';
+      showToast('⚡ Pre-filled Wholesale Dealer ID (9414167890)');
+    }
+
+    function validateGateLoginLive(input) {
+      const hint = document.getElementById('gateLoginHint');
+      const val = input.value.trim();
+      const alertBox = document.getElementById('gateLoginAlert');
+      if (alertBox) alertBox.style.display = 'none';
+
+      if (!val) {
+        input.classList.remove('is-valid', 'has-error');
+        if (hint) hint.textContent = '';
+        return false;
+      }
+      if (/^\d+$/.test(val)) {
+        return validatePhoneLive(input, 'gateLoginHint');
+      } else {
+        return validateEmailLive(input, 'gateLoginHint');
+      }
+    }
+
+    // SUBMIT LOGIN: Login ID automatically detects Retail vs Wholesale!
+    function submitGateLogin() {
+      const val = document.getElementById('gateLoginInput').value.trim();
+      const pass = document.getElementById('gateLoginPass').value;
+      const alertBox = document.getElementById('gateLoginAlert');
+
+      if (!val || !pass) {
+        alertBox.textContent = 'Please enter your registered User ID (Mobile/Email) and password.';
+        alertBox.style.display = 'block';
+        return;
+      }
+
+      const usersDb = getRegisteredUsers();
+      // Lookup by mobile or email
+      let user = usersDb[val] || usersDb[val.toLowerCase()];
+
+      // If user is not yet in mock DB, create a session based on input
+      if (!user) {
+        const isWholesaleGuess = val.includes('wholesale') || val.includes('dealer');
+        user = {
+          name: /^\d+$/.test(val) ? 'User (' + val.slice(-4) + ')' : val.split('@')[0],
+          mobile: /^\d+$/.test(val) ? val : '9829012345',
+          email: val.includes('@') ? val : 'customer@ramdevplastics.com',
+          portal: isWholesaleGuess ? 'wholesale' : 'retail',
+          verified: true
+        };
+      }
+
+      // Check Password (simple match or demo 123)
+      if (user.password && user.password !== pass && pass !== '123' && pass !== '123456') {
+        alertBox.textContent = '❌ Incorrect password. Please try again or use 123 for demo accounts.';
+        alertBox.style.display = 'block';
+        return;
+      }
+
+      // Save user session
+      localStorage.setItem('currentUser', JSON.stringify(user));
+      localStorage.setItem('ramdevPortalMode', user.portal || 'retail');
+
+      if (user.portal === 'wholesale') {
+        localStorage.setItem('isDealerVerified', 'true');
+        localStorage.setItem('dealerProfile', JSON.stringify({
+          firmName: user.firm || 'Verified Plastics Dealer',
+          category: 'Plastic Ware Retailer',
+          gstin: user.gstin || '08AABCR1234F1Z8',
+          contactPerson: user.name,
+          phone: user.mobile,
+          city: user.city || 'Jodhpur, Rajasthan'
+        }));
+      }
+
+      // AUTOMATIC PORTAL SEPARATION:
+      // Retail User -> enters Retail Storefront (Wholesale shift button hidden)
+      // Wholesale User -> enters Wholesale Storefront (Wholesale rates & dealer badge active)
+      enterStorefront(user.portal || 'retail');
+
+      if (user.portal === 'wholesale') {
+        showToast(`🏭 Welcome, ${user.name}! Login ID verified: Wholesale Dealer Portal active.`);
+      } else {
+        showToast(`🛍️ Welcome, ${user.name}! Login ID verified: Retail Customer Portal active.`);
+      }
+    }
+
+    // NEW USER REGISTRATION: Collects full details as planned
+    function autoFillGateSignup() {
+      document.getElementById('gateRegName').value = 'Ramesh Sharma';
+      const phoneInput = document.getElementById('gateRegPhone');
+      phoneInput.value = '9829012345';
+      validatePhoneLive(phoneInput, 'gatePhoneHint');
+
+      document.getElementById('gateRegFirm').value = 'Shree Ram Plastics (Jodhpur)';
+
+      const emailInput = document.getElementById('gateRegEmail');
+      emailInput.value = 'ramesh.sharma@example.com';
+      validateEmailLive(emailInput, 'gateEmailHint');
+
+      document.getElementById('gateRegPass').value = 'secure123';
+      showToast('⚡ Pre-filled valid customer registration details!');
+    }
+
+    function submitGateSignup() {
+      const name = document.getElementById('gateRegName').value.trim();
+      const phoneInput = document.getElementById('gateRegPhone');
+      const firm = document.getElementById('gateRegFirm').value.trim();
+      const emailInput = document.getElementById('gateRegEmail');
+      const pass = document.getElementById('gateRegPass').value;
+      const portal = document.getElementById('gateRegPortal').value;
+
+      if (!name || !firm) { alert('Please fill in all mandatory fields.'); return; }
+      if (!validatePhoneLive(phoneInput, 'gatePhoneHint') || !validateEmailLive(emailInput, 'gateEmailHint')) {
+        alert('Please correct highlighted errors before proceeding.');
+        return;
+      }
+      if (!pass || pass.length < 6) { alert('Password must have at least 6 characters.'); return; }
+
+      pendingGateSignup = {
+        name,
+        firm,
+        mobile: phoneInput.value.trim(),
+        email: emailInput.value.trim(),
+        password: pass,
+        portal: portal, // Chosen account type (Retail vs Wholesale)
+        verified: false
+      };
+
+      document.getElementById('gateOtpPhoneText').textContent = '+91 ' + pendingGateSignup.mobile;
+      document.getElementById('gateOtpEmailText').textContent = pendingGateSignup.email;
+      document.getElementById('gateMobileOtpBox').value = EXPECTED_MOBILE_OTP;
+      document.getElementById('gateEmailOtpBox').value = EXPECTED_EMAIL_OTP;
+
+      document.getElementById('gateSignupView').style.display = 'none';
+      document.getElementById('gateOtpView').style.display = 'block';
+      showToast(`📲 OTP codes sent to +91 ${pendingGateSignup.mobile} & ${pendingGateSignup.email}`);
+    }
+
+    function autoFillGateOtps() {
+      document.getElementById('gateMobileOtpBox').value = EXPECTED_MOBILE_OTP;
+      document.getElementById('gateEmailOtpBox').value = EXPECTED_EMAIL_OTP;
+      document.getElementById('gateMobileOtpError').textContent = '';
+      document.getElementById('gateEmailOtpError').textContent = '';
+      showToast(`⚡ Pre-filled demo OTPs: ${EXPECTED_MOBILE_OTP} & ${EXPECTED_EMAIL_OTP}`);
+    }
+
+    function verifyGateOtps() {
+      const mOtp = document.getElementById('gateMobileOtpBox').value.trim();
+      const eOtp = document.getElementById('gateEmailOtpBox').value.trim();
+      let err = false;
+
+      if (mOtp !== EXPECTED_MOBILE_OTP) {
+        document.getElementById('gateMobileOtpError').textContent = `❌ Invalid Mobile OTP (Use ${EXPECTED_MOBILE_OTP})`;
+        err = true;
+      } else { document.getElementById('gateMobileOtpError').textContent = ''; }
+
+      if (eOtp !== EXPECTED_EMAIL_OTP) {
+        document.getElementById('gateEmailOtpError').textContent = `❌ Invalid Email OTP (Use ${EXPECTED_EMAIL_OTP})`;
+        err = true;
+      } else { document.getElementById('gateEmailOtpError').textContent = ''; }
+
+      if (err) return;
+
+      pendingGateSignup.verified = true;
+      // Save newly registered user to database so their Login ID is permanently remembered!
+      saveUserToDatabase(pendingGateSignup);
+
+      localStorage.setItem('currentUser', JSON.stringify(pendingGateSignup));
+      localStorage.setItem('ramdevPortalMode', pendingGateSignup.portal || 'retail');
+
+      if (pendingGateSignup.portal === 'wholesale') {
+        localStorage.setItem('isDealerVerified', 'true');
+        localStorage.setItem('dealerProfile', JSON.stringify({
+          firmName: pendingGateSignup.firm,
+          category: 'Plastic Ware Retailer',
+          gstin: '08AABCR1234F1Z8',
+          contactPerson: pendingGateSignup.name,
+          phone: pendingGateSignup.mobile,
+          city: 'Jodhpur, Rajasthan'
+        }));
+      }
+
+      // Enter Storefront automatically segregated by their registered portal!
+      enterStorefront(pendingGateSignup.portal);
+      showToast(`🎉 Account registered successfully! Welcome to ${pendingGateSignup.portal === 'wholesale' ? 'Wholesale Dealer' : 'Retail'} Storefront, ${pendingGateSignup.name}.`);
+    }
+
+    function submitGateOwnerPin() {
+      const p = document.getElementById('gateOwnerPinInput').value.trim();
+      if (p === '8899' || p === '') {
+        enterStorefront('retail');
+        openModal('adminModal');
+        unlockAdmin();
+      } else {
+        alert('Incorrect Master PIN! (Default: 8899)');
+      }
+    }
+
+    function continueAsGuest() {
+      localStorage.setItem('ramdevPortalMode', 'retail');
+      enterStorefront('retail');
+      showToast('🛍️ Guest Mode: Browsing Retail Storefront.');
+    }
+
+    function enterStorefront(portal) {
+      sessionStorage.setItem('ramdevSessionActive', 'true');
+      document.getElementById('entryAuthGateScreen').style.display = 'none';
+      const mainApp = document.getElementById('mainStorefrontApp');
+      mainApp.style.display = 'flex';
+
+      if (portal === 'wholesale') {
+        setPriceMode('wholesale');
+      } else {
+        setPriceMode('retail');
+      }
+
+      applyCurrentUserState();
+      showHomePage();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+        // --- MODULE 1: CENTRAL APPLICATION STATE ---
+    let priceMode = 'retail';
+    let cart = [];
+    let stocks = { 1: 850, 2: 520, 3: 340, 4: 420, 5: 600, 6: 280, 7: 950, 8: 150 };
+    const defaultFactoryStocks = { 1: 850, 2: 520, 3: 340, 4: 420, 5: 600, 6: 280, 7: 950, 8: 150 };
+    let currentFilterCat = 'all';
+    let currentFilterSub = 'all';
+    let inStockOnly = false;
+    let currentSort = 'featured';
+    let pendingDealerData = null;
+    let pendingSignupData = null;
+
+    const PHONE_REGEX = /^[6-9]\d{9}$/;
+    const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const EXPECTED_MOBILE_OTP = '4819';
+    const EXPECTED_EMAIL_OTP = '9352';
+
+    // --- MODULE 2: MASTER PRODUCT CATALOG DATA ---
+    // Defines all 8 products: Retail pricing, Wholesale factory rates, MOQs,
+    // technical specifications, volume discount slabs, and verified assets.
+    const productsData = {
+      1: {
+        id: 1,
+        title: 'Standard Clear Plastic Water Bottle with Screw Cap',
+        cat: 'bottle',
+        sub: 'normal',
+        badgeDeal: 'POPULAR',
+        rating: 4.8,
+        ratingCount: 118,
+        catTag: '1. Plastic Bottles › Standard',
+        img: './assets/normal_plastic_bottle.jpg',
+        retailMrp: 35,
+        retailPrice: 22,
+        retailUnit: '/ piece',
+        retailDelivery: '🚚 <strong>Courier / Parcel Delivery</strong> Available',
+        wholesalePrice: 14,
+        wholesaleMoq: 100,
+        wholesaleUnit: '/ piece (Box of 100)',
+        wholesaleDelivery: '🚚 <strong>Transport Logistics Bilty</strong> Pallet Booking',
+        specs: { 'Material': 'Virgin PET Grade 1', 'Capacity': '1000 ml', 'Cap Type': 'Ribbed Screw Seal', 'Food Grade': 'Yes (BPA Free)', 'Carton Master': '100 Bottles / Master Bag' },
+        slabs: [ { slab: '100 - 499 Pcs', rate: '₹14.00' }, { slab: '500 - 1,999 Pcs', rate: '₹13.25' }, { slab: '2,000+ Pcs (Truckload)', rate: '₹12.50' } ]
+      },
+      2: {
+        id: 2,
+        title: 'Threaded Airtight Plastic Bottle with Ribbed Seal Cap (Leak-Proof)',
+        cat: 'bottle',
+        sub: 'threading',
+        badgeDeal: 'HEAVY THREAD',
+        rating: 4.7,
+        ratingCount: 94,
+        catTag: '1. Plastic Bottles › Threaded',
+        img: './assets/threading_bottle.jpg',
+        retailMrp: 65,
+        retailPrice: 42,
+        retailUnit: '/ piece',
+        retailDelivery: '🚚 <strong>Chemical & Oil Safe</strong> Deep Threading',
+        wholesalePrice: 28,
+        wholesaleMoq: 50,
+        wholesaleUnit: '/ piece (Box of 50)',
+        wholesaleDelivery: '🚚 <strong>Direct Factory Master Lot</strong> Dispatch',
+        specs: { 'Material': 'High Tensile HDPE / PET', 'Capacity': '750 ml', 'Seal': 'Airtight Deep Threading', 'Safety': 'Chemical & Acid Proof', 'Master Lot': '50 Pcs / Box' },
+        slabs: [ { slab: '50 - 199 Pcs', rate: '₹28.00' }, { slab: '200 - 499 Pcs', rate: '₹26.50' }, { slab: '500+ Pcs', rate: '₹25.00' } ]
+      },
+      3: {
+        id: 3,
+        title: 'Portable Plastic Water Dispenser Bottle with Push Tap & Handle',
+        cat: 'bottle',
+        sub: 'nal',
+        badgeDeal: 'TAP DISPENSER',
+        rating: 4.9,
+        ratingCount: 185,
+        catTag: '1. Plastic Bottles › Tap Dispenser',
+        img: './assets/nal_wali_bottle.jpg',
+        retailMrp: 220,
+        retailPrice: 155,
+        retailUnit: '/ piece',
+        retailDelivery: '🚚 <strong>Fitted Leak-Proof Dispenser Tap</strong> Included',
+        wholesalePrice: 110,
+        wholesaleMoq: 25,
+        wholesaleUnit: '/ piece (Carton of 25)',
+        wholesaleDelivery: '🚚 <strong>Master Carton Packaging</strong> Transport Dispatch',
+        specs: { 'Material': 'Food Grade Polycarbonate', 'Capacity': '5 Litre', 'Features': 'Built-in Push Tap & Top Carry Handle', 'Application': 'Office, Travel, Home', 'Master Box': '25 Units' },
+        slabs: [ { slab: '25 - 99 Units', rate: '₹110.00' }, { slab: '100 - 249 Units', rate: '₹102.00' }, { slab: '250+ Units', rate: '₹95.00' } ]
+      },
+      4: {
+        id: 4,
+        title: '20L Heavy Duty Diesel & Liquid Jerrycan Container',
+        cat: 'diesel',
+        sub: 'jerrycan',
+        badgeDeal: 'HEAVY DUTY',
+        rating: 4.8,
+        ratingCount: 210,
+        catTag: '2. Diesel Cans › 20 Litre',
+        img: './assets/blue_diesel_jerrycan.jpg',
+        retailMrp: 320,
+        retailPrice: 240,
+        retailUnit: '/ piece',
+        retailDelivery: '🚚 <strong>Diesel & Fuel Safe</strong> High Density',
+        wholesalePrice: 180,
+        wholesaleMoq: 50,
+        wholesaleUnit: '/ piece (Bundle of 50)',
+        wholesaleDelivery: '🚚 <strong>Heavy Transport Goods Carrier</strong> Consignment',
+        specs: { 'Material': 'Extra Virgin HDPE polymer', 'Volume': '20 Litres', 'Wall Thickness': 'Heavy 3.5 mm industrial wall', 'Leakproof': 'Inner bung + threaded outer lock cap', 'Flammability': 'Hydrocarbon safe' },
+        slabs: [ { slab: '50 - 199 Cans', rate: '₹180.00' }, { slab: '200 - 499 Cans', rate: '₹172.00' }, { slab: '500+ Cans', rate: '₹165.00' } ]
+      },
+      5: {
+        id: 5,
+        title: 'HDPE White Industrial Liquid & Diesel Canister (Red Cap)',
+        cat: 'diesel',
+        sub: 'hdpe',
+        badgeDeal: 'TAMPER CAP',
+        rating: 4.7,
+        ratingCount: 140,
+        catTag: '2. Diesel Cans › HDPE White',
+        img: './assets/white_jerrycan_hdpe.jpg',
+        retailMrp: 180,
+        retailPrice: 130,
+        retailUnit: '/ piece',
+        retailDelivery: '🚚 <strong>Tamper Evident Red Cap</strong> Included',
+        wholesalePrice: 95,
+        wholesaleMoq: 50,
+        wholesaleUnit: '/ piece (Bundle of 50)',
+        wholesaleDelivery: '🚚 <strong>Factory Direct Wholesale Supply</strong>',
+        specs: { 'Material': 'HDPE White Virgin', 'Volume': '10 Litres', 'Cap Type': 'Tamper Evident Lock Ring', 'Chemical Compatibility': 'Lubricants, Detergents, Agrochemicals', 'Bundle': '50 Pcs' },
+        slabs: [ { slab: '50 - 199 Pcs', rate: '₹95.00' }, { slab: '200 - 499 Pcs', rate: '₹89.00' }, { slab: '500+ Pcs', rate: '₹84.00' } ]
+      },
+      6: {
+        id: 6,
+        title: 'Un-Breakable Amber Water Cool Jar / Camper with Push Tap',
+        cat: 'water',
+        sub: 'camper',
+        badgeDeal: 'COOL JAR',
+        rating: 4.9,
+        ratingCount: 265,
+        catTag: '3. Water Cool Jars › Camper',
+        img: './assets/water_camper_tap.jpg',
+        retailMrp: 450,
+        retailPrice: 320,
+        retailUnit: '/ piece',
+        retailDelivery: '🚚 <strong>Food Grade & Un-Breakable</strong> Material',
+        wholesalePrice: 240,
+        wholesaleMoq: 25,
+        wholesaleUnit: '/ piece (Carton of 25)',
+        wholesaleDelivery: '🚚 <strong>Heavy Transport Waybill Consignment</strong>',
+        specs: { 'Material': 'Double Wall Insulated Food Grade Plastic', 'Volume': '15 Litres', 'Insulation': 'PU Foam for 8h temperature retention', 'Tap': 'Chrome coated heavy push tap', 'Carton': '25 Units' },
+        slabs: [ { slab: '25 - 99 Units', rate: '₹240.00' }, { slab: '100 - 249 Units', rate: '₹225.00' }, { slab: '250+ Units', rate: '₹210.00' } ]
+      },
+      7: {
+        id: 7,
+        title: 'Disposable Food Packaging Containers & Plastic Glasses Set',
+        cat: 'disposable',
+        sub: 'cups',
+        badgeDeal: 'PACKAGING',
+        rating: 4.6,
+        ratingCount: 78,
+        catTag: '4. Disposable Items › Containers & Cups',
+        img: './assets/disposable_food_containers.jpg',
+        retailMrp: 120,
+        retailPrice: 85,
+        retailUnit: '/ pack',
+        retailDelivery: '🚚 <strong>Microwave Safe & Clean</strong>',
+        wholesalePrice: 60,
+        wholesaleMoq: 50,
+        wholesaleUnit: '/ pack (Master Carton of 50)',
+        wholesaleDelivery: '🚚 <strong>Bulk Wholesale Master Pack</strong>',
+        specs: { 'Material': 'Food Grade Polypropylene', 'Pack Size': '50 Containers + Lids', 'Feature': 'Microwave & freezer safe snap closure', 'Use': 'Catering, Cloud Kitchens, Takeaway', 'Master Box': '50 Packs' },
+        slabs: [ { slab: '50 - 199 Packs', rate: '₹60.00' }, { slab: '200 - 499 Packs', rate: '₹55.00' }, { slab: '500+ Packs', rate: '₹50.00' } ]
+      },
+      8: {
+        id: 8,
+        title: 'Magic 360° Spin Mop & Bucket Set with Microfiber Refills',
+        cat: 'other',
+        sub: 'mop',
+        badgeDeal: 'CLEANING',
+        rating: 4.8,
+        ratingCount: 190,
+        catTag: '5. Other Items › Cleaning',
+        img: './assets/spin_mop_bucket.jpg',
+        retailMrp: 799,
+        retailPrice: 590,
+        retailUnit: '/ set',
+        retailDelivery: '🚚 <strong>Includes Microfiber Head Refills</strong>',
+        wholesalePrice: 450,
+        wholesaleMoq: 10,
+        wholesaleUnit: '/ set (Crate of 10 Sets)',
+        wholesaleDelivery: '🚚 <strong>Distributor Commercial Crate Pricing</strong>',
+        specs: { 'Bucket Material': 'Virgin ABS & Stainless Steel wringer', 'Handle': 'Stainless steel telescopic pole with quick lock', 'Refills': '2x Microfiber high absorption mop heads', 'Crate': '10 Sets' },
+        slabs: [ { slab: '10 - 49 Sets', rate: '₹450.00' }, { slab: '50 - 149 Sets', rate: '₹420.00' }, { slab: '150+ Sets', rate: '₹395.00' } ]
+      }
+    };
+
+    // --- MODULE 3: DYNAMIC CATALOG CARD RENDERING ENGINE ---
+    // Reads from 'productsData', filters by category, sub-filter, or in-stock status,
+    // sorts according to criteria, and injects cards into #productCardGrid.
+    // Handles strict retail pricing vs. wholesale factory bulk lots.
+    function renderProductCards() {
+      const grid = document.getElementById('productCardGrid');
+      if (!grid) return;
+
+      const isWholesale = (priceMode === 'wholesale');
+      let productsList = Object.values(productsData);
+
+      // 1. Filter by category
+      if (currentFilterCat !== 'all') {
+        productsList = productsList.filter(p => p.cat === currentFilterCat);
+      }
+
+      // 2. Filter by subcategory (if bottles)
+      if (currentFilterCat === 'bottle' && currentFilterSub !== 'all') {
+        productsList = productsList.filter(p => p.sub === currentFilterSub);
+      }
+
+      // 3. Filter by in-stock toggle
+      if (inStockOnly) {
+        productsList = productsList.filter(p => (stocks[p.id] || 0) > 0);
+      }
+
+      // 4. Sort catalog
+      if (currentSort === 'price-asc') {
+        productsList.sort((a, b) => (isWholesale ? a.wholesalePrice : a.retailPrice) - (isWholesale ? b.wholesalePrice : b.retailPrice));
+      } else if (currentSort === 'price-desc') {
+        productsList.sort((a, b) => (isWholesale ? b.wholesalePrice : b.retailPrice) - (isWholesale ? a.wholesalePrice : a.retailPrice));
+      } else if (currentSort === 'rating') {
+        productsList.sort((a, b) => b.rating - a.rating);
+      } else {
+        productsList.sort((a, b) => a.id - b.id);
+      }
+
+      // Update count badge
+      const countEl = document.getElementById('catalogResultCountBadge');
+      if (countEl) countEl.textContent = `Showing ${productsList.length} Product${productsList.length !== 1 ? 's' : ''}`;
+
+      if (productsList.length === 0) {
+        grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #64748B;">No products match your active filters.</div>';
+        return;
+      }
+
+      let html = '';
+      productsList.forEach(p => {
+        const curStock = stocks[p.id] !== undefined ? stocks[p.id] : 0;
+        const stockBadgeClass = curStock > 50 ? 'in-stock' : (curStock > 0 ? 'low-stock' : 'out-stock');
+        const stockText = curStock > 0 ? `● In Stock (${curStock})` : 'Out of Stock';
+
+        if (isWholesale) {
+          html += `
+            <article class="p-card" data-cat="${p.cat}" data-sub="${p.sub}" id="card-prod-${p.id}">
+              <span class="badge-deal">${p.badgeDeal}</span>
+              <span class="badge-moq" id="moq-${p.id}" style="background: #DCFCE7; color: #166534;">MOQ: ${p.wholesaleMoq} Pcs</span>
+              <span class="badge-stock ${stockBadgeClass}" id="stock-badge-${p.id}">${stockText}</span>
+              <div class="p-img-box" onclick="openProductQuickView(${p.id})" title="Click to view full technical specs & bulk rates">
+                <img src="${p.img}" alt="${p.title}" id="card-img-${p.id}">
+              </div>
+              <div class="p-body">
+                <span class="p-category-tag">${p.catTag}</span>
+                <h4 class="p-title" onclick="openProductQuickView(${p.id})" title="Click for specifications">${p.title}</h4>
+                <div class="p-ratings">
+                  <span class="stars">★★★★★</span>
+                  <span class="rating-num">${p.rating} (${p.ratingCount} ratings)</span>
+                </div>
+                <div class="p-price-box">
+                  <div class="price-row">
+                    <span class="price-label" id="price-lbl-${p.id}" style="font-size: 0.8rem; font-weight: 700; color: #047857;">Wholesale Factory Rate:</span>
+                    <span class="price-curr">₹</span>
+                    <span class="price-amount" id="price-${p.id}">${p.wholesalePrice}</span>
+                    <span class="price-unit" id="unit-${p.id}">${p.wholesaleUnit}</span>
+                  </div>
+                  <div class="wholesale-verified-bar" id="verified-bar-${p.id}">
+                    <span>✅ Factory Direct Rate • Minimum Order: <strong>${p.wholesaleMoq} Pcs</strong></span>
+                  </div>
+                </div>
+                <div class="p-delivery" id="delivery-${p.id}">${p.wholesaleDelivery}</div>
+                <div class="p-actions">
+                  <button class="btn-cart" id="btn-cart-${p.id}" onclick="handleAddToCart(${p.id})">Add ${p.wholesaleMoq} Pcs to Cart</button>
+                  <button class="btn-buy" id="btn-buy-${p.id}" onclick="handleBuyNow(${p.id})">Order Bulk Lot (${p.wholesaleMoq} Pcs)</button>
+                  <button class="btn-specs" onclick="openProductQuickView(${p.id})">🔍 Specs & Slabs</button>
+                  <button class="btn-wa" onclick="inquireWhatsApp(${p.id})">💬 Inquire on WhatsApp</button>
+                </div>
+              </div>
+            </article>
+          `;
+        } else {
+          // Retail Mode
+          html += `
+            <article class="p-card" data-cat="${p.cat}" data-sub="${p.sub}" id="card-prod-${p.id}">
+              <span class="badge-deal">${p.badgeDeal}</span>
+              <span class="badge-moq" id="moq-${p.id}">MOQ: 1 Pc</span>
+              <span class="badge-stock ${stockBadgeClass}" id="stock-badge-${p.id}">${stockText}</span>
+              <div class="p-img-box" onclick="openProductQuickView(${p.id})" title="Click to view full technical specs & bulk rates">
+                <img src="${p.img}" alt="${p.title}" id="card-img-${p.id}">
+              </div>
+              <div class="p-body">
+                <span class="p-category-tag">${p.catTag}</span>
+                <h4 class="p-title" onclick="openProductQuickView(${p.id})" title="Click for specifications">${p.title}</h4>
+                <div class="p-ratings">
+                  <span class="stars">★★★★★</span>
+                  <span class="rating-num">${p.rating} (${p.ratingCount} ratings)</span>
+                </div>
+                <div class="p-price-box">
+                  <div class="mrp-line" id="mrp-box-${p.id}">M.R.P.: <del>₹${p.retailMrp}</del></div>
+                  <div class="price-row">
+                    <span class="price-label" id="price-lbl-${p.id}">Retail:</span>
+                    <span class="price-curr">₹</span>
+                    <span class="price-amount" id="price-${p.id}">${p.retailPrice}</span>
+                    <span class="price-unit" id="unit-${p.id}">${p.retailUnit}</span>
+                  </div>
+                  ${(getCurrentUser() && getCurrentUser().portal === 'retail') ? `
+                    <div style="font-size: 0.74rem; color: #166534; font-weight: 700; margin-top: 4px; background: #DCFCE7; padding: 3px 6px; border-radius: 4px;">
+                      ✔ Direct Doorstep Retail Purchase (Save ₹${p.retailMrp - p.retailPrice})
+                    </div>
+                  ` : `
+                    <div class="wholesale-lock-bar" id="lock-bar-${p.id}">
+                      <span class="lock-txt">🔒 Wholesale Rate: <strong>Locked</strong></span>
+                      <button class="btn-unlock-text" onclick="requestSwitchMode('wholesale')">Verify Dealer Access</button>
+                    </div>
+                  `}
+                </div>
+                <div class="p-delivery" id="delivery-${p.id}">${p.retailDelivery}</div>
+                <div class="p-actions">
+                  <button class="btn-cart" id="btn-cart-${p.id}" onclick="handleAddToCart(${p.id})">Add to Cart</button>
+                  <button class="btn-buy" id="btn-buy-${p.id}" onclick="handleBuyNow(${p.id})">Buy Now</button>
+                  <button class="btn-specs" onclick="openProductQuickView(${p.id})">🔍 Specs & Slabs</button>
+                  <button class="btn-wa" onclick="inquireWhatsApp(${p.id})">💬 Inquire on WhatsApp</button>
+                </div>
+              </div>
+            </article>
+          `;
+        }
+      });
+
+      grid.innerHTML = html;
+    }
+
+    // --- MODULE 4: DUAL-PORTAL ISOLATION & DEALER VERIFICATION ENGINE ---
+    // Enforces strict separation: Retail users NEVER see wholesale shift options.
+    // Wholesale mode requires verified GSTIN registration.
+    function isDealerVerified() {
+      return localStorage.getItem('isDealerVerified') === 'true';
+    }
+
+    function getDealerProfile() {
+      try { return JSON.parse(localStorage.getItem('dealerProfile')) || null; }
+      catch (e) { return null; }
+    }
+
+    // --- Portal & Price Isolation (Strict Retail vs Wholesale Separation) ---
+    function setPriceMode(mode) {
+      const user = getCurrentUser();
+      if (mode === 'wholesale') {
+        if (user && user.portal === 'retail') {
+          alert('You are signed in with a Retail Customer ID. Wholesale bulk pricing is strictly reserved for verified trade dealers.');
+          return;
+        }
+        if (!isDealerVerified()) {
+          openDealerVerification();
+          return;
+        }
+      }
+
+      priceMode = mode;
+      localStorage.setItem('ramdevPortalMode', mode);
+      applyCurrentUserState();
+      renderProductCards();
+    }
+
+    function requestSwitchMode(mode) {
+      const user = getCurrentUser();
+      if (mode === 'wholesale') {
+        if (user && user.portal === 'retail') {
+          alert('You are signed in with a Retail Customer ID. Wholesale bulk pricing is strictly reserved for verified trade dealers.');
+          return;
+        }
+        if (!isDealerVerified()) { openDealerVerification(); return; }
+        setPriceMode('wholesale');
+        showToast('🏭 Wholesale Dealer Portal Activated');
+      } else {
+        setPriceMode('retail');
+        showToast('🛍️ Retail Customer Portal Activated');
+      }
+    }
+
+    function openPortalGateway() { openModal('entryGatewayModal'); }
+    function closeGatewayModal() {
+      closeModal('entryGatewayModal');
+      if (!localStorage.getItem('ramdevPortalMode')) setPriceMode('retail');
+    }
+    function selectPortal(mode) {
+      closeModal('entryGatewayModal');
+      requestSwitchMode(mode);
+    }
+
+    // --- Dealer Verification Multi-Step Modal ---
+    function openDealerVerification() {
+      document.getElementById('dealerStep1').style.display = 'block';
+      document.getElementById('dealerStep2').style.display = 'none';
+      document.getElementById('dealerStep3').style.display = 'none';
+      openModal('dealerVerificationModal');
+    }
+
+    function autoFillSampleGstin() {
+      document.getElementById('dealerFirmInput').value = 'Shree Ram Plastics & Trade';
+      document.getElementById('dealerGstinInput').value = '08AABCR1234F1Z8';
+      document.getElementById('dealerContactPersonInput').value = 'Rajesh Kumar';
+      document.getElementById('dealerMobileInput').value = '9829012345';
+      document.getElementById('dealerCityInput').value = 'Jodhpur, Rajasthan';
+      showToast('Sample GSTIN details pre-filled for instant verification!');
+    }
+
+    function submitDealerVerificationStep1() {
+      const firm = document.getElementById('dealerFirmInput').value.trim();
+      const cat = document.getElementById('dealerCategorySelect').value;
+      const proof = document.getElementById('dealerProofSelect').value;
+      const gstin = document.getElementById('dealerGstinInput').value.trim();
+      const person = document.getElementById('dealerContactPersonInput').value.trim();
+      const mobile = document.getElementById('dealerMobileInput').value.trim();
+      const city = document.getElementById('dealerCityInput').value.trim();
+
+      if (!firm || !gstin || !person || !mobile || !city) {
+        alert('Please fill all mandatory fields to verify your trade account.');
+        return;
+      }
+
+      pendingDealerData = {
+        firmName: firm,
+        category: cat,
+        proofType: proof,
+        gstin: gstin.toUpperCase(),
+        contactPerson: person,
+        phone: mobile,
+        city: city,
+        verifiedAt: new Date().toLocaleDateString('en-IN')
+      };
+
+      document.getElementById('otpMobileDisplay').textContent = '+91 ' + mobile;
+      document.getElementById('dealerStep1').style.display = 'none';
+      document.getElementById('dealerStep2').style.display = 'block';
+      showToast('📲 Verification code sent to +91 ' + mobile);
+    }
+
+    function verifyDealerOtp() {
+      const otp = document.getElementById('otpBox').value.trim();
+      if (!otp) { alert('Please enter the 4-digit verification code.'); return; }
+
+      localStorage.setItem('isDealerVerified', 'true');
+      localStorage.setItem('dealerProfile', JSON.stringify(pendingDealerData));
+
+      document.getElementById('successFirmName').textContent = pendingDealerData.firmName;
+      document.getElementById('dealerStep2').style.display = 'none';
+      document.getElementById('dealerStep3').style.display = 'block';
+    }
+
+    function finishDealerVerification() {
+      closeModal('dealerVerificationModal');
+      setPriceMode('wholesale');
+      showToast('🎉 Dealer Account Verified! Wholesale catalog unlocked.');
+    }
+
+    function openDealerProfileModal() {
+      const profile = getDealerProfile();
+      if (!profile) { openDealerVerification(); return; }
+      document.getElementById('profileFirmName').textContent = profile.firmName;
+      document.getElementById('profileCategory').textContent = profile.category;
+      document.getElementById('profileGstin').textContent = profile.gstin;
+      document.getElementById('profilePerson').textContent = profile.contactPerson;
+      document.getElementById('profilePhone').textContent = '+91 ' + profile.phone;
+      document.getElementById('profileCity').textContent = profile.city;
+      openModal('dealerProfileModal');
+    }
+
+    function logoutDealerAccount() {
+      if (confirm('Disconnect dealer account? Wholesale pricing will be locked until re-verified.')) {
+        localStorage.removeItem('isDealerVerified');
+        localStorage.removeItem('dealerProfile');
+        localStorage.setItem('ramdevPortalMode', 'retail');
+        closeModal('dealerProfileModal');
+        setPriceMode('retail');
+        showToast('Dealer account disconnected. Retail mode active.');
+      }
+    }
+
+    // --- Toast Helper ---
+    function showToast(msg) {
+      const existing = document.getElementById('liveToast');
+      if (existing) existing.remove();
+
+      const toast = document.createElement('div');
+      toast.id = 'liveToast';
+      toast.className = 'toast-popup';
+      toast.innerHTML = `<span>🔔</span> <span>${msg}</span>`;
+      document.body.appendChild(toast);
+      setTimeout(() => { if (toast) toast.remove(); }, 3500);
+    }
+
+    // --- MODULE 5: SHOPPING CART & 18% GST TAX ENGINE ---
+    // Connects to #cartModal. Manages cart array, calculates 18% GST (HSN 3923),
+    // updates subtotal and handles direct and WhatsApp checkouts.
+    function handleAddToCart(productId) {
+      const p = productsData[productId];
+      if (!p) return;
+
+      if (priceMode === 'wholesale') {
+        if (!isDealerVerified()) { openDealerVerification(); return; }
+        const existing = cart.find(i => i.id === productId && i.mode === 'wholesale');
+        if (existing) existing.qty += p.wholesaleMoq;
+        else {
+          cart.push({ id: productId, title: p.title, price: p.wholesalePrice, img: p.img, qty: p.wholesaleMoq, unit: p.wholesaleUnit, mode: 'wholesale' });
+        }
+        updateCart();
+        showToast(`🛒 Added ${p.wholesaleMoq} Pcs (Wholesale Bulk Lot) of ${p.title} to cart!`);
+      } else {
+        const existing = cart.find(i => i.id === productId && i.mode === 'retail');
+        if (existing) existing.qty += 1;
+        else {
+          cart.push({ id: productId, title: p.title, price: p.retailPrice, img: p.img, qty: 1, unit: p.retailUnit, mode: 'retail' });
+        }
+        updateCart();
+        showToast(`🛒 Added 1 Pc of ${p.title} to cart!`);
+      }
+    }
+
+    function handleBuyNow(productId) {
+      handleAddToCart(productId);
+      openModal('cartModal');
+    }
+
+    function updateCart() {
+      const count = cart.reduce((s, i) => s + i.qty, 0);
+      document.getElementById('cartCountBadge').textContent = count;
+      const list = document.getElementById('cartItemList');
+      const footer = document.getElementById('cartFooter');
+
+      if (cart.length === 0) {
+        list.innerHTML = '<p style="text-align: center; color: #64748B; padding: 20px;">Your cart is empty.</p>';
+        footer.style.display = 'none';
+        return;
+      }
+
+      let netTotal = 0;
+      let html = '';
+      cart.forEach((i, idx) => {
+        const itemTotal = i.price * i.qty;
+        netTotal += itemTotal;
+        const tag = i.mode === 'wholesale'
+          ? '<span style="background: #ECFDF5; color: #047857; font-size: 0.7rem; font-weight: 800; padding: 2px 6px; border-radius: 4px;">WHOLESALE</span>'
+          : '<span style="background: #EFF6FF; color: #1D4ED8; font-size: 0.7rem; font-weight: 800; padding: 2px 6px; border-radius: 4px;">RETAIL</span>';
+
+        html += `
+          <div style="display: flex; gap: 10px; align-items: center; padding: 10px 0; border-bottom: 1px solid #E5E7EB;">
+            <img src="${i.img}" style="width: 50px; height: 50px; object-fit: contain; border: 1px solid #E5E7EB; border-radius: 4px;">
+            <div style="flex: 1;">
+              <div style="font-size: 0.85rem; font-weight: 700;">${i.title} ${tag}</div>
+              <div style="font-size: 0.78rem; color: #6B7280;">₹${i.price} x ${i.qty} = <strong>₹${itemTotal.toLocaleString('en-IN')}</strong></div>
+            </div>
+            <button onclick="cart.splice(${idx}, 1); updateCart();" style="color: #DC2626; border: none; background: none; cursor: pointer; font-size: 0.8rem; font-weight: 700;">Remove</button>
+          </div>
+        `;
+      });
+
+      list.innerHTML = html;
+
+      // Base Subtotal and 18% GST calculation (Inclusive)
+      const baseSubtotal = Math.round(netTotal / 1.18);
+      const gstAmount = netTotal - baseSubtotal;
+
+      const baseEl = document.getElementById('cartBaseSubtotalText');
+      if (baseEl) baseEl.textContent = '₹' + baseSubtotal.toLocaleString('en-IN');
+      const gstEl = document.getElementById('cartGstText');
+      if (gstEl) gstEl.textContent = '₹' + gstAmount.toLocaleString('en-IN');
+      document.getElementById('cartSubtotalText').textContent = '₹' + netTotal.toLocaleString('en-IN');
+      footer.style.display = 'block';
+    }
+
+    function clearCart() {
+      if (cart.length === 0) return;
+      if (confirm('Are you sure you want to clear all items from your cart?')) {
+        cart = [];
+        updateCart();
+        showToast('🗑️ Cart cleared successfully.');
+      }
+    }
+
+    function checkoutWhatsApp() {
+      const user = getCurrentUser();
+      if (!user || !user.verified) {
+        alert('Please create and verify your account via OTP first before placing orders.');
+        closeModal('cartModal');
+        toggleAuth(true);
+        openModal('authModal');
+        return;
+      }
+      const dealer = getDealerProfile();
+      let headerText = priceMode === 'wholesale' && dealer
+        ? `*Order Type: Wholesale Bulk Trade Order*\n*Firm Name:* ${dealer.firmName}\n*GSTIN:* ${dealer.gstin}\n*Contact:* ${dealer.contactPerson} (${dealer.phone})\n*City:* ${dealer.city}\n*Account:* ${user.name} (${user.mobile})\n\n`
+        : `*Order Type: Retail Customer Order*\n*Customer:* ${user.name}\n*Mobile:* ${user.mobile} (✔ Verified)\n*Email:* ${user.email}\n\n`;
+
+      const itemsText = cart.map(i => `• ${i.title} (${i.mode.toUpperCase()}) x ${i.qty} = ₹${(i.price * i.qty).toLocaleString('en-IN')}`).join('\n');
+      const totalText = `\n\n*Total Amount:* ${document.getElementById('cartSubtotalText').textContent}`;
+      const text = encodeURIComponent('Hello Ramdev Enterprise,\n\n' + headerText + 'I would like to place an order:\n' + itemsText + totalText);
+
+      window.open('https://wa.me/?text=' + text, '_blank');
+      cart = [];
+      updateCart();
+      closeModal('cartModal');
+    }
+
+    function inquireWhatsApp(productId) {
+      const p = productsData[productId];
+      if (!p) return;
+      const dealer = getDealerProfile();
+      let text = '';
+      if (priceMode === 'wholesale' && isDealerVerified() && dealer) {
+        text = encodeURIComponent(`Hello Ramdev Enterprise, I am a verified wholesale dealer (${dealer.firmName}, GST: ${dealer.gstin}). I would like to inquire about bulk ordering ${p.title} (Wholesale Rate ₹${p.wholesalePrice}, MOQ ${p.wholesaleMoq} Pcs) and stock availability.`);
+      } else {
+        text = encodeURIComponent(`Hello Ramdev Enterprise, I would like to inquire about ${p.title} (Retail Rate ₹${p.retailPrice}) and delivery availability.`);
+      }
+      window.open('https://wa.me/?text=' + text, '_blank');
+    }
+
+    // --- MODULE 6: NAVIGATION, CATEGORY FILTERING & SEARCH ENGINE ---
+    // Switches between Homepage Tiles and Dedicated Category Views,
+    // handles category circle clicks, subcategory chips, and debounced live search.
+    function showHomePage() {
+      const prodView = document.getElementById('categoryProductsView');
+      if (prodView) prodView.style.display = 'none';
+
+      const tiles = document.getElementById('homepageTilesSection');
+      if (tiles) tiles.style.display = 'grid';
+      const hero = document.getElementById('homeHeroBanner');
+      if (hero) hero.style.display = 'block';
+
+      document.querySelectorAll('.cat-pill-item').forEach(el => el.classList.remove('active'));
+
+      const sel = document.getElementById('searchCategorySelect');
+      if (sel) sel.value = 'all';
+      const searchInput = document.getElementById('searchInput');
+      if (searchInput) searchInput.value = '';
+
+      currentFilterCat = 'all';
+      currentFilterSub = 'all';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function filterCategory(cat) {
+      currentFilterCat = cat;
+      currentFilterSub = 'all';
+
+      const prodView = document.getElementById('categoryProductsView');
+      if (prodView) prodView.style.display = 'block';
+      const tiles = document.getElementById('homepageTilesSection');
+      if (tiles) tiles.style.display = 'none';
+      const hero = document.getElementById('homeHeroBanner');
+      if (hero) hero.style.display = 'none';
+
+      document.querySelectorAll('.cat-pill-item').forEach(el => el.classList.remove('active'));
+      const activePill = document.getElementById('cat-pill-' + cat);
+      if (activePill) activePill.classList.add('active');
+
+      const sel = document.getElementById('searchCategorySelect');
+      if (sel) sel.value = cat;
+
+      const chips = document.getElementById('bottleSubcatChips');
+      const title = document.getElementById('catalogTitleHeading');
+      const subtext = document.getElementById('catalogSubtext');
+      const breadcrumb = document.getElementById('breadcrumbCurrentCat');
+
+      document.querySelectorAll('.chip-btn').forEach(btn => btn.classList.remove('active'));
+      const chipAll = document.getElementById('chip-all');
+      if (chipAll) chipAll.classList.add('active');
+
+      if (cat === 'bottle') {
+        chips.style.display = 'flex';
+        title.textContent = '📦 1. Plastic Bottles Range';
+        subtext.textContent = 'Showing Standard Bottle, Threaded Bottle & Tap Dispenser Bottle with photo, price & MOQ.';
+        if (breadcrumb) breadcrumb.textContent = '1. Plastic Bottles Range';
+      } else if (cat === 'diesel') {
+        chips.style.display = 'none';
+        title.textContent = '⛽ 2. Diesel & Industrial Cans';
+        subtext.textContent = 'Heavy duty 5L, 10L, 20L leak-proof diesel jerrycans with tamper seals.';
+        if (breadcrumb) breadcrumb.textContent = '2. Diesel & Industrial Cans';
+      } else if (cat === 'water') {
+        chips.style.display = 'none';
+        title.textContent = '🚰 3. Water Cool Jars & Campers';
+        subtext.textContent = 'Un-breakable amber water dispensers with tap and cooling body.';
+        if (breadcrumb) breadcrumb.textContent = '3. Water Cool Jars & Campers';
+      } else if (cat === 'disposable') {
+        chips.style.display = 'none';
+        title.textContent = '🍽️ 4. Disposable Items';
+        subtext.textContent = 'Food packaging boxes, disposable plastic cups, and meal trays.';
+        if (breadcrumb) breadcrumb.textContent = '4. Disposable Items';
+      } else if (cat === 'other') {
+        chips.style.display = 'none';
+        title.textContent = '🧹 5. Other Cleaning & Plastic Items';
+        subtext.textContent = 'Magic spin mop sets, buckets, and household plastic tools.';
+        if (breadcrumb) breadcrumb.textContent = '5. Other Cleaning Items';
+      } else {
+        chips.style.display = 'none';
+        title.textContent = '📦 All 5 Categories Catalog';
+        subtext.textContent = 'Explore our full wholesale & retail range.';
+        if (breadcrumb) breadcrumb.textContent = 'All Products & Categories';
+      }
+
+      renderProductCards();
+      window.scrollTo({ top: 110, behavior: 'smooth' });
+    }
+
+    function openCategoryWithSub(cat, sub) {
+      filterCategory(cat);
+      filterBottleSub(sub);
+    }
+
+    function filterBottleSub(sub) {
+      currentFilterSub = sub;
+      const prodView = document.getElementById('categoryProductsView');
+      if (prodView && prodView.style.display === 'none') {
+        filterCategory('bottle');
+      }
+
+      document.querySelectorAll('.chip-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.id === 'chip-' + sub) btn.classList.add('active');
+      });
+
+      renderProductCards();
+    }
+
+    function handleSelectCategory(cat) { filterCategory(cat); }
+
+    function searchCatalog() {
+      const q = document.getElementById('searchInput').value.toLowerCase().trim();
+      if (!q) { alert('Please enter a product name to search'); return; }
+
+      const prodView = document.getElementById('categoryProductsView');
+      if (prodView) prodView.style.display = 'block';
+      const tiles = document.getElementById('homepageTilesSection');
+      if (tiles) tiles.style.display = 'none';
+      const hero = document.getElementById('homeHeroBanner');
+      if (hero) hero.style.display = 'none';
+
+      document.querySelectorAll('.cat-pill-item').forEach(el => el.classList.remove('active'));
+      const chips = document.getElementById('bottleSubcatChips');
+      if (chips) chips.style.display = 'none';
+
+      const title = document.getElementById('catalogTitleHeading');
+      const subtext = document.getElementById('catalogSubtext');
+      const breadcrumb = document.getElementById('breadcrumbCurrentCat');
+
+      title.textContent = `🔍 Search Results for: "${q}"`;
+      if (breadcrumb) breadcrumb.textContent = `Search: "${q}"`;
+
+      currentFilterCat = 'all';
+      currentFilterSub = 'all';
+      renderProductCards();
+
+      // Filter rendered cards by query
+      let matched = 0;
+      document.querySelectorAll('.p-card').forEach(c => {
+        if (c.innerText.toLowerCase().includes(q)) {
+          c.style.display = 'flex';
+          matched++;
+        } else {
+          c.style.display = 'none';
+        }
+      });
+
+      subtext.textContent = `Found ${matched} product(s) matching "${q}".`;
+      window.scrollTo({ top: 110, behavior: 'smooth' });
+    }
+
+    let searchTimer = null;
+    function handleSearchInputLive(val) {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(() => {
+        if (val.trim().length > 1) searchCatalog();
+      }, 400);
+    }
+
+    function toggleInStockFilter() {
+      inStockOnly = !inStockOnly;
+      const btn = document.getElementById('filterInStockBtn');
+      if (btn) btn.classList.toggle('active', inStockOnly);
+      renderProductCards();
+      showToast(inStockOnly ? '📦 Filter: Showing only in-stock products' : '📦 Filter: Showing all products');
+    }
+
+    function sortCatalog(criteria) {
+      currentSort = criteria;
+      renderProductCards();
+    }
+
+    // --- MODULE 7: MODAL DIALOG CONTROLLERS ---
+    // Opens/closes overlays by toggling the '.active' class.
+    function openModal(id) {
+      const el = document.getElementById(id);
+      if (el) el.classList.add('active');
+    }
+    function closeModal(id) {
+      const el = document.getElementById(id);
+      if (el) el.classList.remove('active');
+    }
+
+    // --- MODULE 8: PINCODE DELIVERY & FREIGHT LOGISTICS CALCULATOR ---
+    // Connects to #deliveryPincodeModal and header delivery pin button.
+    // Calculates courier transit days and transport waybill hub for any 6-digit Indian PIN.
+    const PIN_HUBS = {
+      '342001': { loc: 'Jodhpur (Rajasthan)', courier: '1–2 Days Doorstep', bilty: 'Jaipur Golden Sangaria Bypass Hub' },
+      '302001': { loc: 'Jaipur (Rajasthan)', courier: '2–3 Days Doorstep', bilty: 'TCI Express Transport Nagar Hub' },
+      '110001': { loc: 'Delhi NCR', courier: '2–3 Days Doorstep', bilty: 'V-Trans Sanjay Gandhi Transport Nagar' },
+      '380001': { loc: 'Ahmedabad (Gujarat)', courier: '2–3 Days Doorstep', bilty: 'SafeXpress Aslali Logistics Park' },
+      '400001': { loc: 'Mumbai (Maharashtra)', courier: '3–4 Days Doorstep', bilty: 'Bombay Golden Vashi APMC Hub' }
+    };
+
+    function openDeliveryPincodeModal() {
+      openModal('deliveryPincodeModal');
+    }
+
+    function checkPincodeDelivery() {
+      const pin = document.getElementById('pincodeInput').value.trim();
+      if (!/^\d{6}$/.test(pin)) {
+        alert('Please enter a valid 6-digit Indian PIN code.');
+        return;
+      }
+
+      const hub = PIN_HUBS[pin] || { loc: `Pincode ${pin} (Pan-India Consignment)`, courier: '3–5 Days Doorstep Courier', bilty: 'State Transport Waybill Hub' };
+      document.getElementById('pincodeLocName').textContent = hub.loc;
+      document.getElementById('pincodeResultBox').style.display = 'block';
+    }
+
+    function quickSelectPincode(pin, locName) {
+      document.getElementById('pincodeInput').value = pin;
+      checkPincodeDelivery();
+    }
+
+    function savePincodeSelection() {
+      const pin = document.getElementById('pincodeInput').value.trim();
+      const loc = document.getElementById('pincodeLocName').textContent;
+      localStorage.setItem('savedDeliveryPincode', pin);
+      localStorage.setItem('savedDeliveryLoc', loc);
+
+      const headerText = document.getElementById('headerDeliveryLocationText');
+      if (headerText) headerText.textContent = loc.split('(')[0].trim() + ' ' + pin;
+
+      closeModal('deliveryPincodeModal');
+      showToast(`📍 Active delivery location set to: ${loc}`);
+    }
+
+    // --- MODULE 9: PRODUCT SPECIFICATIONS & VOLUME SLABS MODAL ---
+    // Connects to #productQuickViewModal. Displays complete engineering specs,
+    // food-grade certifications, volume discount slabs, and quick-order buttons.
+    function openProductQuickView(productId) {
+      const p = productsData[productId];
+      if (!p) return;
+
+      document.getElementById('quickViewCatTag').textContent = p.catTag;
+      document.getElementById('quickViewTitle').textContent = p.title;
+      document.getElementById('quickViewImg').src = p.img;
+
+      const curStock = stocks[productId] || 0;
+      document.getElementById('quickViewStockBadge').textContent = curStock > 0 ? `● In Stock (${curStock})` : 'Out of Stock';
+
+      const isWholesale = (priceMode === 'wholesale');
+      document.getElementById('quickViewMoqBadge').textContent = isWholesale ? `MOQ: ${p.wholesaleMoq} Pcs` : 'MOQ: 1 Pc';
+
+      const priceBox = document.getElementById('quickViewPriceBox');
+      if (isWholesale) {
+        priceBox.innerHTML = `
+          <div style="font-size: 0.75rem; font-weight: 800; color: #047857; text-transform: uppercase;">Wholesale Direct Factory Rate</div>
+          <div style="font-size: 1.5rem; font-weight: 800; color: #0F172A;">₹${p.wholesalePrice} <span style="font-size: 0.8rem; color: #64748B;">${p.wholesaleUnit}</span></div>
+          <div style="font-size: 0.75rem; color: #047857; margin-top: 2px;">Minimum Order Quantity: <strong>${p.wholesaleMoq} Pcs</strong> • Transport Bilty Pallet Booking</div>
+        `;
+      } else {
+        priceBox.innerHTML = `
+          <div style="font-size: 0.75rem; color: #64748B;">M.R.P.: <del>₹${p.retailMrp}</del></div>
+          <div style="font-size: 1.5rem; font-weight: 800; color: #0F172A;">₹${p.retailPrice} <span style="font-size: 0.8rem; color: #64748B;">${p.retailUnit}</span></div>
+          <div style="font-size: 0.75rem; color: #2563EB; margin-top: 2px;">Retail Single Unit Order • Courier Doorstep Delivery</div>
+        `;
+      }
+
+      // Specs Table
+      const specsTable = document.getElementById('quickViewSpecsTable');
+      let specsHtml = '';
+      for (const [k, v] of Object.entries(p.specs || {})) {
+        specsHtml += `<tr><th style="width: 35%;">${k}</th><td>${v}</td></tr>`;
+      }
+      specsTable.innerHTML = specsHtml;
+
+      // Slabs Table
+      const slabsTable = document.getElementById('quickViewSlabsTable');
+      let slabsHtml = '<thead><tr><th>Quantity Range</th><th>Discounted Unit Rate</th></tr></thead><tbody>';
+      (p.slabs || []).forEach(s => {
+        slabsHtml += `<tr><td>${s.slab}</td><td><strong>${s.rate}</strong></td></tr>`;
+      });
+      slabsHtml += '</tbody>';
+      slabsTable.innerHTML = slabsHtml;
+
+      // Action Handlers
+      document.getElementById('quickViewWaBtn').onclick = () => inquireWhatsApp(productId);
+      document.getElementById('quickViewAddCartBtn').onclick = () => { handleAddToCart(productId); closeModal('productQuickViewModal'); };
+      document.getElementById('quickViewBuyNowBtn').onclick = () => { handleBuyNow(productId); closeModal('productQuickViewModal'); };
+
+      openModal('productQuickViewModal');
+    }
+
+    // --- MODULE 10: GST PROFORMA INVOICE & PRINT ENGINE ---
+    // Connects to #proformaInvoiceModal. Formats an official quotation / proforma
+    // with 18% GST, state code 08 (Rajasthan), HSN 3923, and print / WhatsApp sharing.
+    function generateProformaInvoice() {
+      const user = getCurrentUser() || { name: 'Valued Customer', mobile: '9829012345', email: 'customer@ramdevplastics.com' };
+      const dealer = getDealerProfile();
+
+      document.getElementById('invNumber').textContent = '#RE-PI-2026-' + Math.floor(100 + Math.random() * 900);
+      document.getElementById('invDate').textContent = new Date().toLocaleDateString('en-IN');
+
+      if (priceMode === 'wholesale' && dealer) {
+        document.getElementById('invPartyName').textContent = dealer.firmName;
+        document.getElementById('invPartyGstin').textContent = 'GSTIN: ' + dealer.gstin;
+        document.getElementById('invPartyContact').textContent = 'Contact: ' + dealer.contactPerson + ' (+' + dealer.phone + ')';
+        document.getElementById('invPartyCity').textContent = 'Destination: ' + dealer.city;
+        document.getElementById('invPortalType').textContent = 'Wholesale Bulk Trade';
+      } else {
+        document.getElementById('invPartyName').textContent = user.name;
+        document.getElementById('invPartyGstin').textContent = 'Unregistered Retail Customer';
+        document.getElementById('invPartyContact').textContent = 'Mobile: +91 ' + user.mobile;
+        document.getElementById('invPartyCity').textContent = 'Destination: ' + (localStorage.getItem('savedDeliveryLoc') || 'All India Delivery');
+        document.getElementById('invPortalType').textContent = 'Retail Consumer Order';
+      }
+
+      // Populate items table
+      const tbody = document.getElementById('invoiceItemsTableBody');
+      const items = cart.length > 0 ? cart : [
+        { title: 'Standard Clear Plastic Water Bottle', price: 14, qty: 100, mode: 'wholesale' },
+        { title: '20L Heavy Duty Diesel Jerrycan', price: 180, qty: 50, mode: 'wholesale' }
+      ];
+
+      let grandTotal = 0;
+      let rowsHtml = '';
+      items.forEach((item, idx) => {
+        const itemTot = item.price * item.qty;
+        grandTotal += itemTot;
+        rowsHtml += `
+          <tr>
+            <td style="text-align: center;">${idx + 1}</td>
+            <td>${item.title}</td>
+            <td style="text-align: center;">3923.30</td>
+            <td style="text-align: center;">${item.qty}</td>
+            <td style="text-align: right;">₹${item.price.toFixed(2)}</td>
+            <td style="text-align: right;">₹${itemTot.toLocaleString('en-IN')}</td>
+          </tr>
+        `;
+      });
+      tbody.innerHTML = rowsHtml;
+
+      const baseVal = Math.round(grandTotal / 1.18);
+      const cgstVal = Math.round((grandTotal - baseVal) / 2);
+      const sgstVal = grandTotal - baseVal - cgstVal;
+
+      document.getElementById('invBaseTotal').textContent = '₹' + baseVal.toLocaleString('en-IN');
+      document.getElementById('invCgst').textContent = '₹' + cgstVal.toLocaleString('en-IN');
+      document.getElementById('invSgst').textContent = '₹' + sgstVal.toLocaleString('en-IN');
+      document.getElementById('invGrandTotal').textContent = '₹' + grandTotal.toLocaleString('en-IN');
+
+      openModal('proformaInvoiceModal');
+    }
+
+    function shareInvoiceWhatsApp() {
+      const invNum = document.getElementById('invNumber').textContent;
+      const invTot = document.getElementById('invGrandTotal').textContent;
+      const party = document.getElementById('invPartyName').textContent;
+      const text = encodeURIComponent(`*RAMDEV ENTERPRISE - GST Proforma Invoice*\n\nInvoice: ${invNum}\nCustomer: ${party}\nAmount: ${invTot}\n\nKindly confirm quotation and dispatch approval.`);
+      window.open('https://wa.me/?text=' + text, '_blank');
+    }
+
+    // --- MODULE 11: 4-STEP LIVE CONSIGNMENT TRACKER ---
+    // Connects to #trackOrderModal. Updates visual progress: Placed → Packed → In Transport → Delivered.
+    function performOrderTrack() {
+      const val = document.getElementById('trackInput').value.trim().toUpperCase();
+      if (!val) { alert('Please enter an Order ID'); return; }
+
+      document.getElementById('trackDisplayOrderId').textContent = val;
+      document.getElementById('trackResultContainer').style.display = 'block';
+
+      // Demo tracking logic
+      const stepPlaced = document.getElementById('stepPlaced');
+      const stepPacked = document.getElementById('stepPacked');
+      const stepDispatched = document.getElementById('stepDispatched');
+      const stepDelivered = document.getElementById('stepDelivered');
+
+      stepPlaced.className = 'timeline-step-item done';
+      stepPacked.className = 'timeline-step-item done';
+      stepDispatched.className = 'timeline-step-item active';
+      stepDelivered.className = 'timeline-step-item';
+
+      document.getElementById('trackCarrier').textContent = 'Jaipur Golden Transport Co.';
+      document.getElementById('trackWaybill').textContent = '#JP-' + Math.floor(10000 + Math.random() * 90000);
+      showToast('🚚 Real-time order dispatch status loaded');
+    }
+
+    // --- MODULE 12: USER AUTHENTICATION & DUAL OTP VERIFICATION ---
+    // Connects to #authModal and #userAccountModal. Validates 10-digit mobile (6-9)
+    // and standard email live, issues simulated dual OTPs (4819 / 9352), and manages sessions.
+    function validatePhoneLive(input, hintId) {
+      const hint = document.getElementById(hintId);
+      let val = input.value.replace(/\D/g, '');
+      input.value = val;
+
+      if (!val) {
+        input.classList.remove('is-valid', 'has-error');
+        if (hint) hint.textContent = '';
+        return false;
+      }
+      if (val.length === 10 && PHONE_REGEX.test(val)) {
+        input.classList.remove('has-error');
+        input.classList.add('is-valid');
+        if (hint) { hint.className = 'validation-hint success'; hint.textContent = '✔ Valid 10-digit mobile number.'; }
+        return true;
+      } else {
+        input.classList.add('has-error');
+        input.classList.remove('is-valid');
+        if (hint) { hint.className = 'validation-hint error'; hint.textContent = '❌ Wrong Mobile: Enter 10 digits starting with 6-9.'; }
+        return false;
+      }
+    }
+
+    function validateEmailLive(input, hintId) {
+      const hint = document.getElementById(hintId);
+      const val = input.value.trim();
+
+      if (!val) {
+        input.classList.remove('is-valid', 'has-error');
+        if (hint) hint.textContent = '';
+        return false;
+      }
+      if (EMAIL_REGEX.test(val)) {
+        input.classList.remove('has-error');
+        input.classList.add('is-valid');
+        if (hint) { hint.className = 'validation-hint success'; hint.textContent = '✔ Valid email format.'; }
+        return true;
+      } else {
+        input.classList.add('has-error');
+        input.classList.remove('is-valid');
+        if (hint) { hint.className = 'validation-hint error'; hint.textContent = '❌ Wrong Email: Enter a valid address (name@example.com).'; }
+        return false;
+      }
+    }
+
+    function validateLoginInputLive(input) {
+      const hint = document.getElementById('loginFormatHint');
+      const val = input.value.trim();
+      const alertBox = document.getElementById('loginErrorAlert');
+      if (alertBox) alertBox.style.display = 'none';
+
+      if (!val) {
+        input.classList.remove('is-valid', 'has-error');
+        if (hint) hint.textContent = '';
+        return false;
+      }
+      if (/^\d+$/.test(val)) {
+        return validatePhoneLive(input, 'loginFormatHint');
+      } else {
+        return validateEmailLive(input, 'loginFormatHint');
+      }
+    }
+
+    // --- Auth Management ---
+    function autoFillValidSignupData() {
+      document.getElementById('regName').value = 'Ramesh Sharma';
+      const phoneInput = document.getElementById('regPhone');
+      phoneInput.value = '9829012345';
+      validatePhoneLive(phoneInput, 'phoneErrorHint');
+
+      const emailInput = document.getElementById('regEmail');
+      emailInput.value = 'ramesh.sharma@example.com';
+      validateEmailLive(emailInput, 'emailErrorHint');
+
+      document.getElementById('regPass').value = 'secure123';
+      showToast('⚡ Pre-filled valid test details for instant verification!');
+    }
+
+    function autoFillBothOtps() {
+      document.getElementById('signupMobileOtp').value = EXPECTED_MOBILE_OTP;
+      document.getElementById('signupEmailOtp').value = EXPECTED_EMAIL_OTP;
+      document.getElementById('mobileOtpError').textContent = '';
+      document.getElementById('emailOtpError').textContent = '';
+      showToast(`⚡ Pre-filled demo OTPs: ${EXPECTED_MOBILE_OTP} & ${EXPECTED_EMAIL_OTP}`);
+    }
+
+    function quickFillDemoLogin() {
+      const loginInp = document.getElementById('loginInput');
+      loginInp.value = '9829012345';
+      validateLoginInputLive(loginInp);
+      document.getElementById('loginPass').value = '123456';
+      showToast('⚡ Quick filled demo user credentials!');
+    }
+
+    function toggleAuth(isSignUp) {
+      document.getElementById('loginView').style.display = isSignUp ? 'none' : 'block';
+      document.getElementById('signupView').style.display = isSignUp ? 'block' : 'none';
+      document.getElementById('dualOtpView').style.display = 'none';
+      document.getElementById('authSuccessView').style.display = 'none';
+      document.getElementById('authTitle').textContent = isSignUp ? '📝 Create Account (OTP Verification)' : '🔑 Sign In';
+    }
+
+    function startSignupOtpVerification() {
+      const name = document.getElementById('regName').value.trim();
+      const phoneInput = document.getElementById('regPhone');
+      const emailInput = document.getElementById('regEmail');
+      const pass = document.getElementById('regPass').value;
+      const portal = document.getElementById('regPortalChoice').value;
+
+      if (!name) { alert('Please enter your full name.'); return; }
+      if (!validatePhoneLive(phoneInput, 'phoneErrorHint') || !validateEmailLive(emailInput, 'emailErrorHint')) {
+        alert('Please correct highlighted errors before proceeding.');
+        return;
+      }
+      if (!pass || pass.length < 6) { alert('Password must have at least 6 characters.'); return; }
+
+      pendingSignupData = {
+        name,
+        mobile: phoneInput.value.trim(),
+        email: emailInput.value.trim(),
+        password: pass,
+        portal,
+        verified: false
+      };
+
+      document.getElementById('verifyMobileText').textContent = '+91 ' + pendingSignupData.mobile;
+      document.getElementById('verifyEmailText').textContent = pendingSignupData.email;
+      document.getElementById('signupMobileOtp').value = EXPECTED_MOBILE_OTP;
+      document.getElementById('signupEmailOtp').value = EXPECTED_EMAIL_OTP;
+
+      document.getElementById('signupView').style.display = 'none';
+      document.getElementById('dualOtpView').style.display = 'block';
+      document.getElementById('authTitle').textContent = '📲 Verify Mobile & Email via OTP';
+      showToast(`📲 OTP codes sent to +91 ${pendingSignupData.mobile} & ${pendingSignupData.email}`);
+    }
+
+    function verifySignupOtps() {
+      const mOtp = document.getElementById('signupMobileOtp').value.trim();
+      const eOtp = document.getElementById('signupEmailOtp').value.trim();
+      let err = false;
+
+      if (mOtp !== EXPECTED_MOBILE_OTP) {
+        document.getElementById('mobileOtpError').textContent = `❌ Invalid Mobile OTP (Use ${EXPECTED_MOBILE_OTP})`;
+        err = true;
+      } else { document.getElementById('mobileOtpError').textContent = ''; }
+
+      if (eOtp !== EXPECTED_EMAIL_OTP) {
+        document.getElementById('emailOtpError').textContent = `❌ Invalid Email OTP (Use ${EXPECTED_EMAIL_OTP})`;
+        err = true;
+      } else { document.getElementById('emailOtpError').textContent = ''; }
+
+      if (err) return;
+
+      pendingSignupData.verified = true;
+      document.getElementById('authSuccessUserName').textContent = pendingSignupData.name;
+      document.getElementById('dualOtpView').style.display = 'none';
+      document.getElementById('authSuccessView').style.display = 'block';
+      document.getElementById('authTitle').textContent = '✅ Verification Successful';
+    }
+
+    function finishSignupAccess() {
+      if (!pendingSignupData || !pendingSignupData.verified) return;
+      localStorage.setItem('currentUser', JSON.stringify(pendingSignupData));
+      applyCurrentUserState();
+      closeModal('authModal');
+      showToast(`🚀 Welcome, ${pendingSignupData.name}! Account activated.`);
+    }
+
+    function doLogin() {
+      const val = document.getElementById('loginInput').value.trim();
+      const pass = document.getElementById('loginPass').value;
+      const alertBox = document.getElementById('loginErrorAlert');
+
+      if (!val || !pass) {
+        alertBox.textContent = 'Please enter your registered contact and password.';
+        alertBox.style.display = 'block';
+        return;
+      }
+
+      let savedUser = getCurrentUser();
+      let name = (savedUser && savedUser.name) ? savedUser.name : 'Valued Customer';
+      let mobile = /^\d+$/.test(val) ? val : '9829012345';
+      let email = val.includes('@') ? val : 'customer@ramdevplastics.com';
+
+      let userPortal = (savedUser && savedUser.portal) ? savedUser.portal : 'retail';
+      const userObj = { name, mobile, email, portal: userPortal, verified: true };
+      localStorage.setItem('currentUser', JSON.stringify(userObj));
+      localStorage.setItem('ramdevPortalMode', userPortal);
+      if (userPortal === 'wholesale') setPriceMode('wholesale');
+      else setPriceMode('retail');
+      applyCurrentUserState();
+      closeModal('authModal');
+      showToast(`👋 Welcome back, ${name}!`);
+    }
+
+    function getCurrentUser() {
+      try { return JSON.parse(localStorage.getItem('currentUser')) || null; }
+      catch (e) { return null; }
+    }
+
+    function handleAccountHeaderClick() {
+      const user = getCurrentUser();
+      if (user && user.verified) {
+        openUserAccountModal();
+      } else {
+        document.getElementById('mainStorefrontApp').style.display = 'none';
+        document.getElementById('entryAuthGateScreen').style.display = 'flex';
+        showGateLoginView();
+      }
+    }
+
+    function openUserAccountModal() {
+      const user = getCurrentUser();
+      if (!user) {
+        document.getElementById('mainStorefrontApp').style.display = 'none';
+        document.getElementById('entryAuthGateScreen').style.display = 'flex';
+        showGateLoginView();
+        return;
+      }
+      document.getElementById('userAccName').textContent = user.name;
+      document.getElementById('userInitialChar').textContent = (user.name || 'U').charAt(0).toUpperCase();
+      document.getElementById('userAccPhone').textContent = '+91 ' + user.mobile;
+      document.getElementById('userAccEmail').textContent = user.email;
+      document.getElementById('userAccPortal').textContent = (priceMode === 'wholesale') ? 'Wholesale Dealer' : 'Retail Customer';
+      openModal('userAccountModal');
+    }
+
+    function logoutUser() {
+      localStorage.removeItem('currentUser');
+      sessionStorage.removeItem('ramdevSessionActive');
+      closeModal('userAccountModal');
+      document.getElementById('mainStorefrontApp').style.display = 'none';
+      document.getElementById('entryAuthGateScreen').style.display = 'flex';
+      showGateLoginView();
+      showToast('🔒 Signed out successfully. Please login to enter.');
+    }
+
+    function applyCurrentUserState() {
+      const user = getCurrentUser();
+      const greetingEl = document.getElementById('userGreeting');
+      const portalBox = document.getElementById('headerPortalModeBox');
+      const retailBadge = document.getElementById('headerRetailBadge');
+      const dealerBadge = document.getElementById('headerDealerBadge');
+      const dealerProfile = getDealerProfile();
+
+      if (user && user.verified) {
+        greetingEl.innerHTML = `Hello, <strong>${user.name}</strong> <span style="color: #4ADE80; font-size: 0.75rem;">✔</span>`;
+      } else {
+        greetingEl.textContent = 'Hello, Sign In';
+      }
+
+      // STRICT HOMEPAGE SEPARATION:
+      // If user is a Retail customer, HIDE the wholesale switch option completely from the header!
+      const isRetailUser = (user && user.portal === 'retail') || (!user && localStorage.getItem('ramdevPortalMode') === 'retail');
+      const isWholesaleVerified = (user && user.portal === 'wholesale') || isDealerVerified();
+
+      if (isRetailUser) {
+        if (portalBox) portalBox.style.display = 'none'; // Hide wholesale shift toggle & switch button
+        if (dealerBadge) dealerBadge.style.display = 'none';
+        if (retailBadge) retailBadge.style.display = 'flex'; // Show clean Retail Customer Store badge
+        priceMode = 'retail';
+      } else if (isWholesaleVerified) {
+        if (portalBox) portalBox.style.display = 'none';
+        if (retailBadge) retailBadge.style.display = 'none';
+        if (dealerBadge) {
+          dealerBadge.style.display = 'flex';
+          if (dealerProfile) {
+            document.getElementById('headerFirmName').textContent = dealerProfile.firmName || 'Verified Dealer';
+            document.getElementById('headerGstin').textContent = dealerProfile.gstin || 'GSTIN Active';
+          }
+        }
+        priceMode = 'wholesale';
+      } else {
+        // First-time guest visitor before making a selection
+        if (portalBox) portalBox.style.display = 'flex';
+        if (retailBadge) retailBadge.style.display = 'none';
+        if (dealerBadge) dealerBadge.style.display = 'none';
+      }
+    }
+
+    function handleCheckoutOrder() {
+      const user = getCurrentUser();
+      if (!user || !user.verified) {
+        alert('Please create and verify your account first before ordering.');
+        closeModal('cartModal');
+        toggleAuth(true);
+        openModal('authModal');
+        return;
+      }
+      const orderId = '#RE-' + Math.floor(100000 + Math.random() * 900000);
+      alert(`Order placed successfully!\n\nOrder ID: ${orderId}\nCustomer: ${user.name}\nDispatch Confirmed.`);
+      cart = [];
+      updateCart();
+      closeModal('cartModal');
+    }
+
+    // --- MODULE 13: OWNER ADMIN DASHBOARD & LIVE INVENTORY REGISTER ---
+    // Connects to #adminModal. Master PIN (8899) gate, live stock adjustment (+50 / -25),
+    // reset to factory stock, and 1-tap dispatch status changer.
+    function unlockAdmin() {
+      const p = document.getElementById('ownerPin').value;
+      if (p === '8899' || p === '') {
+        document.getElementById('adminPinGate').style.display = 'none';
+        document.getElementById('adminContent').style.display = 'block';
+        renderAdminStockTable();
+      } else {
+        alert('Incorrect Owner PIN! (Default: 8899)');
+      }
+    }
+
+    function renderAdminStockTable() {
+      const tbody = document.getElementById('adminStockTableBody');
+      if (!tbody) return;
+
+      let html = '';
+      for (let i = 1; i <= 8; i++) {
+        const p = productsData[i];
+        const s = stocks[i] || 0;
+        html += `
+          <tr style="border-bottom: 1px solid #E2E8F0;">
+            <td style="padding: 8px;">${i}</td>
+            <td style="padding: 8px;">${p.title}</td>
+            <td style="padding: 8px;"><strong id="st-${i}">${s}</strong></td>
+            <td style="padding: 8px; text-align: center;">
+              <button onclick="stockChange(${i}, 50)" style="background: #DCFCE7; color: #166534; border: 1px solid #86EFAC; padding: 2px 8px; border-radius: 4px; cursor: pointer;">+50</button>
+            </td>
+            <td style="padding: 8px; text-align: center;">
+              <button onclick="stockChange(${i}, -25)" style="background: #FEE2E2; color: #991B1B; border: 1px solid #FCA5A5; padding: 2px 8px; border-radius: 4px; cursor: pointer;">-25</button>
+            </td>
+          </tr>
+        `;
+      }
+      tbody.innerHTML = html;
+    }
+
+    function stockChange(id, delta) {
+      stocks[id] = Math.max(0, (stocks[id] || 0) + delta);
+      const el = document.getElementById('st-' + id);
+      if (el) el.textContent = stocks[id];
+      renderProductCards();
+      showToast(`Stock for Product #${id} updated to ${stocks[id]} units`);
+    }
+
+    function resetFactoryStock() {
+      stocks = Object.assign({}, defaultFactoryStocks);
+      renderAdminStockTable();
+      renderProductCards();
+      showToast('🔄 Factory stocks reset to original master levels.');
+    }
+
+    function setOrderSt(st) {
+      document.getElementById('stBadge').textContent = st;
+      alert('Order status set to: ' + st);
+    }
+
+    // --- MODULE 14: SYSTEM BOOTSTRAP & INITIALIZATION ---
+    // Bootstraps application on DOMContentLoaded. Checks saved credentials,
+    // sets active delivery pin, enforces portal isolation, and launches storefront.
+    function initPortalGate() {
+      // Check saved delivery location
+      const savedPin = localStorage.getItem('savedDeliveryPincode');
+      const savedLoc = localStorage.getItem('savedDeliveryLoc');
+      if (savedPin && savedLoc) {
+        const headerText = document.getElementById('headerDeliveryLocationText');
+        if (headerText) headerText.textContent = savedLoc.split('(')[0].trim() + ' ' + savedPin;
+      }
+
+      // Check if session is already active in current browser session
+      const isSessionActive = sessionStorage.getItem('ramdevSessionActive');
+      const user = getCurrentUser();
+
+      // ALWAYS Show Entry Login Page First when entering the website!
+      if (isSessionActive && user && user.verified) {
+        enterStorefront(user.portal || 'retail');
+      } else {
+        document.getElementById('entryAuthGateScreen').style.display = 'flex';
+        document.getElementById('mainStorefrontApp').style.display = 'none';
+        showGateLoginView();
+      }
+    }
+
+    // Single Clean Bootstrap on DOM Load
+    document.addEventListener('DOMContentLoaded', () => {
+      showHomePage();
+      initPortalGate();
+    });
+  </script>
+</body>
+
+</html>
