@@ -64,7 +64,7 @@
             🔑 Sign In to Your Account
           </h3>
           <p style="font-size: 0.82rem; color: #64748B; margin-bottom: 16px;">
-            Enter your registered Mobile Number or Email ID to enter your portal:
+            Enter your registered Mobile Number or Email to log in:
           </p>
 
           <div id="gateLoginAlert" class="validation-hint error" style="display: none; margin-bottom: 12px;"></div>
@@ -77,68 +77,36 @@
 
           <div class="form-group">
             <label>Password *</label>
-            <input type="password" id="gateLoginPass" class="form-control" placeholder="Enter password (e.g. 123)">
+            <input type="password" id="gateLoginPass" class="form-control" placeholder="Enter your password" onkeyup="if(event.key === 'Enter') submitGateLogin()">
           </div>
 
-          <button class="btn-buy" style="width: 100%; padding: 12px; font-weight: 800; font-size: 0.95rem; margin-top: 6px;" onclick="submitGateLogin()">
-            Sign In & Enter Storefront →
+          <button class="btn-login-submit" onclick="submitGateLogin()">
+            Log In
           </button>
 
-          <!-- 1-Click Demo Login Helpers for Retail vs Wholesale -->
-          <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 12px; margin-top: 14px;">
-            <div style="font-size: 0.75rem; font-weight: 700; color: #64748B; margin-bottom: 8px; text-transform: uppercase;">
-              ⚡ Quick Test Logins (Auto-Separated ID):
-            </div>
-            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-              <button type="button" class="btn-specs" style="flex: 1; font-size: 0.76rem;" onclick="quickFillRetailUser()">
-                🛍️ Retail ID (9829012345)
-              </button>
-              <button type="button" class="btn-specs" style="flex: 1; font-size: 0.76rem; color: #047857; border-color: #A7F3D0; background: #ECFDF5;" onclick="quickFillWholesaleDealer()">
-                🏭 Wholesale ID (9414167890)
-              </button>
-            </div>
-          </div>
-
-          <!-- PROMINENT NEW USER REGISTRATION BOX -->
-          <div style="border-top: 2px dashed #CBD5E1; margin-top: 20px; padding-top: 18px; text-align: center;">
-            <div style="font-size: 0.88rem; font-weight: 700; color: #334155; margin-bottom: 6px;">
-              New to Ramdev Enterprise?
-            </div>
-            <p style="font-size: 0.78rem; color: #64748B; margin-bottom: 12px;">
-              Create an account with your full details to shop retail or wholesale:
-            </p>
-            <button class="btn-portal-blue" style="width: 100%; padding: 11px; font-weight: 800; font-size: 0.9rem;" onclick="showGateSignupView()">
-              📝 New User? Register & Create Account Here →
-            </button>
-          </div>
-
-          <!-- Bottom Utility Links -->
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; padding-top: 12px; border-top: 1px solid #E2E8F0; font-size: 0.78rem;">
-            <a href="javascript:void(0)" style="color: #64748B; text-decoration: none;" onclick="showGateOwnerView()">
-              👑 Store Owner PIN Gate
-            </a>
-            <a href="javascript:void(0)" style="color: #2563EB; font-weight: 700; text-decoration: none;" onclick="continueAsGuest()">
-              🛍️ Continue as Guest (Retail) ›
-            </a>
+          <!-- New User Link Form with Glowing Effect on Hover / Click -->
+          <div class="auth-signup-footer">
+            <span class="auth-signup-text">New user?</span>
+            <a href="javascript:void(0)" class="auth-create-link" onclick="showGateSignupView()">Create an account</a>
           </div>
         </div>
 
         <!-- ======================================================== -->
-        <!-- 2. DEDICATED NEW USER REGISTRATION PAGE (FULL DETAILS)   -->
+        <!-- 2. DEDICATED NEW USER REGISTRATION PAGE                 -->
         <!-- ======================================================== -->
         <div id="gateSignupView" style="display: none;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
             <button type="button" class="btn-specs" style="padding: 4px 10px; font-size: 0.78rem;" onclick="showGateLoginView()">
               ← Back to Login
             </button>
-            <span style="font-size: 0.78rem; color: #64748B; font-weight: 700;">STEP 1: REGISTRATION</span>
+            <span style="font-size: 0.78rem; color: #64748B; font-weight: 700;">CREATE ACCOUNT</span>
           </div>
 
           <h3 style="font-size: 1.15rem; font-weight: 800; color: #0F172A; margin-bottom: 4px;">
-            📝 Create New Customer Account
+            📝 Create New Account
           </h3>
           <p style="font-size: 0.82rem; color: #64748B; margin-bottom: 14px;">
-            Enter your full details as planned. Your Login ID will automatically separate your portal:
+            Fill in your details to create your customer account:
           </p>
 
           <form onsubmit="event.preventDefault(); submitGateSignup();">
@@ -153,7 +121,7 @@
             </div>
             <div class="form-group">
               <label>Shop / Firm Name or Household *</label>
-              <input type="text" id="gateRegFirm" class="form-control" placeholder="e.g. Shree Ram Trading Co. / Domestic Home" required>
+              <input type="text" id="gateRegFirm" class="form-control" placeholder="e.g. Shree Ram Trading / Domestic Home" required>
             </div>
             <div class="form-group">
               <label>Email Address (Alternate User ID) *</label>
@@ -170,19 +138,15 @@
                 <option value="retail">🛍️ Retail Customer (1 Pc Orders - Courier Doorstep Delivery)</option>
                 <option value="wholesale">🏭 Wholesale Trade Dealer (Bulk Lot Orders - Transport Bilty)</option>
               </select>
-              <span style="font-size: 0.72rem; color: #64748B;">
-                * Your User ID will automatically open this portal whenever you log in.
-              </span>
             </div>
 
-            <div style="display: flex; gap: 8px; margin-top: 14px;">
-              <button type="button" class="btn-specs" style="flex: 1;" onclick="autoFillGateSignup()">⚡ Auto-Fill Valid Details</button>
-              <button type="submit" class="btn-buy" style="flex: 1.2; font-weight: 800;">Verify Mobile & Email →</button>
-            </div>
+            <button type="submit" class="btn-login-submit" style="margin-top: 10px;">
+              Verify via OTP →
+            </button>
           </form>
 
           <div style="text-align: center; margin-top: 14px; font-size: 0.82rem;">
-            Already registered? <a href="javascript:void(0)" class="tile-see-more" onclick="showGateLoginView()">Sign In Here ›</a>
+            Already have an account? <a href="javascript:void(0)" class="tile-see-more" onclick="showGateLoginView()">Sign In Here ›</a>
           </div>
         </div>
 
@@ -209,28 +173,8 @@
           </div>
           <div style="display: flex; gap: 8px;">
             <button type="button" class="btn-specs" style="flex: 1;" onclick="autoFillGateOtps()">⚡ Auto-Fill Codes</button>
-            <button type="button" class="btn-buy" style="flex: 1.2; font-weight: 800;" onclick="verifyGateOtps()">Verify & Enter Store →</button>
+            <button type="button" class="btn-login-submit" style="flex: 1.2;" onclick="verifyGateOtps()">Verify & Enter Store →</button>
           </div>
-        </div>
-
-        <!-- ======================================================== -->
-        <!-- 4. STORE OWNER MASTER PIN GATE                           -->
-        <!-- ======================================================== -->
-        <div id="gateOwnerView" style="display: none; text-align: center;">
-          <div style="display: flex; justify-content: flex-start; margin-bottom: 8px;">
-            <button type="button" class="btn-specs" style="padding: 4px 10px; font-size: 0.78rem;" onclick="showGateLoginView()">
-              ← Back to Customer Login
-            </button>
-          </div>
-          <span style="font-size: 2.2rem;">👑</span>
-          <h4 style="font-size: 1.15rem; margin: 6px 0;">Ramdev Enterprise Store Owner Login</h4>
-          <p style="font-size: 0.85rem; color: #64748B; margin-bottom: 14px;">
-            Enter Master Owner Security PIN to access live inventory and dispatch:
-          </p>
-          <input type="password" id="gateOwnerPinInput" class="form-control" placeholder="Enter Master PIN (Default: 8899)" maxlength="6" style="max-width: 260px; margin: 0 auto 12px; text-align: center; font-size: 1.1rem; font-weight: 800; letter-spacing: 3px;" onkeyup="if(event.key === 'Enter') submitGateOwnerPin()">
-          <button class="btn-buy" style="width: 100%; padding: 11px; font-weight: 800;" onclick="submitGateOwnerPin()">
-            Unlock Owner Dashboard →
-          </button>
         </div>
       </div>
     </div>
@@ -249,7 +193,7 @@
       <a href="javascript:void(0)" onclick="openModal('trackOrderModal')">🚚 Live Track Order</a>
       <a href="javascript:void(0)" onclick="openDeliveryPincodeModal()">📍 Check Pincode</a>
       <a href="javascript:void(0)" onclick="openModal('complaintModal')">⚠️ Support</a>
-      <a href="javascript:void(0)" onclick="openModal('adminModal')">👑 Owner Login</a>
+      
     </div>
   </div>
 
@@ -381,7 +325,7 @@
       <a href="javascript:void(0)" class="subnav-link" onclick="filterCategory('disposable')">Disposable Packaging</a>
       <a href="javascript:void(0)" class="subnav-link" onclick="filterCategory('other')">Spin Mops & Buckets</a>
       <a href="javascript:void(0)" class="subnav-link" onclick="openDeliveryPincodeModal()">🚚 Freight & Bilty Hubs</a>
-      <a href="javascript:void(0)" class="subnav-link" onclick="openModal('adminModal')">👑 Store Owner Admin</a>
+      
     </div>
   </nav>
 
@@ -1137,66 +1081,6 @@
     </div>
   </div>
 
-  <!-- 5. Owner / Admin Portal -->
-  <div class="modal-overlay" id="adminModal">
-    <div class="modal-card modal-card-lg">
-      <div class="modal-head">
-        <h3>👑 Ramdev Enterprise Owner Control Panel</h3>
-        <button class="modal-close" onclick="closeModal('adminModal')">×</button>
-      </div>
-      <div class="modal-body">
-        <div id="adminPinGate">
-          <p style="font-size: 0.9rem; color: #475569; margin-bottom: 8px;">Enter Master Owner Security PIN:</p>
-          <div style="display: flex; gap: 8px; max-width: 320px; margin-bottom: 12px;">
-            <input type="password" id="ownerPin" class="form-control" placeholder="Enter PIN (Default: 8899)" onkeyup="if(event.key === 'Enter') unlockAdmin()">
-            <button class="btn-buy" style="padding: 0 16px; font-weight: 700;" onclick="unlockAdmin()">Unlock</button>
-          </div>
-          <span style="font-size: 0.75rem; color: #94A3B8;">Master PIN is 8899 for authorized store owners.</span>
-        </div>
-
-        <div id="adminContent" style="display: none;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-            <h4 style="font-size: 1rem; font-weight: 800; margin: 0;">📊 Live Stock Inventory Register (All 8 Products)</h4>
-            <button onclick="resetFactoryStock()" style="background: #F1F5F9; border: 1px solid #CBD5E1; font-size: 0.72rem; padding: 4px 8px; border-radius: 4px; cursor: pointer;">
-              🔄 Reset to Factory Stock
-            </button>
-          </div>
-
-          <div style="max-height: 280px; overflow-y: auto; border: 1px solid #E2E8F0; border-radius: 6px; margin-bottom: 18px;">
-            <table style="width: 100%; border-collapse: collapse; font-size: 0.82rem;">
-              <thead style="position: sticky; top: 0; background: #F1F5F9;">
-                <tr>
-                  <th style="padding: 8px; text-align: left;">#</th>
-                  <th style="padding: 8px; text-align: left;">Product Name</th>
-                  <th style="padding: 8px; text-align: left;">Net Stock</th>
-                  <th style="padding: 8px; text-align: center;">Stock In (+)</th>
-                  <th style="padding: 8px; text-align: center;">Dispatched (-)</th>
-                </tr>
-              </thead>
-              <tbody id="adminStockTableBody"></tbody>
-            </table>
-          </div>
-
-          <h4 style="font-size: 1rem; font-weight: 800; margin-bottom: 8px;">📱 Regulate Order Dispatch (1-Tap Status)</h4>
-          <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 12px;">
-            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 4px;">
-              <strong>Order #RE-89241 — Rajesh Plastics (Jodhpur)</strong>
-              <span id="stBadge" style="color: #0284C7; font-weight: 700;">In Transport</span>
-            </div>
-            <div style="font-size: 0.8rem; color: #475569; margin-bottom: 10px;">
-              50x Tap Dispenser Bottles + 20x 20L Diesel Cans • Waybill #JP-49208
-            </div>
-            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-              <button class="btn-cart" style="padding: 4px 10px; font-size: 0.75rem;" onclick="setOrderSt('Packed in Warehouse')">Set Packed</button>
-              <button class="btn-buy" style="padding: 4px 10px; font-size: 0.75rem;" onclick="setOrderSt('Dispatched to Logistics')">Set Dispatched</button>
-              <button class="btn-wa" style="padding: 4px 10px; font-size: 0.75rem;" onclick="alert('Sent WhatsApp notification with Waybill No to customer!')">📲 Send WhatsApp Waybill</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- Footer -->
   <footer class="main-footer">
     <div class="footer-grid">
@@ -1222,7 +1106,7 @@
         <a href="javascript:void(0)" onclick="filterCategory('diesel')">Diesel Jerrycans</a>
         <a href="javascript:void(0)" onclick="filterCategory('water')">Water Cool Jars</a>
         <a href="javascript:void(0)" onclick="openModal('trackOrderModal')">Live Order Tracker</a>
-        <a href="javascript:void(0)" onclick="openModal('adminModal')">Owner Admin Gate</a>
+        
       </div>
     </div>
     <div class="footer-bottom">

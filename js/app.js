@@ -101,22 +101,15 @@
       document.getElementById('gateLoginView').style.display = 'block';
       document.getElementById('gateSignupView').style.display = 'none';
       document.getElementById('gateOtpView').style.display = 'none';
-      document.getElementById('gateOwnerView').style.display = 'none';
     }
 
     function showGateSignupView() {
       document.getElementById('gateLoginView').style.display = 'none';
       document.getElementById('gateSignupView').style.display = 'block';
       document.getElementById('gateOtpView').style.display = 'none';
-      document.getElementById('gateOwnerView').style.display = 'none';
     }
 
-    function showGateOwnerView() {
-      document.getElementById('gateLoginView').style.display = 'none';
-      document.getElementById('gateSignupView').style.display = 'none';
-      document.getElementById('gateOtpView').style.display = 'none';
-      document.getElementById('gateOwnerView').style.display = 'block';
-    }
+    
 
     // 1-Click Demo Fills
     function quickFillRetailUser() {
@@ -315,16 +308,7 @@
       showToast(`🎉 Account registered successfully! Welcome to ${pendingGateSignup.portal === 'wholesale' ? 'Wholesale Dealer' : 'Retail'} Storefront, ${pendingGateSignup.name}.`);
     }
 
-    function submitGateOwnerPin() {
-      const p = document.getElementById('gateOwnerPinInput').value.trim();
-      if (p === '8899' || p === '') {
-        enterStorefront('retail');
-        openModal('adminModal');
-        unlockAdmin();
-      } else {
-        alert('Incorrect Master PIN! (Default: 8899)');
-      }
-    }
+    
 
     function continueAsGuest() {
       localStorage.setItem('ramdevPortalMode', 'retail');
@@ -1641,67 +1625,6 @@
       cart = [];
       updateCart();
       closeModal('cartModal');
-    }
-
-    // --- MODULE 13: OWNER ADMIN DASHBOARD & LIVE INVENTORY REGISTER ---
-    // Connects to #adminModal. Master PIN (8899) gate, live stock adjustment (+50 / -25),
-    // reset to factory stock, and 1-tap dispatch status changer.
-    function unlockAdmin() {
-      const p = document.getElementById('ownerPin').value;
-      if (p === '8899' || p === '') {
-        document.getElementById('adminPinGate').style.display = 'none';
-        document.getElementById('adminContent').style.display = 'block';
-        renderAdminStockTable();
-      } else {
-        alert('Incorrect Owner PIN! (Default: 8899)');
-      }
-    }
-
-    function renderAdminStockTable() {
-      const tbody = document.getElementById('adminStockTableBody');
-      if (!tbody) return;
-
-      let html = '';
-      for (let i = 1; i <= 8; i++) {
-        const p = productsData[i];
-        const s = stocks[i] || 0;
-        html += `
-          <tr style="border-bottom: 1px solid #E2E8F0;">
-            <td style="padding: 8px;">${i}</td>
-            <td style="padding: 8px;">${p.title}</td>
-            <td style="padding: 8px;"><strong id="st-${i}">${s}</strong></td>
-            <td style="padding: 8px; text-align: center;">
-              <button onclick="stockChange(${i}, 50)" style="background: #DCFCE7; color: #166534; border: 1px solid #86EFAC; padding: 2px 8px; border-radius: 4px; cursor: pointer;">+50</button>
-            </td>
-            <td style="padding: 8px; text-align: center;">
-              <button onclick="stockChange(${i}, -25)" style="background: #FEE2E2; color: #991B1B; border: 1px solid #FCA5A5; padding: 2px 8px; border-radius: 4px; cursor: pointer;">-25</button>
-            </td>
-          </tr>
-        `;
-      }
-      tbody.innerHTML = html;
-    }
-
-    function stockChange(id, delta) {
-      stocks[id] = Math.max(0, (stocks[id] || 0) + delta);
-      localStorage.setItem('ramdevStocks', JSON.stringify(stocks));
-      const el = document.getElementById('st-' + id);
-      if (el) el.textContent = stocks[id];
-      renderProductCards();
-      showToast(`Stock for Product #${id} updated to ${stocks[id]} units`);
-    }
-
-    function resetFactoryStock() {
-      stocks = Object.assign({}, defaultFactoryStocks);
-      localStorage.removeItem('ramdevStocks');
-      renderAdminStockTable();
-      renderProductCards();
-      showToast('🔄 Factory stocks reset to original master levels.');
-    }
-
-    function setOrderSt(st) {
-      document.getElementById('stBadge').textContent = st;
-      alert('Order status set to: ' + st);
     }
 
     // --- MODULE 14: SYSTEM BOOTSTRAP & INITIALIZATION ---
