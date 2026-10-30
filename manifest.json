@@ -1,0 +1,24 @@
+{
+  "name": "Ramdev Enterprise — Quality Plastics Portal",
+  "short_name": "Ramdev Plastics",
+  "description": "Official wholesale and retail trading platform for industrial containers, jerrycans, water dispensers, and plastic ware.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#090D16",
+  "theme_color": "#2563EB",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "./assets/ramdev_feather_logo.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./assets/ramdev_feather_logo.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -352,7 +352,7 @@
         // --- MODULE 1: CENTRAL APPLICATION STATE ---
     let priceMode = 'retail';
     let cart = [];
-    let stocks = { 1: 850, 2: 520, 3: 340, 4: 420, 5: 600, 6: 280, 7: 950, 8: 150 };
+    let stocks = (() => { try { return JSON.parse(localStorage.getItem('ramdevStocks')) || { 1: 850, 2: 520, 3: 340, 4: 420, 5: 600, 6: 280, 7: 950, 8: 150 }; } catch(e) { return { 1: 850, 2: 520, 3: 340, 4: 420, 5: 600, 6: 280, 7: 950, 8: 150 }; } })();
     const defaultFactoryStocks = { 1: 850, 2: 520, 3: 340, 4: 420, 5: 600, 6: 280, 7: 950, 8: 150 };
     let currentFilterCat = 'all';
     let currentFilterSub = 'all';
@@ -599,7 +599,7 @@
               <span class="badge-moq" id="moq-${p.id}" style="background: #DCFCE7; color: #166534;">MOQ: ${p.wholesaleMoq} Pcs</span>
               <span class="badge-stock ${stockBadgeClass}" id="stock-badge-${p.id}">${stockText}</span>
               <div class="p-img-box" onclick="openProductQuickView(${p.id})" title="Click to view full technical specs & bulk rates">
-                <img src="${p.img}" alt="${p.title}" id="card-img-${p.id}">
+                <img src="${p.img}" alt="${p.title}" id="card-img-${p.id}" onerror="this.onerror=null; this.src='./assets/ramdev_feather_logo.jpg';">
               </div>
               <div class="p-body">
                 <span class="p-category-tag">${p.catTag}</span>
@@ -637,7 +637,7 @@
               <span class="badge-moq" id="moq-${p.id}">MOQ: 1 Pc</span>
               <span class="badge-stock ${stockBadgeClass}" id="stock-badge-${p.id}">${stockText}</span>
               <div class="p-img-box" onclick="openProductQuickView(${p.id})" title="Click to view full technical specs & bulk rates">
-                <img src="${p.img}" alt="${p.title}" id="card-img-${p.id}">
+                <img src="${p.img}" alt="${p.title}" id="card-img-${p.id}" onerror="this.onerror=null; this.src='./assets/ramdev_feather_logo.jpg';">
               </div>
               <div class="p-body">
                 <span class="p-category-tag">${p.catTag}</span>
@@ -1684,6 +1684,7 @@
 
     function stockChange(id, delta) {
       stocks[id] = Math.max(0, (stocks[id] || 0) + delta);
+      localStorage.setItem('ramdevStocks', JSON.stringify(stocks));
       const el = document.getElementById('st-' + id);
       if (el) el.textContent = stocks[id];
       renderProductCards();
@@ -1692,6 +1693,7 @@
 
     function resetFactoryStock() {
       stocks = Object.assign({}, defaultFactoryStocks);
+      localStorage.removeItem('ramdevStocks');
       renderAdminStockTable();
       renderProductCards();
       showToast('🔄 Factory stocks reset to original master levels.');
