@@ -114,6 +114,84 @@
     // Demo accounts password is '123'
     // SHA-256('123') = a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3
     // =================================================================================
+    
+    // =================================================================================
+    // DISPOSABLE / TEMPORARY EMAIL DOMAIN BLOCKLIST
+    // Prevents fake or disposable email addresses from registering.
+    // =================================================================================
+    const DISPOSABLE_EMAIL_DOMAINS = new Set([
+      'mailinator.com', 'tempmail.com', 'temp-mail.org', 'temp-mail.io',
+      '10minutemail.com', '10minutemail.net', 'guerrillamail.com', 'guerrillamailblock.com',
+      'sharklasers.com', 'grr.la', 'guerrillamail.biz', 'guerrillamail.de', 'guerrillamail.net',
+      'throwawaymail.com', 'yopmail.com', 'yopmail.fr', 'yopmail.net',
+      'trashmail.com', 'trashmail.me', 'trashmail.net', 'dispostable.com',
+      'getairmail.com', 'fakemailgenerator.com', 'maildrop.cc', 'mohmal.com',
+      'crazymailing.com', 'mytemp.email', 'emailondeck.com', 'tempail.com',
+      'burnermail.io', 'inboxkitten.com', 'nada.ltd', 'getnada.com',
+      'generator.email', 'fakeinbox.com', 'throwaway.email'
+    ]);
+
+    function isDisposableEmail(email) {
+      if (!email || !email.includes('@')) return false;
+      const parts = email.split('@');
+      const domain = parts[parts.length - 1].trim().toLowerCase();
+      return DISPOSABLE_EMAIL_DOMAINS.has(domain);
+    }
+
+    // Dynamic 6-Digit OTP Generator & Lifecycle Controller
+    let currentOtpState = {
+      code: null,           // 6-digit OTP code string
+      expiresAt: 0,         // Expiry timestamp (5 minutes)
+      attemptsRemaining: 3, // Maximum 3 attempts
+      timerInterval: null   // Countdown timer interval handle
+    };
+
+    function generate6DigitOtp() {
+      return Math.floor(100000 + Math.random() * 900000).toString();
+    }
+
+    function getCurrentOtpState() {
+      return currentOtpState;
+    }
+
+    function startOtpCountdownTimer(targetElementId, countdownElId, errorElId, onExpireCallback) {
+      if (currentOtpState.timerInterval) {
+        clearInterval(currentOtpState.timerInterval);
+      }
+      
+      function updateDisplay() {
+        const remainingMs = currentOtpState.expiresAt - Date.now();
+        const countdownEl = document.getElementById(countdownElId);
+        
+        if (remainingMs <= 0) {
+          if (countdownEl) {
+            countdownEl.textContent = '00:00 (Expired)';
+            countdownEl.style.color = '#DC2626';
+          }
+          const errEl = document.getElementById(errorElId);
+          if (errEl) {
+            errEl.textContent = '❌ OTP expire ho chuka hai (5 minutes limit). Kripya "Resend OTP" par click karein.';
+            errEl.style.display = 'block';
+          }
+          clearInterval(currentOtpState.timerInterval);
+          currentOtpState.timerInterval = null;
+          if (onExpireCallback) onExpireCallback();
+          return;
+        }
+
+        const totalSecs = Math.floor(remainingMs / 1000);
+        const mins = Math.floor(totalSecs / 60).toString().padStart(2, '0');
+        const secs = (totalSecs % 60).toString().padStart(2, '0');
+        if (countdownEl) {
+          countdownEl.textContent = `${mins}:${secs}`;
+          countdownEl.style.color = totalSecs < 60 ? '#DC2626' : '#2563EB';
+        }
+      }
+
+      updateDisplay();
+      currentOtpState.timerInterval = setInterval(updateDisplay, 1000);
+    }
+
     const DEFAULT_ACCOUNTS = {
       '9829012345': {
         name: 'Ramesh Sharma',
@@ -231,7 +309,7 @@
       const lockout = checkLoginLockout();
       if (lockout.isLocked) {
         if (alertBox) {
-          alertBox.textContent = "⛔ Account temporarily locked due to 5 consecutive failed attempts. Please wait " + lockout.remainingSeconds + "s before trying again.";
+          alertBox.textContent = `⛔ Account temporarily locked due to 5 consecutive failed attempts. Please wait ${lockout.remainingSeconds}s before trying again.`;
           alertBox.style.display = 'block';
         }
         return;
@@ -240,7 +318,7 @@
       // 2. Strict Empty Field Validation
       if (!val && !pass) {
         if (alertBox) {
-          alertBox.textContent = "Please enter both User ID (Mobile/Email) and Password.";
+          alertBox.textContent = 'Please enter both User ID (Mobile/Email) and Password.';
           alertBox.style.display = 'block';
         }
         if (inputEl) inputEl.focus();
@@ -248,7 +326,7 @@
       }
       if (!val) {
         if (alertBox) {
-          alertBox.textContent = "Please enter your registered User ID (Mobile Number or Email).";
+          alertBox.textContent = 'Please enter your registered User ID (Mobile Number or Email).';
           alertBox.style.display = 'block';
         }
         if (inputEl) inputEl.focus();
@@ -256,7 +334,7 @@
       }
       if (!pass) {
         if (alertBox) {
-          alertBox.textContent = "Please enter your password.";
+          alertBox.textContent = 'Please enter your password.';
           alertBox.style.display = 'block';
         }
         if (passEl) passEl.focus();
@@ -267,14 +345,15 @@
       const usersDb = getRegisteredUsers();
       const user = usersDb[val] || usersDb[val.toLowerCase()];
 
+      // Uniform Error: "Invalid User ID or Password" for both non-existent users and wrong passwords
       if (!user) {
         const state = recordFailedLoginAttempt();
         const remaining = 5 - (state.count || 0);
         if (alertBox) {
           if (state.count >= 5) {
-            alertBox.textContent = "⛔ Too many failed attempts (5/5). Login temporarily locked for 60 seconds.";
+            alertBox.textContent = '⛔ Too many failed attempts (5/5). Login temporarily locked for 60 seconds.';
           } else {
-            alertBox.textContent = "❌ Invalid User ID or Password. (" + remaining + " attempts remaining)";
+            alertBox.textContent = `❌ Invalid User ID or Password. (${remaining} attempts remaining)`;
           }
           alertBox.style.display = 'block';
         }
@@ -291,27 +370,35 @@
         const remaining = 5 - (state.count || 0);
         if (alertBox) {
           if (state.count >= 5) {
-            alertBox.textContent = "⛔ Too many failed attempts (5/5). Login temporarily locked for 60 seconds.";
+            alertBox.textContent = '⛔ Too many failed attempts (5/5). Login temporarily locked for 60 seconds.';
           } else {
-            alertBox.textContent = "❌ Invalid User ID or Password. (" + remaining + " attempts remaining)";
+            alertBox.textContent = `❌ Invalid User ID or Password. (${remaining} attempts remaining)`;
           }
           alertBox.style.display = 'block';
         }
         return;
       }
 
-      // Upgrade plain text password to hash if it was stored in legacy format
+      // 5. REQUIREMENT 3: Block Unverified Accounts
+      if (!user.verified) {
+        if (alertBox) {
+          alertBox.innerHTML = `⚠️ <strong>Pehle apni email/mobile verify karein.</strong><br><span style="font-size: 0.8rem; color: #475569;">Aapka account verify nahi hua hai.</span> <a href="javascript:void(0)" onclick="resumeGateVerification('${user.mobile}')" style="color: #2563EB; font-weight: 700; text-decoration: underline; margin-top: 6px; display: inline-block;">👉 Complete OTP Verification Now ›</a>`;
+          alertBox.style.display = 'block';
+        }
+        return;
+      }
+
+      // Upgrade plain text password to hash if stored in legacy format
       if (user.password && !user.passwordHash) {
         user.passwordHash = inputHash;
         delete user.password;
         saveUserToDatabase(user);
       }
 
-      // 5. Successful Login: Reset rate-limit counter and create secure session
+      // 6. Successful Login: Reset rate-limit counter and create secure session
       resetLoginAttempts();
       if (alertBox) alertBox.style.display = 'none';
 
-      // Safe session record (NO passwords or hashes stored in session state)
       const sessionUser = {
         name: user.name || 'Valued Customer',
         mobile: user.mobile,
@@ -340,9 +427,9 @@
       enterStorefront(sessionUser.portal);
 
       if (sessionUser.portal === 'wholesale') {
-        showToast("🏭 Welcome, " + sessionUser.name + "! Login ID verified: Wholesale Dealer Portal active.");
+        showToast(`🏭 Welcome, ${sessionUser.name}! Login ID verified: Wholesale Dealer Portal active.`);
       } else {
-        showToast("🛍️ Welcome, " + sessionUser.name + "! Login ID verified: Retail Customer Portal active.");
+        showToast(`🛍️ Welcome, ${sessionUser.name}! Login ID verified: Retail Customer Portal active.`);
       }
     }
 
@@ -362,13 +449,24 @@
         alert('Please correct highlighted errors before proceeding.');
         return;
       }
+      
+      const email = emailInput.value.trim().toLowerCase();
+      // REQUIREMENT 5: Block disposable/fake email domains
+      if (isDisposableEmail(email)) {
+        alert('Temporary / disposable emails (jaise mailinator, tempmail) are not allowed. Please enter a valid permanent email address.');
+        emailInput.classList.add('has-error');
+        emailInput.focus();
+        return;
+      }
+
       if (!pass || pass.length < 6) { alert('Password must have at least 6 characters.'); return; }
 
       const mobile = phoneInput.value.trim();
-      const email = emailInput.value.trim().toLowerCase();
       const usersDb = getRegisteredUsers();
 
-      if (usersDb[mobile] || usersDb[email]) {
+      // Check if user already exists and is verified
+      const existing = usersDb[mobile] || usersDb[email];
+      if (existing && existing.verified) {
         alert('An account with this Mobile Number or Email already exists. Please log in.');
         showGateLoginView();
         return;
@@ -382,45 +480,171 @@
         firm,
         mobile,
         email,
-        passwordHash: passHash, // Plaintext password is NEVER saved
+        passwordHash: passHash,
         portal,
-        verified: false
+        verified: false // Account is UNVERIFIED until valid OTP verification
       };
 
-      document.getElementById('gateOtpPhoneText').textContent = '+91 ' + pendingGateSignup.mobile;
-      document.getElementById('gateOtpEmailText').textContent = pendingGateSignup.email;
-      document.getElementById('gateMobileOtpBox').value = EXPECTED_MOBILE_OTP;
-      document.getElementById('gateEmailOtpBox').value = EXPECTED_EMAIL_OTP;
+      // Save unverified account to database
+      saveUserToDatabase(pendingGateSignup);
+
+      // Generate dynamic 6-digit OTP (5-minute expiry, max 3 attempts)
+      initiateGateOtpFlow(pendingGateSignup);
+    }
+
+    function initiateGateOtpFlow(userData) {
+      const otpCode = generate6DigitOtp();
+      currentOtpState = {
+        code: otpCode,
+        expiresAt: Date.now() + (5 * 60 * 1000), // Exactly 5 minutes
+        attemptsRemaining: 3
+      };
+
+      // Update UI elements
+      document.getElementById('gateOtpPhoneText').textContent = '+91 ' + userData.mobile;
+      document.getElementById('gateOtpEmailText').textContent = userData.email;
+      
+      const otpInput = document.getElementById('gateEmailOtpBox');
+      if (otpInput) {
+        otpInput.value = '';
+        otpInput.disabled = false;
+        otpInput.focus();
+      }
+      
+      const errEl = document.getElementById('gateEmailOtpError');
+      if (errEl) errEl.textContent = '';
+
+      const attemptsEl = document.getElementById('gateOtpAttemptsCount');
+      if (attemptsEl) attemptsEl.textContent = '3/3';
+
+      const demoNotice = document.getElementById('gateOtpDemoNotice');
+      if (demoNotice) {
+        demoNotice.innerHTML = `🔔 <strong>Simulation Notice:</strong> 6-Digit OTP sent to ${userData.email}: <strong style="letter-spacing: 2px; color: #1E40AF; font-size: 1rem;">${otpCode}</strong> <br><span style="font-size: 0.72rem; color: #64748B;">(Expires in 5 minutes | 3 attempts allowed)</span>`;
+      }
+
+      // Start 5-minute countdown timer
+      startOtpCountdownTimer('gateOtpTimer', 'gateOtpCountdown', 'gateEmailOtpError');
 
       document.getElementById('gateSignupView').style.display = 'none';
       document.getElementById('gateOtpView').style.display = 'block';
-      showToast("📲 OTP codes sent to +91 " + pendingGateSignup.mobile + " & " + pendingGateSignup.email);
+
+      showToast(`📲 6-Digit OTP sent to ${userData.email} & +91 ${userData.mobile}. Code: ${otpCode}`);
+    }
+
+    function resendGateOtp() {
+      if (!pendingGateSignup) {
+        alert('No pending registration found. Please fill the signup form.');
+        showGateSignupView();
+        return;
+      }
+
+      const otpCode = generate6DigitOtp();
+      currentOtpState = {
+        code: otpCode,
+        expiresAt: Date.now() + (5 * 60 * 1000), // Fresh 5 minutes
+        attemptsRemaining: 3
+      };
+
+      const otpInput = document.getElementById('gateEmailOtpBox');
+      if (otpInput) {
+        otpInput.value = '';
+        otpInput.disabled = false;
+        otpInput.focus();
+      }
+
+      const errEl = document.getElementById('gateEmailOtpError');
+      if (errEl) errEl.textContent = '';
+
+      const attemptsEl = document.getElementById('gateOtpAttemptsCount');
+      if (attemptsEl) attemptsEl.textContent = '3/3';
+
+      const demoNotice = document.getElementById('gateOtpDemoNotice');
+      if (demoNotice) {
+        demoNotice.innerHTML = `🔔 <strong>New OTP Generated:</strong> 6-Digit Code: <strong style="letter-spacing: 2px; color: #1E40AF; font-size: 1rem;">${otpCode}</strong> <br><span style="font-size: 0.72rem; color: #64748B;">(Fresh 5 minutes timer reset | 3 attempts allowed)</span>`;
+      }
+
+      startOtpCountdownTimer('gateOtpTimer', 'gateOtpCountdown', 'gateEmailOtpError');
+      showToast(`🔄 New 6-digit OTP generated: ${otpCode} (Valid for 5 minutes)`);
+    }
+
+    function resumeGateVerification(identifier) {
+      const usersDb = getRegisteredUsers();
+      const user = usersDb[identifier] || usersDb[identifier.toLowerCase()];
+      if (!user) {
+        alert('Account not found. Please create a new account.');
+        showGateSignupView();
+        return;
+      }
+      pendingGateSignup = user;
+      document.getElementById('gateLoginView').style.display = 'none';
+      initiateGateOtpFlow(user);
     }
 
     function autoFillGateOtps() {
-      document.getElementById('gateMobileOtpBox').value = EXPECTED_MOBILE_OTP;
-      document.getElementById('gateEmailOtpBox').value = EXPECTED_EMAIL_OTP;
-      document.getElementById('gateMobileOtpError').textContent = '';
-      document.getElementById('gateEmailOtpError').textContent = '';
-      showToast("⚡ Pre-filled demo OTPs: " + EXPECTED_MOBILE_OTP + " & " + EXPECTED_EMAIL_OTP);
+      if (!currentOtpState.code) resendGateOtp();
+      const otpInput = document.getElementById('gateEmailOtpBox');
+      if (otpInput) {
+        otpInput.value = currentOtpState.code;
+      }
+      showToast(`⚡ Pre-filled current 6-digit OTP: ${currentOtpState.code}`);
     }
 
     function verifyGateOtps() {
-      const mOtp = document.getElementById('gateMobileOtpBox').value.trim();
-      const eOtp = document.getElementById('gateEmailOtpBox').value.trim();
-      let err = false;
+      const otpBox = document.getElementById('gateEmailOtpBox');
+      const enteredOtp = otpBox ? otpBox.value.trim() : '';
+      const errEl = document.getElementById('gateEmailOtpError');
+      const attemptsEl = document.getElementById('gateOtpAttemptsCount');
 
-      if (mOtp !== EXPECTED_MOBILE_OTP) {
-        document.getElementById("gateMobileOtpError").textContent = "❌ Invalid Mobile OTP (Use " + EXPECTED_MOBILE_OTP + ")";
-        err = true;
-      } else { document.getElementById('gateMobileOtpError').textContent = ''; }
+      if (!enteredOtp) {
+        if (errEl) errEl.textContent = 'Please enter the 6-digit OTP sent to your email/mobile.';
+        if (otpBox) otpBox.focus();
+        return;
+      }
 
-      if (eOtp !== EXPECTED_EMAIL_OTP) {
-        document.getElementById("gateEmailOtpError").textContent = "❌ Invalid Email OTP (Use " + EXPECTED_EMAIL_OTP + ")";
-        err = true;
-      } else { document.getElementById('gateEmailOtpError').textContent = ''; }
+      // REQUIREMENT 2: 5-Minute Expiration Check
+      if (Date.now() > currentOtpState.expiresAt) {
+        if (errEl) {
+          errEl.textContent = '❌ OTP expire ho chuka hai (5 minutes limit). Kripya "Resend OTP" par click karein.';
+        }
+        if (otpBox) otpBox.disabled = true;
+        return;
+      }
 
-      if (err) return;
+      // REQUIREMENT 2: 3 Incorrect Attempts Lockout Check
+      if (currentOtpState.attemptsRemaining <= 0) {
+        if (errEl) {
+          errEl.textContent = '❌ 3 galat attempts ho chuke hain. Security ke liye naya OTP maangna hoga. Kripya "Resend OTP" par click karein.';
+        }
+        if (otpBox) otpBox.disabled = true;
+        return;
+      }
+
+      // Verify entered OTP
+      if (enteredOtp !== currentOtpState.code) {
+        currentOtpState.attemptsRemaining--;
+        if (attemptsEl) {
+          attemptsEl.textContent = `${currentOtpState.attemptsRemaining}/3`;
+          attemptsEl.style.color = '#DC2626';
+        }
+
+        if (currentOtpState.attemptsRemaining <= 0) {
+          if (errEl) {
+            errEl.textContent = '❌ 3 galat attempts ho chuke hain. Security ke liye naya OTP maangna hoga. Kripya "Resend OTP" karein.';
+          }
+          if (otpBox) otpBox.disabled = true;
+        } else {
+          if (errEl) {
+            errEl.textContent = `❌ Galat OTP code. (${currentOtpState.attemptsRemaining} attempt${currentOtpState.attemptsRemaining === 1 ? '' : 's'} remaining)`;
+          }
+        }
+        return;
+      }
+
+      // SUCCESS: Clear timer and activate account!
+      if (currentOtpState.timerInterval) {
+        clearInterval(currentOtpState.timerInterval);
+        currentOtpState.timerInterval = null;
+      }
 
       pendingGateSignup.verified = true;
       saveUserToDatabase(pendingGateSignup);
@@ -451,7 +675,7 @@
       }
 
       enterStorefront(sessionUser.portal);
-      showToast("🎉 Account registered successfully! Welcome to " + (sessionUser.portal === "wholesale" ? "Wholesale Dealer" : "Retail") + " Storefront, " + sessionUser.name + ".");
+      showToast(`🎉 Email & Mobile verified successfully! Welcome to ${sessionUser.portal === 'wholesale' ? 'Wholesale Dealer' : 'Retail'} Storefront, ${sessionUser.name}.`);
     }
 
     // =================================================================================
@@ -1528,6 +1752,18 @@
         if (hint) hint.textContent = '';
         return false;
       }
+
+      // Check disposable / temporary email domains
+      if (isDisposableEmail(val)) {
+        input.classList.add('has-error');
+        input.classList.remove('is-valid');
+        if (hint) {
+          hint.className = 'validation-hint error';
+          hint.textContent = '❌ Disposable/temporary emails are not allowed. Please enter a permanent email address (e.g. Gmail, Outlook, Yahoo).';
+        }
+        return false;
+      }
+
       if (EMAIL_REGEX.test(val)) {
         input.classList.remove('has-error');
         input.classList.add('is-valid');
@@ -1610,13 +1846,21 @@
         alert('Please correct highlighted phone or email errors.');
         return;
       }
+
+      const email = emailInput.value.trim().toLowerCase();
+      if (isDisposableEmail(email)) {
+        alert('Temporary / disposable emails (jaise mailinator, tempmail) are not allowed. Please enter a valid permanent email address.');
+        emailInput.classList.add('has-error');
+        emailInput.focus();
+        return;
+      }
+
       if (!pass || pass.length < 6) {
         alert('Password must be at least 6 characters.');
         return;
       }
 
       const mobile = phoneInput.value.trim();
-      const email = emailInput.value.trim().toLowerCase();
       const usersDb = getRegisteredUsers();
 
       if (usersDb[mobile] || usersDb[email]) {
@@ -1635,35 +1879,65 @@
         verified: false
       };
 
+      saveUserToDatabase(pendingSignupData);
+
+      const otpCode = generate6DigitOtp();
+      currentOtpState = {
+        code: otpCode,
+        expiresAt: Date.now() + (5 * 60 * 1000),
+        attemptsRemaining: 3
+      };
+
       document.getElementById('verifyMobileText').textContent = '+91 ' + pendingSignupData.mobile;
       document.getElementById('verifyEmailText').textContent = pendingSignupData.email;
-      document.getElementById('signupMobileOtp').value = EXPECTED_MOBILE_OTP;
-      document.getElementById('signupEmailOtp').value = EXPECTED_EMAIL_OTP;
+      const emailOtpInp = document.getElementById('signupEmailOtp');
+      if (emailOtpInp) {
+        emailOtpInp.value = '';
+        emailOtpInp.disabled = false;
+      }
 
       document.getElementById('signupView').style.display = 'none';
       document.getElementById('dualOtpView').style.display = 'block';
       document.getElementById('authTitle').textContent = '📲 Verify Mobile & Email via OTP';
-      showToast("📲 OTP codes sent to +91 " + pendingSignupData.mobile + " & " + pendingSignupData.email);
+      showToast("📲 6-digit OTP sent to " + pendingSignupData.email + ": " + otpCode + " (Valid for 5 mins)");
     }
 
     function verifySignupOtps() {
-      const mOtp = document.getElementById('signupMobileOtp').value.trim();
-      const eOtp = document.getElementById('signupEmailOtp').value.trim();
-      let err = false;
+      const eOtpInp = document.getElementById('signupEmailOtp');
+      const eOtp = eOtpInp ? eOtpInp.value.trim() : '';
+      const errEl = document.getElementById('emailOtpError');
 
-      if (mOtp !== EXPECTED_MOBILE_OTP) {
-        document.getElementById("mobileOtpError").textContent = "❌ Invalid Mobile OTP (Use " + EXPECTED_MOBILE_OTP + ")";
-        err = true;
-      } else { document.getElementById('mobileOtpError').textContent = ''; }
+      if (!eOtp) {
+        if (errEl) errEl.textContent = 'Please enter the 6-digit OTP.';
+        return;
+      }
 
-      if (eOtp !== EXPECTED_EMAIL_OTP) {
-        document.getElementById("emailOtpError").textContent = "❌ Invalid Email OTP (Use " + EXPECTED_EMAIL_OTP + ")";
-        err = true;
-      } else { document.getElementById('emailOtpError').textContent = ''; }
+      if (Date.now() > currentOtpState.expiresAt) {
+        if (errEl) errEl.textContent = '❌ OTP expire ho chuka hai (5 minutes limit). Kripya "Resend OTP" karein.';
+        if (eOtpInp) eOtpInp.disabled = true;
+        return;
+      }
 
-      if (err) return;
+      if (currentOtpState.attemptsRemaining <= 0) {
+        if (errEl) errEl.textContent = '❌ 3 galat attempts ho chuke hain. Kripya naya OTP generate karein.';
+        if (eOtpInp) eOtpInp.disabled = true;
+        return;
+      }
+
+      if (eOtp !== currentOtpState.code) {
+        currentOtpState.attemptsRemaining--;
+        if (currentOtpState.attemptsRemaining <= 0) {
+          if (errEl) errEl.textContent = '❌ 3 galat attempts ho chuke hain. Kripya naya OTP generate karein.';
+          if (eOtpInp) eOtpInp.disabled = true;
+        } else {
+          if (errEl) errEl.textContent = "❌ Galat OTP code. (" + currentOtpState.attemptsRemaining + " attempts remaining)";
+        }
+        return;
+      }
 
       pendingSignupData.verified = true;
+      saveUserToDatabase(pendingSignupData);
+
       document.getElementById('authSuccessUserName').textContent = pendingSignupData.name;
       document.getElementById('dualOtpView').style.display = 'none';
       document.getElementById('authSuccessView').style.display = 'block';
@@ -1761,6 +2035,15 @@
           } else {
             alertBox.textContent = "❌ Invalid User ID or Password. (" + remaining + " attempts remaining)";
           }
+          alertBox.style.display = 'block';
+        }
+        return;
+      }
+
+      // Block unverified accounts
+      if (!user.verified) {
+        if (alertBox) {
+          alertBox.textContent = "Pehle apni email/mobile verify karein. Please complete OTP verification first.";
           alertBox.style.display = 'block';
         }
         return;
