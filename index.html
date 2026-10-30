@@ -41,7 +41,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <!-- EXTERNAL CSS STYLESHEET -->
-  <link rel="stylesheet" href="css/style.css?v=3.5">
+  <link rel="stylesheet" href="css/style.css?v=4.0">
 </head>
 
 <body>
@@ -66,8 +66,8 @@
           <div id="gateLoginAlert" class="validation-hint error" style="display: none; margin-bottom: 12px;"></div>
 
           <div class="form-group">
-            <label>Mobile Number or Email</label>
-            <input type="text" id="gateLoginInput" class="form-control" placeholder="Enter registered mobile or email" oninput="validateGateLoginLive(this)">
+            <label>Registered Email Address</label>
+            <input type="email" id="gateLoginInput" class="form-control" placeholder="Enter your registered email" oninput="validateGateLoginLive(this)">
             <div id="gateLoginHint" class="validation-hint"></div>
           </div>
 
@@ -142,39 +142,33 @@
         </div>
 
         <!-- ======================================================== -->
-        <!-- 3. DUAL OTP VERIFICATION (MOBILE + EMAIL)               -->
+        <!-- 3. REAL EMAIL VERIFICATION (FIREBASE AUTHENTICATION)     -->
         <!-- ======================================================== -->
         <div id="gateOtpView" style="display: none; text-align: center;">
-          <span style="font-size: 2.2rem;">📲</span>
-          <h2 class="auth-card-title" style="font-size: 1.25rem; margin-top: 4px;">Verify via OTP</h2>
-          <p class="auth-card-subtitle" style="margin-bottom: 12px;">
-            Enter 6-digit verification code sent to:<br>
-            <strong id="gateOtpEmailText">email@example.com</strong> & <strong id="gateOtpPhoneText">+91 9829012345</strong>
-          </p>
+          <span style="font-size: 2.5rem;">✉️</span>
+          <h2 class="auth-card-title" style="font-size: 1.25rem; margin-top: 6px;">Verify Your Email</h2>
 
-          <!-- 5-Minute Countdown Timer & Attempts Counter -->
-          <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 12px; margin-bottom: 14px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.78rem; font-weight: 700; color: #64748B;">
-              <span>⏳ Expires In: <strong id="gateOtpCountdown" style="color: #2563EB;">05:00</strong></span>
-              <span>Attempts Left: <strong id="gateOtpAttemptsCount" style="color: #0F172A;">3/3</strong></span>
+          <div style="background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 8px; padding: 14px; margin: 14px 0; text-align: left;">
+            <div style="font-size: 0.88rem; color: #1E3A8A; line-height: 1.5; font-weight: 600;">
+              Verification link aapki email par bheja gaya hai:
+              <div style="margin-top: 6px; font-weight: 800; color: #1D4ED8; word-break: break-all; font-size: 0.95rem;" id="gateOtpEmailText">user@example.com</div>
             </div>
-
-            <div style="margin-top: 10px;">
-              <input type="text" id="gateEmailOtpBox" class="form-control" maxlength="6" placeholder="Enter 6-digit OTP" style="text-align: center; font-size: 1.25rem; font-weight: 800; letter-spacing: 4px; padding: 10px;" onkeyup="if(event.key === 'Enter') verifyGateOtps()">
-              <div id="gateEmailOtpError" class="validation-hint error" style="margin-top: 6px;"></div>
+            <div style="font-size: 0.8rem; color: #475569; margin-top: 10px; border-top: 1px solid #DBEAFE; padding-top: 10px; line-height: 1.5;">
+              👉 Apne Inbox ya Spam folder me jaakar link par click karke verify karein. Link verify hone ke baad neeche <strong>"Proceed to Login"</strong> button dabayein.
             </div>
-
-            <div id="gateOtpDemoNotice" style="margin-top: 10px; font-size: 0.76rem; text-align: left;"></div>
           </div>
 
-          <div style="display: flex; gap: 8px; margin-bottom: 10px;">
-            <button type="button" id="gateResendOtpBtn" class="btn-specs" style="flex: 1;" onclick="resendGateOtp()">🔄 Resend OTP</button>
-            <button type="button" class="btn-login-submit" style="flex: 1.2;" onclick="verifyGateOtps()">Verify & Activate Account →</button>
+          <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 14px;">
+            <button type="button" class="btn-login-submit" onclick="showGateLoginView()">
+              🔑 Link Verify Ho Gaya? Proceed to Login →
+            </button>
+            <button type="button" class="btn-specs" style="padding: 10px;" onclick="resendVerificationEmail()">
+              🔄 Resend Verification Email
+            </button>
           </div>
 
-          <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.78rem; margin-top: 12px;">
+          <div style="text-align: center; margin-top: 14px; font-size: 0.8rem;">
             <a href="javascript:void(0)" class="tile-see-more" onclick="showGateSignupView()">← Back to Edit Details</a>
-            <a href="javascript:void(0)" class="tile-see-more" onclick="autoFillGateOtps()">⚡ Auto-Fill Demo OTP</a>
           </div>
         </div>
       </div>
@@ -1121,7 +1115,11 @@
   <!-- SCRIPT LOGIC (MODULAR, SELF-DOCUMENTING ARCHITECTURE) -->
 
   <!-- EXTERNAL JAVASCRIPT ENGINE -->
-  <script src="js/app.js?v=3.5"></script>
+  <script src="js/app.js?v=4.0"></script>
+
+  <!-- FIREBASE CONFIGURATION & MODULAR AUTH ENGINE (v10) -->
+  <script src="js/firebase-config.js?v=4.0"></script>
+  <script type="module" src="js/firebase-auth.js?v=4.0"></script>
 </body>
 
 </html>
