@@ -60,21 +60,18 @@
         <!-- 1. PRIMARY LOGIN PAGE (FIRST SCREEN ON WEBSITE ENTRY)    -->
         <!-- ======================================================== -->
         <div id="gateLoginView">
-          <h2 class="auth-card-title">Login</h2>
-          <p class="auth-card-subtitle">
-            Enter your registered Mobile Number or Email to continue:
-          </p>
+          <h2 class="auth-card-title">Log In</h2>
 
           <div id="gateLoginAlert" class="validation-hint error" style="display: none; margin-bottom: 12px;"></div>
 
           <div class="form-group">
-            <label>User ID (Registered Mobile or Email) *</label>
-            <input type="text" id="gateLoginInput" class="form-control" placeholder="e.g. 9829012345 or email" oninput="validateGateLoginLive(this)">
+            <label>Mobile Number or Email</label>
+            <input type="text" id="gateLoginInput" class="form-control" placeholder="Enter registered mobile or email" oninput="validateGateLoginLive(this)">
             <div id="gateLoginHint" class="validation-hint"></div>
           </div>
 
           <div class="form-group">
-            <label>Password *</label>
+            <label>Password</label>
             <input type="password" id="gateLoginPass" class="form-control" placeholder="Enter your password" onkeyup="if(event.key === 'Enter') submitGateLogin()">
           </div>
 
@@ -100,10 +97,7 @@
             <span style="font-size: 0.78rem; color: #64748B; font-weight: 700;">CREATE ACCOUNT</span>
           </div>
 
-          <h2 class="auth-card-title" style="font-size: 1.35rem;">Create Account</h2>
-          <p class="auth-card-subtitle">
-            Fill in your details to create your customer account:
-          </p>
+          <h2 class="auth-card-title">Create Account</h2>
 
           <form onsubmit="event.preventDefault(); submitGateSignup();">
             <div class="form-group">
