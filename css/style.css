@@ -993,11 +993,14 @@
     .entry-auth-fullscreen {
       min-height: 100vh;
       width: 100%;
-      background: #FFFFFF;
+      background: #F8FAFC;
+      background-image: radial-gradient(#E2E8F0 1px, transparent 1px);
+      background-size: 24px 24px;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 24px 16px;
+      padding: 32px 16px;
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
       z-index: 9999;
@@ -1006,10 +1009,11 @@
     .auth-gate-card {
       background: #FFFFFF;
       width: 100%;
-      max-width: 390px;
-      border-radius: 16px;
-      border: 1px solid #E2E8F0;
-      box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.08), 0 4px 12px -2px rgba(0, 0, 0, 0.04);
+      max-width: 400px;
+      border-radius: 14px;
+      border: 1px solid #CBD5E1;
+      border-top: 4px solid #F59E0B;
+      box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.10), 0 8px 16px -6px rgba(15, 23, 42, 0.06), 0 0 0 1px rgba(0, 0, 0, 0.02);
       overflow: hidden;
       animation: fadeInSlideUp 0.3s ease-out;
       margin: auto;
@@ -1017,22 +1021,22 @@
     .auth-gate-header {
       background: #FFFFFF;
       color: #0F172A;
-      padding: 26px 20px 14px;
+      padding: 28px 24px 16px;
       text-align: center;
       border-bottom: 1px solid #F1F5F9;
     }
     .auth-gate-logo {
-      width: 60px;
-      height: 60px;
+      width: 64px;
+      height: 64px;
       border-radius: 50%;
       object-fit: cover;
       border: 2px solid #E2E8F0;
-      margin-bottom: 8px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      margin-bottom: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     }
     .auth-gate-header h2 {
       font-family: var(--font-heading);
-      font-size: 1.3rem;
+      font-size: 1.35rem;
       font-weight: 800;
       color: #0F172A;
       letter-spacing: 0.3px;
@@ -1046,7 +1050,7 @@
       margin-top: 3px;
     }
     .auth-gate-body {
-      padding: 22px 24px 26px;
+      padding: 24px 28px 28px;
     }
     /* Soft Warm Golden Button (Matches white background) */
     .btn-login-submit {
@@ -1062,6 +1066,7 @@
       box-shadow: 0 2px 6px rgba(245, 158, 11, 0.25);
       transition: all 0.2s ease;
       font-family: var(--font-body);
+      margin-top: 6px;
     }
     .btn-login-submit:hover {
       background: #EAB308;
