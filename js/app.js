@@ -54,15 +54,83 @@
     // =================================================================================
     let pendingGateSignup = null;
 
-    // Default Pre-Registered Accounts for Instant Auto-Separation Testing
+    // =================================================================================
+    // CRYPTOGRAPHIC SHA-256 HASHING (WEB CRYPTO API)
+    // Never stores or transmits plaintext passwords in client databases or sessions.
+    // =================================================================================
+    async function hashPassword(plainText) {
+      if (!plainText) return '';
+      const encoder = new TextEncoder();
+      const data = encoder.encode(plainText);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    // =================================================================================
+    // RATE LIMITING & LOCKOUT SHIELD (5 FAILED ATTEMPTS -> 60s COOLDOWN)
+    // =================================================================================
+    function getLoginRateLimitState() {
+      try {
+        const raw = localStorage.getItem('ramdevLoginRateLimit');
+        if (!raw) return { count: 0, lockUntil: 0 };
+        return JSON.parse(raw);
+      } catch (e) {
+        return { count: 0, lockUntil: 0 };
+      }
+    }
+
+    function recordFailedLoginAttempt() {
+      const state = getLoginRateLimitState();
+      const now = Date.now();
+      if (state.lockUntil && now > state.lockUntil) {
+        state.count = 0;
+        state.lockUntil = 0;
+      }
+      state.count = (state.count || 0) + 1;
+      if (state.count >= 5) {
+        state.lockUntil = now + (60 * 1000); // 60s cooldown lockout
+      }
+      localStorage.setItem('ramdevLoginRateLimit', JSON.stringify(state));
+      return state;
+    }
+
+    function resetLoginAttempts() {
+      localStorage.removeItem('ramdevLoginRateLimit');
+    }
+
+    function checkLoginLockout() {
+      const state = getLoginRateLimitState();
+      const now = Date.now();
+      if (state.lockUntil && now < state.lockUntil) {
+        const remainingSeconds = Math.ceil((state.lockUntil - now) / 1000);
+        return { isLocked: true, remainingSeconds };
+      }
+      return { isLocked: false, remainingSeconds: 0 };
+    }
+
+    // =================================================================================
+    // REGISTERED ACCOUNTS WITH SHA-256 HASHED PASSWORDS
+    // Demo accounts password is '123'
+    // SHA-256('123') = a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3
+    // =================================================================================
     const DEFAULT_ACCOUNTS = {
       '9829012345': {
         name: 'Ramesh Sharma',
         mobile: '9829012345',
         email: 'ramesh.sharma@example.com',
         firm: 'Sharma Household Store',
-        password: '123',
+        passwordHash: 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3',
         portal: 'retail', // AUTOMATIC RETAIL
+        verified: true
+      },
+      'ramesh.sharma@example.com': {
+        name: 'Ramesh Sharma',
+        mobile: '9829012345',
+        email: 'ramesh.sharma@example.com',
+        firm: 'Sharma Household Store',
+        passwordHash: 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3',
+        portal: 'retail',
         verified: true
       },
       '9414167890': {
@@ -72,8 +140,19 @@
         firm: 'Shree Ram Plastics & Trade',
         gstin: '08AABCR1234F1Z8',
         city: 'Jodhpur, Rajasthan',
-        password: '123',
+        passwordHash: 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3',
         portal: 'wholesale', // AUTOMATIC WHOLESALE
+        verified: true
+      },
+      'rajesh@shreeramplastics.com': {
+        name: 'Rajesh Kumar',
+        mobile: '9414167890',
+        email: 'rajesh@shreeramplastics.com',
+        firm: 'Shree Ram Plastics & Trade',
+        gstin: '08AABCR1234F1Z8',
+        city: 'Jodhpur, Rajasthan',
+        passwordHash: 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3',
+        portal: 'wholesale',
         verified: true
       }
     };
@@ -90,8 +169,17 @@
     function saveUserToDatabase(userObj) {
       try {
         const db = JSON.parse(localStorage.getItem('ramdevUsersDb')) || {};
-        db[userObj.mobile] = userObj;
-        if (userObj.email) db[userObj.email.toLowerCase()] = userObj;
+        const safeRecord = {
+          name: userObj.name,
+          mobile: userObj.mobile,
+          email: userObj.email,
+          firm: userObj.firm || '',
+          passwordHash: userObj.passwordHash,
+          portal: userObj.portal || 'retail',
+          verified: !!userObj.verified
+        };
+        db[safeRecord.mobile] = safeRecord;
+        if (safeRecord.email) db[safeRecord.email.toLowerCase()] = safeRecord;
         localStorage.setItem('ramdevUsersDb', JSON.stringify(db));
       } catch (e) {}
     }
@@ -101,29 +189,14 @@
       document.getElementById('gateLoginView').style.display = 'block';
       document.getElementById('gateSignupView').style.display = 'none';
       document.getElementById('gateOtpView').style.display = 'none';
+      const alertBox = document.getElementById('gateLoginAlert');
+      if (alertBox) alertBox.style.display = 'none';
     }
 
     function showGateSignupView() {
       document.getElementById('gateLoginView').style.display = 'none';
       document.getElementById('gateSignupView').style.display = 'block';
       document.getElementById('gateOtpView').style.display = 'none';
-    }
-
-    
-
-    // 1-Click Demo Fills
-    function quickFillRetailUser() {
-      document.getElementById('gateLoginInput').value = '9829012345';
-      validateGateLoginLive(document.getElementById('gateLoginInput'));
-      document.getElementById('gateLoginPass').value = '123';
-      showToast('⚡ Pre-filled Retail Customer ID (9829012345)');
-    }
-
-    function quickFillWholesaleDealer() {
-      document.getElementById('gateLoginInput').value = '9414167890';
-      validateGateLoginLive(document.getElementById('gateLoginInput'));
-      document.getElementById('gateLoginPass').value = '123';
-      showToast('⚡ Pre-filled Wholesale Dealer ID (9414167890)');
     }
 
     function validateGateLoginLive(input) {
@@ -144,46 +217,115 @@
       }
     }
 
-    // SUBMIT LOGIN: Login ID automatically detects Retail vs Wholesale!
-    function submitGateLogin() {
-      const val = document.getElementById('gateLoginInput').value.trim();
-      const pass = document.getElementById('gateLoginPass').value;
+    // =================================================================================
+    // SUBMIT GATE LOGIN: SECURE CREDENTIAL VERIFICATION WITH RATE LIMITING
+    // =================================================================================
+    async function submitGateLogin() {
+      const inputEl = document.getElementById('gateLoginInput');
+      const passEl = document.getElementById('gateLoginPass');
+      const val = inputEl ? inputEl.value.trim() : '';
+      const pass = passEl ? passEl.value : '';
       const alertBox = document.getElementById('gateLoginAlert');
 
-      if (!val || !pass) {
-        alertBox.textContent = 'Please enter your registered User ID (Mobile/Email) and password.';
-        alertBox.style.display = 'block';
+      // 1. Check Rate-Limiting Lockout (5 failed attempts -> 60s cooldown)
+      const lockout = checkLoginLockout();
+      if (lockout.isLocked) {
+        if (alertBox) {
+          alertBox.textContent = "⛔ Account temporarily locked due to 5 consecutive failed attempts. Please wait " + lockout.remainingSeconds + "s before trying again.";
+          alertBox.style.display = 'block';
+        }
         return;
       }
 
+      // 2. Strict Empty Field Validation
+      if (!val && !pass) {
+        if (alertBox) {
+          alertBox.textContent = "Please enter both User ID (Mobile/Email) and Password.";
+          alertBox.style.display = 'block';
+        }
+        if (inputEl) inputEl.focus();
+        return;
+      }
+      if (!val) {
+        if (alertBox) {
+          alertBox.textContent = "Please enter your registered User ID (Mobile Number or Email).";
+          alertBox.style.display = 'block';
+        }
+        if (inputEl) inputEl.focus();
+        return;
+      }
+      if (!pass) {
+        if (alertBox) {
+          alertBox.textContent = "Please enter your password.";
+          alertBox.style.display = 'block';
+        }
+        if (passEl) passEl.focus();
+        return;
+      }
+
+      // 3. User Lookup in Database
       const usersDb = getRegisteredUsers();
-      // Lookup by mobile or email
-      let user = usersDb[val] || usersDb[val.toLowerCase()];
+      const user = usersDb[val] || usersDb[val.toLowerCase()];
 
-      // If user is not yet in mock DB, create a session based on input
       if (!user) {
-        const isWholesaleGuess = val.includes('wholesale') || val.includes('dealer');
-        user = {
-          name: /^\d+$/.test(val) ? 'User (' + val.slice(-4) + ')' : val.split('@')[0],
-          mobile: /^\d+$/.test(val) ? val : '9829012345',
-          email: val.includes('@') ? val : 'customer@ramdevplastics.com',
-          portal: isWholesaleGuess ? 'wholesale' : 'retail',
-          verified: true
-        };
-      }
-
-      // Check Password (simple match or demo 123)
-      if (user.password && user.password !== pass && pass !== '123' && pass !== '123456') {
-        alertBox.textContent = '❌ Incorrect password. Please try again or use 123 for demo accounts.';
-        alertBox.style.display = 'block';
+        const state = recordFailedLoginAttempt();
+        const remaining = 5 - (state.count || 0);
+        if (alertBox) {
+          if (state.count >= 5) {
+            alertBox.textContent = "⛔ Too many failed attempts (5/5). Login temporarily locked for 60 seconds.";
+          } else {
+            alertBox.textContent = "❌ Invalid User ID or Password. (" + remaining + " attempts remaining)";
+          }
+          alertBox.style.display = 'block';
+        }
         return;
       }
 
-      // Save user session
-      localStorage.setItem('currentUser', JSON.stringify(user));
-      localStorage.setItem('ramdevPortalMode', user.portal || 'retail');
+      // 4. Cryptographic Password Hash Verification
+      const inputHash = await hashPassword(pass);
+      const isMatch = (user.passwordHash && user.passwordHash === inputHash) ||
+                      (user.password && user.password === pass);
 
-      if (user.portal === 'wholesale') {
+      if (!isMatch) {
+        const state = recordFailedLoginAttempt();
+        const remaining = 5 - (state.count || 0);
+        if (alertBox) {
+          if (state.count >= 5) {
+            alertBox.textContent = "⛔ Too many failed attempts (5/5). Login temporarily locked for 60 seconds.";
+          } else {
+            alertBox.textContent = "❌ Invalid User ID or Password. (" + remaining + " attempts remaining)";
+          }
+          alertBox.style.display = 'block';
+        }
+        return;
+      }
+
+      // Upgrade plain text password to hash if it was stored in legacy format
+      if (user.password && !user.passwordHash) {
+        user.passwordHash = inputHash;
+        delete user.password;
+        saveUserToDatabase(user);
+      }
+
+      // 5. Successful Login: Reset rate-limit counter and create secure session
+      resetLoginAttempts();
+      if (alertBox) alertBox.style.display = 'none';
+
+      // Safe session record (NO passwords or hashes stored in session state)
+      const sessionUser = {
+        name: user.name || 'Valued Customer',
+        mobile: user.mobile,
+        email: user.email,
+        firm: user.firm || '',
+        portal: user.portal || 'retail',
+        verified: true
+      };
+
+      localStorage.setItem('currentUser', JSON.stringify(sessionUser));
+      sessionStorage.setItem('ramdevSessionActive', 'true');
+      localStorage.setItem('ramdevPortalMode', sessionUser.portal);
+
+      if (sessionUser.portal === 'wholesale') {
         localStorage.setItem('isDealerVerified', 'true');
         localStorage.setItem('dealerProfile', JSON.stringify({
           firmName: user.firm || 'Verified Plastics Dealer',
@@ -195,36 +337,19 @@
         }));
       }
 
-      // AUTOMATIC PORTAL SEPARATION:
-      // Retail User -> enters Retail Storefront (Wholesale shift button hidden)
-      // Wholesale User -> enters Wholesale Storefront (Wholesale rates & dealer badge active)
-      enterStorefront(user.portal || 'retail');
+      enterStorefront(sessionUser.portal);
 
-      if (user.portal === 'wholesale') {
-        showToast(`🏭 Welcome, ${user.name}! Login ID verified: Wholesale Dealer Portal active.`);
+      if (sessionUser.portal === 'wholesale') {
+        showToast("🏭 Welcome, " + sessionUser.name + "! Login ID verified: Wholesale Dealer Portal active.");
       } else {
-        showToast(`🛍️ Welcome, ${user.name}! Login ID verified: Retail Customer Portal active.`);
+        showToast("🛍️ Welcome, " + sessionUser.name + "! Login ID verified: Retail Customer Portal active.");
       }
     }
 
-    // NEW USER REGISTRATION: Collects full details as planned
-    function autoFillGateSignup() {
-      document.getElementById('gateRegName').value = 'Ramesh Sharma';
-      const phoneInput = document.getElementById('gateRegPhone');
-      phoneInput.value = '9829012345';
-      validatePhoneLive(phoneInput, 'gatePhoneHint');
-
-      document.getElementById('gateRegFirm').value = 'Shree Ram Plastics (Jodhpur)';
-
-      const emailInput = document.getElementById('gateRegEmail');
-      emailInput.value = 'ramesh.sharma@example.com';
-      validateEmailLive(emailInput, 'gateEmailHint');
-
-      document.getElementById('gateRegPass').value = 'secure123';
-      showToast('⚡ Pre-filled valid customer registration details!');
-    }
-
-    function submitGateSignup() {
+    // =================================================================================
+    // DEDICATED SIGNUP CONTROLLER: HASHES PASSWORDS WITH SHA-256 BEFORE SAVING
+    // =================================================================================
+    async function submitGateSignup() {
       const name = document.getElementById('gateRegName').value.trim();
       const phoneInput = document.getElementById('gateRegPhone');
       const firm = document.getElementById('gateRegFirm').value.trim();
@@ -239,13 +364,26 @@
       }
       if (!pass || pass.length < 6) { alert('Password must have at least 6 characters.'); return; }
 
+      const mobile = phoneInput.value.trim();
+      const email = emailInput.value.trim().toLowerCase();
+      const usersDb = getRegisteredUsers();
+
+      if (usersDb[mobile] || usersDb[email]) {
+        alert('An account with this Mobile Number or Email already exists. Please log in.');
+        showGateLoginView();
+        return;
+      }
+
+      // Cryptographic SHA-256 password hash
+      const passHash = await hashPassword(pass);
+
       pendingGateSignup = {
         name,
         firm,
-        mobile: phoneInput.value.trim(),
-        email: emailInput.value.trim(),
-        password: pass,
-        portal: portal, // Chosen account type (Retail vs Wholesale)
+        mobile,
+        email,
+        passwordHash: passHash, // Plaintext password is NEVER saved
+        portal,
         verified: false
       };
 
@@ -256,7 +394,7 @@
 
       document.getElementById('gateSignupView').style.display = 'none';
       document.getElementById('gateOtpView').style.display = 'block';
-      showToast(`📲 OTP codes sent to +91 ${pendingGateSignup.mobile} & ${pendingGateSignup.email}`);
+      showToast("📲 OTP codes sent to +91 " + pendingGateSignup.mobile + " & " + pendingGateSignup.email);
     }
 
     function autoFillGateOtps() {
@@ -264,7 +402,7 @@
       document.getElementById('gateEmailOtpBox').value = EXPECTED_EMAIL_OTP;
       document.getElementById('gateMobileOtpError').textContent = '';
       document.getElementById('gateEmailOtpError').textContent = '';
-      showToast(`⚡ Pre-filled demo OTPs: ${EXPECTED_MOBILE_OTP} & ${EXPECTED_EMAIL_OTP}`);
+      showToast("⚡ Pre-filled demo OTPs: " + EXPECTED_MOBILE_OTP + " & " + EXPECTED_EMAIL_OTP);
     }
 
     function verifyGateOtps() {
@@ -273,51 +411,71 @@
       let err = false;
 
       if (mOtp !== EXPECTED_MOBILE_OTP) {
-        document.getElementById('gateMobileOtpError').textContent = `❌ Invalid Mobile OTP (Use ${EXPECTED_MOBILE_OTP})`;
+        document.getElementById("gateMobileOtpError").textContent = "❌ Invalid Mobile OTP (Use " + EXPECTED_MOBILE_OTP + ")";
         err = true;
       } else { document.getElementById('gateMobileOtpError').textContent = ''; }
 
       if (eOtp !== EXPECTED_EMAIL_OTP) {
-        document.getElementById('gateEmailOtpError').textContent = `❌ Invalid Email OTP (Use ${EXPECTED_EMAIL_OTP})`;
+        document.getElementById("gateEmailOtpError").textContent = "❌ Invalid Email OTP (Use " + EXPECTED_EMAIL_OTP + ")";
         err = true;
       } else { document.getElementById('gateEmailOtpError').textContent = ''; }
 
       if (err) return;
 
       pendingGateSignup.verified = true;
-      // Save newly registered user to database so their Login ID is permanently remembered!
       saveUserToDatabase(pendingGateSignup);
 
-      localStorage.setItem('currentUser', JSON.stringify(pendingGateSignup));
-      localStorage.setItem('ramdevPortalMode', pendingGateSignup.portal || 'retail');
+      const sessionUser = {
+        name: pendingGateSignup.name,
+        firm: pendingGateSignup.firm,
+        mobile: pendingGateSignup.mobile,
+        email: pendingGateSignup.email,
+        portal: pendingGateSignup.portal || 'retail',
+        verified: true
+      };
 
-      if (pendingGateSignup.portal === 'wholesale') {
+      localStorage.setItem('currentUser', JSON.stringify(sessionUser));
+      sessionStorage.setItem('ramdevSessionActive', 'true');
+      localStorage.setItem('ramdevPortalMode', sessionUser.portal);
+
+      if (sessionUser.portal === 'wholesale') {
         localStorage.setItem('isDealerVerified', 'true');
         localStorage.setItem('dealerProfile', JSON.stringify({
-          firmName: pendingGateSignup.firm,
+          firmName: sessionUser.firm,
           category: 'Plastic Ware Retailer',
           gstin: '08AABCR1234F1Z8',
-          contactPerson: pendingGateSignup.name,
-          phone: pendingGateSignup.mobile,
+          contactPerson: sessionUser.name,
+          phone: sessionUser.mobile,
           city: 'Jodhpur, Rajasthan'
         }));
       }
 
-      // Enter Storefront automatically segregated by their registered portal!
-      enterStorefront(pendingGateSignup.portal);
-      showToast(`🎉 Account registered successfully! Welcome to ${pendingGateSignup.portal === 'wholesale' ? 'Wholesale Dealer' : 'Retail'} Storefront, ${pendingGateSignup.name}.`);
+      enterStorefront(sessionUser.portal);
+      showToast("🎉 Account registered successfully! Welcome to " + (sessionUser.portal === "wholesale" ? "Wholesale Dealer" : "Retail") + " Storefront, " + sessionUser.name + ".");
     }
 
-    
+    // =================================================================================
+    // CENTRAL ROUTE & VIEW GUARD (PROTECTS SHOP PAGES FROM UNAUTHENTICATED ACCESS)
+    // =================================================================================
+    function enforceAuthGuard() {
+      const user = getCurrentUser();
+      const isSessionActive = sessionStorage.getItem('ramdevSessionActive') === 'true';
 
-    function continueAsGuest() {
-      localStorage.setItem('ramdevPortalMode', 'retail');
-      enterStorefront('retail');
-      showToast('🛍️ Guest Mode: Browsing Retail Storefront.');
+      if (!user || !user.verified || !isSessionActive) {
+        const storefront = document.getElementById('mainStorefrontApp');
+        const authGate = document.getElementById('entryAuthGateScreen');
+        if (storefront) storefront.style.display = 'none';
+        if (authGate) authGate.style.display = 'flex';
+        showGateLoginView();
+        document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+        return false;
+      }
+      return true;
     }
 
     function enterStorefront(portal) {
-      sessionStorage.setItem('ramdevSessionActive', 'true');
+      if (!enforceAuthGuard()) return;
+
       document.getElementById('entryAuthGateScreen').style.display = 'none';
       const mainApp = document.getElementById('mainStorefrontApp');
       mainApp.style.display = 'flex';
@@ -333,7 +491,7 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-        // --- MODULE 1: CENTRAL APPLICATION STATE ---
+    // --- MODULE 1: CENTRAL APPLICATION STATE ---
     let priceMode = 'retail';
     let cart = [];
     let stocks = (() => { try { return JSON.parse(localStorage.getItem('ramdevStocks')) || { 1: 850, 2: 520, 3: 340, 4: 420, 5: 600, 6: 280, 7: 950, 8: 150 }; } catch(e) { return { 1: 850, 2: 520, 3: 340, 4: 420, 5: 600, 6: 280, 7: 950, 8: 150 }; } })();
@@ -829,6 +987,7 @@
     // Connects to #cartModal. Manages cart array, calculates 18% GST (HSN 3923),
     // updates subtotal and handles direct and WhatsApp checkouts.
     function handleAddToCart(productId) {
+      if (!enforceAuthGuard()) return;
       const p = productsData[productId];
       if (!p) return;
 
@@ -853,6 +1012,7 @@
     }
 
     function handleBuyNow(productId) {
+      if (!enforceAuthGuard()) return;
       handleAddToCart(productId);
       openModal('cartModal');
     }
@@ -954,6 +1114,7 @@
     // Switches between Homepage Tiles and Dedicated Category Views,
     // handles category circle clicks, subcategory chips, and debounced live search.
     function showHomePage() {
+      if (!enforceAuthGuard()) return;
       const prodView = document.getElementById('categoryProductsView');
       if (prodView) prodView.style.display = 'none';
 
@@ -1124,6 +1285,9 @@
     // --- MODULE 7: MODAL DIALOG CONTROLLERS ---
     // Opens/closes overlays by toggling the '.active' class.
     function openModal(id) {
+      if (id !== 'entryGatewayModal' && id !== 'authModal') {
+        if (!enforceAuthGuard()) return;
+      }
       const el = document.getElementById(id);
       if (el) el.classList.add('active');
     }
@@ -1181,6 +1345,7 @@
     // Connects to #productQuickViewModal. Displays complete engineering specs,
     // food-grade certifications, volume discount slabs, and quick-order buttons.
     function openProductQuickView(productId) {
+      if (!enforceAuthGuard()) return;
       const p = productsData[productId];
       if (!p) return;
 
@@ -1421,7 +1586,7 @@
       const loginInp = document.getElementById('loginInput');
       loginInp.value = '9829012345';
       validateLoginInputLive(loginInp);
-      document.getElementById('loginPass').value = '123456';
+      document.getElementById('loginPass').value = '123';
       showToast('⚡ Quick filled demo user credentials!');
     }
 
@@ -1433,7 +1598,7 @@
       document.getElementById('authTitle').textContent = isSignUp ? '📝 Create Account (OTP Verification)' : '🔑 Sign In';
     }
 
-    function startSignupOtpVerification() {
+    async function startSignupOtpVerification() {
       const name = document.getElementById('regName').value.trim();
       const phoneInput = document.getElementById('regPhone');
       const emailInput = document.getElementById('regEmail');
@@ -1442,16 +1607,30 @@
 
       if (!name) { alert('Please enter your full name.'); return; }
       if (!validatePhoneLive(phoneInput, 'phoneErrorHint') || !validateEmailLive(emailInput, 'emailErrorHint')) {
-        alert('Please correct highlighted errors before proceeding.');
+        alert('Please correct highlighted phone or email errors.');
         return;
       }
-      if (!pass || pass.length < 6) { alert('Password must have at least 6 characters.'); return; }
+      if (!pass || pass.length < 6) {
+        alert('Password must be at least 6 characters.');
+        return;
+      }
 
+      const mobile = phoneInput.value.trim();
+      const email = emailInput.value.trim().toLowerCase();
+      const usersDb = getRegisteredUsers();
+
+      if (usersDb[mobile] || usersDb[email]) {
+        alert('An account with this Mobile Number or Email already exists. Please sign in.');
+        toggleAuth(false);
+        return;
+      }
+
+      const passHash = await hashPassword(pass);
       pendingSignupData = {
         name,
-        mobile: phoneInput.value.trim(),
-        email: emailInput.value.trim(),
-        password: pass,
+        mobile,
+        email,
+        passwordHash: passHash,
         portal,
         verified: false
       };
@@ -1464,7 +1643,7 @@
       document.getElementById('signupView').style.display = 'none';
       document.getElementById('dualOtpView').style.display = 'block';
       document.getElementById('authTitle').textContent = '📲 Verify Mobile & Email via OTP';
-      showToast(`📲 OTP codes sent to +91 ${pendingSignupData.mobile} & ${pendingSignupData.email}`);
+      showToast("📲 OTP codes sent to +91 " + pendingSignupData.mobile + " & " + pendingSignupData.email);
     }
 
     function verifySignupOtps() {
@@ -1473,12 +1652,12 @@
       let err = false;
 
       if (mOtp !== EXPECTED_MOBILE_OTP) {
-        document.getElementById('mobileOtpError').textContent = `❌ Invalid Mobile OTP (Use ${EXPECTED_MOBILE_OTP})`;
+        document.getElementById("mobileOtpError").textContent = "❌ Invalid Mobile OTP (Use " + EXPECTED_MOBILE_OTP + ")";
         err = true;
       } else { document.getElementById('mobileOtpError').textContent = ''; }
 
       if (eOtp !== EXPECTED_EMAIL_OTP) {
-        document.getElementById('emailOtpError').textContent = `❌ Invalid Email OTP (Use ${EXPECTED_EMAIL_OTP})`;
+        document.getElementById("emailOtpError").textContent = "❌ Invalid Email OTP (Use " + EXPECTED_EMAIL_OTP + ")";
         err = true;
       } else { document.getElementById('emailOtpError').textContent = ''; }
 
@@ -1493,37 +1672,128 @@
 
     function finishSignupAccess() {
       if (!pendingSignupData || !pendingSignupData.verified) return;
-      localStorage.setItem('currentUser', JSON.stringify(pendingSignupData));
+      saveUserToDatabase(pendingSignupData);
+
+      const sessionUser = {
+        name: pendingSignupData.name,
+        mobile: pendingSignupData.mobile,
+        email: pendingSignupData.email,
+        portal: pendingSignupData.portal || 'retail',
+        verified: true
+      };
+
+      localStorage.setItem('currentUser', JSON.stringify(sessionUser));
+      sessionStorage.setItem('ramdevSessionActive', 'true');
       applyCurrentUserState();
       closeModal('authModal');
-      showToast(`🚀 Welcome, ${pendingSignupData.name}! Account activated.`);
+      showToast("🚀 Welcome, " + pendingSignupData.name + "! Account activated.");
     }
 
-    function doLogin() {
-      const val = document.getElementById('loginInput').value.trim();
-      const pass = document.getElementById('loginPass').value;
+    async function doLogin() {
+      const inputEl = document.getElementById('loginInput');
+      const passEl = document.getElementById('loginPass');
+      const val = inputEl ? inputEl.value.trim() : '';
+      const pass = passEl ? passEl.value : '';
       const alertBox = document.getElementById('loginErrorAlert');
 
-      if (!val || !pass) {
-        alertBox.textContent = 'Please enter your registered contact and password.';
-        alertBox.style.display = 'block';
+      // Rate limit check
+      const lockout = checkLoginLockout();
+      if (lockout.isLocked) {
+        if (alertBox) {
+          alertBox.textContent = "⛔ Account temporarily locked due to 5 consecutive failed attempts. Please wait " + lockout.remainingSeconds + "s.";
+          alertBox.style.display = 'block';
+        }
         return;
       }
 
-      let savedUser = getCurrentUser();
-      let name = (savedUser && savedUser.name) ? savedUser.name : 'Valued Customer';
-      let mobile = /^\d+$/.test(val) ? val : '9829012345';
-      let email = val.includes('@') ? val : 'customer@ramdevplastics.com';
+      if (!val && !pass) {
+        if (alertBox) {
+          alertBox.textContent = "Please enter both User ID (Mobile/Email) and Password.";
+          alertBox.style.display = 'block';
+        }
+        if (inputEl) inputEl.focus();
+        return;
+      }
+      if (!val) {
+        if (alertBox) {
+          alertBox.textContent = "Please enter your registered User ID (Mobile Number or Email).";
+          alertBox.style.display = 'block';
+        }
+        if (inputEl) inputEl.focus();
+        return;
+      }
+      if (!pass) {
+        if (alertBox) {
+          alertBox.textContent = "Please enter your password.";
+          alertBox.style.display = 'block';
+        }
+        if (passEl) passEl.focus();
+        return;
+      }
 
-      let userPortal = (savedUser && savedUser.portal) ? savedUser.portal : 'retail';
-      const userObj = { name, mobile, email, portal: userPortal, verified: true };
-      localStorage.setItem('currentUser', JSON.stringify(userObj));
-      localStorage.setItem('ramdevPortalMode', userPortal);
-      if (userPortal === 'wholesale') setPriceMode('wholesale');
+      const usersDb = getRegisteredUsers();
+      const user = usersDb[val] || usersDb[val.toLowerCase()];
+
+      if (!user) {
+        const state = recordFailedLoginAttempt();
+        const remaining = 5 - (state.count || 0);
+        if (alertBox) {
+          if (state.count >= 5) {
+            alertBox.textContent = "⛔ Too many failed attempts (5/5). Login temporarily locked for 60 seconds.";
+          } else {
+            alertBox.textContent = "❌ Invalid User ID or Password. (" + remaining + " attempts remaining)";
+          }
+          alertBox.style.display = 'block';
+        }
+        return;
+      }
+
+      const inputHash = await hashPassword(pass);
+      const isMatch = (user.passwordHash && user.passwordHash === inputHash) ||
+                      (user.password && user.password === pass);
+
+      if (!isMatch) {
+        const state = recordFailedLoginAttempt();
+        const remaining = 5 - (state.count || 0);
+        if (alertBox) {
+          if (state.count >= 5) {
+            alertBox.textContent = "⛔ Too many failed attempts (5/5). Login temporarily locked for 60 seconds.";
+          } else {
+            alertBox.textContent = "❌ Invalid User ID or Password. (" + remaining + " attempts remaining)";
+          }
+          alertBox.style.display = 'block';
+        }
+        return;
+      }
+
+      resetLoginAttempts();
+      if (alertBox) alertBox.style.display = 'none';
+
+      if (user.password && !user.passwordHash) {
+        user.passwordHash = inputHash;
+        delete user.password;
+        saveUserToDatabase(user);
+      }
+
+      const sessionUser = {
+        name: user.name || 'Valued Customer',
+        mobile: user.mobile,
+        email: user.email,
+        firm: user.firm || '',
+        portal: user.portal || 'retail',
+        verified: true
+      };
+
+      localStorage.setItem('currentUser', JSON.stringify(sessionUser));
+      sessionStorage.setItem('ramdevSessionActive', 'true');
+      localStorage.setItem('ramdevPortalMode', sessionUser.portal);
+
+      if (sessionUser.portal === 'wholesale') setPriceMode('wholesale');
       else setPriceMode('retail');
+
       applyCurrentUserState();
       closeModal('authModal');
-      showToast(`👋 Welcome back, ${name}!`);
+      showToast("👋 Welcome back, " + sessionUser.name + "!");
     }
 
     function getCurrentUser() {
@@ -1533,23 +1803,17 @@
 
     function handleAccountHeaderClick() {
       const user = getCurrentUser();
-      if (user && user.verified) {
+      const isSessionActive = sessionStorage.getItem('ramdevSessionActive') === 'true';
+      if (user && user.verified && isSessionActive) {
         openUserAccountModal();
       } else {
-        document.getElementById('mainStorefrontApp').style.display = 'none';
-        document.getElementById('entryAuthGateScreen').style.display = 'flex';
-        showGateLoginView();
+        enforceAuthGuard();
       }
     }
 
     function openUserAccountModal() {
+      if (!enforceAuthGuard()) return;
       const user = getCurrentUser();
-      if (!user) {
-        document.getElementById('mainStorefrontApp').style.display = 'none';
-        document.getElementById('entryAuthGateScreen').style.display = 'flex';
-        showGateLoginView();
-        return;
-      }
       document.getElementById('userAccName').textContent = user.name;
       document.getElementById('userInitialChar').textContent = (user.name || 'U').charAt(0).toUpperCase();
       document.getElementById('userAccPhone').textContent = '+91 ' + user.mobile;
@@ -1558,14 +1822,38 @@
       openModal('userAccountModal');
     }
 
+    // =================================================================================
+    // COMPLETE LOGOUT: CLEARS ALL USER SESSIONS, DEALER PROFILES, CARTS & MODALS
+    // =================================================================================
     function logoutUser() {
       localStorage.removeItem('currentUser');
       sessionStorage.removeItem('ramdevSessionActive');
-      closeModal('userAccountModal');
+      localStorage.removeItem('isDealerVerified');
+      localStorage.removeItem('dealerProfile');
+      localStorage.removeItem('ramdevPortalMode');
+
+      cart = [];
+      updateCart();
+
+      // Close all active modals
+      document.querySelectorAll('.modal-overlay').forEach(modal => {
+        modal.classList.remove('active');
+      });
+
+      // Clear input fields
+      const gateInput = document.getElementById('gateLoginInput');
+      const gatePass = document.getElementById('gateLoginPass');
+      const modalInput = document.getElementById('loginInput');
+      const modalPass = document.getElementById('loginPass');
+      if (gateInput) gateInput.value = '';
+      if (gatePass) gatePass.value = '';
+      if (modalInput) modalInput.value = '';
+      if (modalPass) modalPass.value = '';
+
       document.getElementById('mainStorefrontApp').style.display = 'none';
       document.getElementById('entryAuthGateScreen').style.display = 'flex';
       showGateLoginView();
-      showToast('🔒 Signed out successfully. Please login to enter.');
+      showToast('🔒 Signed out successfully. Please log in to enter.');
     }
 
     function applyCurrentUserState() {
@@ -1639,11 +1927,9 @@
         if (headerText) headerText.textContent = savedLoc.split('(')[0].trim() + ' ' + savedPin;
       }
 
-      // Check if session is already active in current browser session
-      const isSessionActive = sessionStorage.getItem('ramdevSessionActive');
+      const isSessionActive = sessionStorage.getItem('ramdevSessionActive') === 'true';
       const user = getCurrentUser();
 
-      // ALWAYS Show Entry Login Page First when entering the website!
       if (isSessionActive && user && user.verified) {
         enterStorefront(user.portal || 'retail');
       } else {
@@ -1653,8 +1939,7 @@
       }
     }
 
-    // Single Clean Bootstrap on DOM Load
+    // Single Clean Bootstrap on DOM Load (Strictly Guards Unauthenticated Users)
     document.addEventListener('DOMContentLoaded', () => {
-      showHomePage();
       initPortalGate();
     });
