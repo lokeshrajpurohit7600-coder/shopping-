@@ -1,5 +1,4 @@
 <!--
-
 ====================================================================================
   RAMDEV ENTERPRISE — OFFICIAL E-COMMERCE & MANAGEMENT PORTAL
 ====================================================================================
@@ -41,15 +40,16 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <!-- EXTERNAL CSS STYLESHEET -->
-  <link rel="stylesheet" href="css/style.css?v=4.0">
+  <link rel="stylesheet" href="css/style.css?v=4.1">
 </head>
 
-<body>
+<body
   <!-- ========================================================================= -->
   <!-- STEP 2 OF MASTER PLAN: ENTRY AUTHENTICATION GATEWAY (LOGIN / SIGN-UP)    -->
   <!-- ========================================================================= -->
   <div id="entryAuthGateScreen" class="entry-auth-fullscreen">
-    <div class="auth-gate-card">
+    <div class="auth-gate-card" id="authGateCard">
+      <a href="javascript:void(0)" class="auth-card-back-btn" id="gateSignupBackBtn" onclick="showGateLoginView()" style="display: none;">← Back to Login</a>
       <div class="auth-gate-header">
         <img src="./assets/ramdev_feather_logo.jpg" alt="Ramdev Enterprise" class="auth-gate-logo">
         <h2>Ramdev Enterprise</h2>
@@ -91,16 +91,10 @@
         <!-- 2. DEDICATED NEW USER REGISTRATION PAGE                 -->
         <!-- ======================================================== -->
         <div id="gateSignupView" style="display: none;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-            <button type="button" class="btn-specs" style="padding: 4px 10px; font-size: 0.78rem;" onclick="showGateLoginView()">
-              ← Back to Login
-            </button>
-            <span style="font-size: 0.78rem; color: #64748B; font-weight: 700;">CREATE ACCOUNT</span>
-          </div>
+          <h2 class="auth-card-title auth-signup-title">Create Account</h2>
 
-          <h2 class="auth-card-title">Create Account</h2>
-
-          <form onsubmit="event.preventDefault(); submitGateSignup();">
+          <form id="gateSignupForm" class="auth-signup-grid" onsubmit="event.preventDefault(); submitGateSignup();">
+            <!-- Row 1: Full Name | 10-Digit Mobile Number -->
             <div class="form-group">
               <label>Full Name *</label>
               <input type="text" id="gateRegName" class="form-control" placeholder="e.g. Ramesh Sharma" required>
@@ -110,6 +104,8 @@
               <input type="tel" id="gateRegPhone" class="form-control" placeholder="e.g. 9829012345" maxlength="10" required oninput="validatePhoneLive(this, 'gatePhoneHint')">
               <div id="gatePhoneHint" class="validation-hint"></div>
             </div>
+
+            <!-- Row 2: Shop / Firm Name | Email Address -->
             <div class="form-group">
               <label>Shop / Firm Name or Household *</label>
               <input type="text" id="gateRegFirm" class="form-control" placeholder="e.g. Shree Ram Trading / Domestic Home" required>
@@ -119,26 +115,33 @@
               <input type="email" id="gateRegEmail" class="form-control" placeholder="e.g. ramesh@example.com" required oninput="validateEmailLive(this, 'gateEmailHint')">
               <div id="gateEmailHint" class="validation-hint"></div>
             </div>
+
+            <!-- Row 3: Create Password | Account Type / Shopping Portal -->
             <div class="form-group">
               <label>Create Password (Min 6 Characters) *</label>
               <input type="password" id="gateRegPass" class="form-control" placeholder="Create strong password" required minlength="6">
             </div>
             <div class="form-group">
               <label>Account Type / Shopping Portal *</label>
-              <select id="gateRegPortal" class="form-control" style="font-weight: 700;">
-                <option value="retail">🛍️ Retail Customer (1 Pc Orders - Courier Doorstep Delivery)</option>
-                <option value="wholesale">🏭 Wholesale Trade Dealer (Bulk Lot Orders - Transport Bilty)</option>
+              <select id="gateRegPortal" class="form-control auth-portal-select">
+                <option value="retail">🛍️ Retail Customer (1 Pc Orders - Courier Delivery)</option>
+                <option value="wholesale">🏭 Wholesale Dealer (Bulk Lots - Transport Bilty)</option>
               </select>
             </div>
 
-            <button type="submit" class="btn-login-submit" style="margin-top: 10px;">
-              Verify via OTP →
-            </button>
-          </form>
+            <!-- Full Width: Create Account Button -->
+            <div class="auth-grid-full">
+              <button type="submit" class="btn-login-submit" style="margin-top: 4px;">
+                Create Account →
+              </button>
+            </div>
 
-          <div style="text-align: center; margin-top: 14px; font-size: 0.82rem;">
-            Already have an account? <a href="javascript:void(0)" class="tile-see-more" onclick="showGateLoginView()">Sign In Here ›</a>
-          </div>
+            <!-- Full Width: Login Link -->
+            <div class="auth-grid-full auth-signup-footer" style="margin-top: 8px; padding-top: 10px;">
+              <span class="auth-signup-text">Already have an account?</span>
+              <a href="javascript:void(0)" class="tile-see-more" onclick="showGateLoginView()" style="font-weight: 700; color: #2563EB;">Log In Here ›</a>
+            </div>
+          </form>
         </div>
 
         <!-- ======================================================== -->

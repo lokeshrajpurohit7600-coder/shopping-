@@ -303,10 +303,7 @@ window.submitGateSignup = async function() {
   }
 
   const errEl = document.getElementById('gateEmailOtpError');
-  if (errEl) {
-    errEl.textContent = '';
-    errEl.style.display = 'none';
-  }
+  if (errEl) errEl.textContent = '';
 
   const attemptsEl = document.getElementById('gateOtpAttemptsCount');
   if (attemptsEl) attemptsEl.textContent = '3/3';
@@ -317,6 +314,11 @@ window.submitGateSignup = async function() {
   }
 
   startOtpCountdownTimer();
+
+  const card = document.getElementById('authGateCard') || document.querySelector('.auth-gate-card');
+  if (card) card.classList.remove('is-signup');
+  const backBtn = document.getElementById('gateSignupBackBtn');
+  if (backBtn) backBtn.style.display = 'none';
 
   document.getElementById('gateSignupView').style.display = 'none';
   document.getElementById('gateOtpView').style.display = 'block';
@@ -336,10 +338,7 @@ window.verifyGateOtps = function() {
   const attemptsEl = document.getElementById('gateOtpAttemptsCount');
 
   if (!enteredOtp) {
-    if (errEl) {
-      errEl.textContent = 'Please enter the 6-digit OTP code.';
-      errEl.style.display = 'block';
-    }
+    if (errEl) errEl.textContent = 'Please enter the 6-digit OTP code.';
     if (otpBox) otpBox.focus();
     return;
   }
@@ -348,7 +347,6 @@ window.verifyGateOtps = function() {
   if (Date.now() > currentOtpState.expiresAt) {
     if (errEl) {
       errEl.textContent = '❌ OTP expire ho chuka hai (5 minutes limit). Kripya "Resend OTP" par click karein.';
-      errEl.style.display = 'block';
     }
     if (otpBox) otpBox.disabled = true;
     return;
@@ -358,7 +356,6 @@ window.verifyGateOtps = function() {
   if (currentOtpState.attemptsRemaining <= 0) {
     if (errEl) {
       errEl.textContent = '❌ 3 galat attempts ho chuke hain. Security ke liye naya OTP generate karein (Resend OTP).';
-      errEl.style.display = 'block';
     }
     if (otpBox) otpBox.disabled = true;
     return;
@@ -375,13 +372,11 @@ window.verifyGateOtps = function() {
     if (currentOtpState.attemptsRemaining <= 0) {
       if (errEl) {
         errEl.textContent = '❌ 3 galat attempts ho chuke hain. Security ke liye naya OTP maangna hoga. Kripya "Resend OTP" karein.';
-        errEl.style.display = 'block';
       }
       if (otpBox) otpBox.disabled = true;
     } else {
       if (errEl) {
         errEl.textContent = `❌ Galat OTP code. (${currentOtpState.attemptsRemaining} attempt${currentOtpState.attemptsRemaining === 1 ? '' : 's'} remaining)`;
-        errEl.style.display = 'block';
       }
     }
     return;
@@ -454,10 +449,7 @@ window.resendGateOtp = function() {
   }
 
   const errEl = document.getElementById('gateEmailOtpError');
-  if (errEl) {
-    errEl.textContent = '';
-    errEl.style.display = 'none';
-  }
+  if (errEl) errEl.textContent = '';
 
   const attemptsEl = document.getElementById('gateOtpAttemptsCount');
   if (attemptsEl) attemptsEl.textContent = '3/3';

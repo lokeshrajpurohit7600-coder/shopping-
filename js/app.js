@@ -57,6 +57,11 @@
 
     // View Switchers
     function showGateLoginView() {
+      const card = document.getElementById('authGateCard') || document.querySelector('.auth-gate-card');
+      if (card) card.classList.remove('is-signup');
+      const backBtn = document.getElementById('gateSignupBackBtn');
+      if (backBtn) backBtn.style.display = 'none';
+
       const loginView = document.getElementById('gateLoginView');
       const signupView = document.getElementById('gateSignupView');
       const otpView = document.getElementById('gateOtpView');
@@ -68,6 +73,11 @@
     }
 
     function showGateSignupView() {
+      const card = document.getElementById('authGateCard') || document.querySelector('.auth-gate-card');
+      if (card) card.classList.add('is-signup');
+      const backBtn = document.getElementById('gateSignupBackBtn');
+      if (backBtn) backBtn.style.display = 'inline-flex';
+
       const loginView = document.getElementById('gateLoginView');
       const signupView = document.getElementById('gateSignupView');
       const otpView = document.getElementById('gateOtpView');
